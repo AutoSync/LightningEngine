@@ -1,22 +1,71 @@
 #pragma once
+//Standard Library
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <chrono>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+//GLFW
+#include <GLFW/glfw3.h>
+//GLEW
+#include <GLEW/glew.h>
+//STB Image importer
+#include "stb_image.h"
 
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
+using namespace std::chrono;
 
 namespace Lightning
 {
 	//Typedefs
 	
-	//
+	//unsigned int 32bits
 	typedef unsigned int uint;
+	//Steady Clock Now
+	typedef steady_clock::time_point now;
 
 	//Enums
+	enum Keyboard
+	{
+		NUM_1, NUM_2, NUM_3, NUM_4, NUM_5, NUM_6, NUM_7, NUM_8, NUM_9, NUM_0,
+		KEY_1 = GLFW_KEY_1, KEY_2 = GLFW_KEY_2, KEY_3 = GLFW_KEY_3, KEY_4 = GLFW_KEY_4, KEY_5 = GLFW_KEY_5, KEY_6 = GLFW_KEY_6, KEY_7 = GLFW_KEY_7, KEY_8 = GLFW_KEY_8, KEY_9 = GLFW_KEY_9, KEY_0 = GLFW_KEY_0,
+		Q = GLFW_KEY_Q, W = GLFW_KEY_W, E = GLFW_KEY_E, R = GLFW_KEY_R, T = GLFW_KEY_T, Y = GLFW_KEY_Y, U = GLFW_KEY_U, I = GLFW_KEY_I, O = GLFW_KEY_O, P = GLFW_KEY_P,
+		A = GLFW_KEY_A, S = GLFW_KEY_S, D = GLFW_KEY_D, F = GLFW_KEY_F, G = GLFW_KEY_G, H = GLFW_KEY_H, J = GLFW_KEY_J, K = GLFW_KEY_K, L = GLFW_KEY_L,
+		Z = GLFW_KEY_Z, X = GLFW_KEY_X, C = GLFW_KEY_C, V = GLFW_KEY_V, B = GLFW_KEY_B, N = GLFW_KEY_N, M = GLFW_KEY_M,
+		NL_ADD = GLFW_KEY_KP_ADD, NL_SUB = GLFW_KEY_KP_SUBTRACT
+	};
+	enum MouseKeys
+	{
+		MOUSE_LEFT = GLFW_MOUSE_BUTTON_LEFT, MOUSE_RIGHT = GLFW_MOUSE_BUTTON_RIGHT, MOUSE_MIDDLE = GLFW_MOUSE_BUTTON_MIDDLE
+	};
+	enum Cursor
+	{
+		Pointer = GLFW_CURSOR_NORMAL,
+		Hide = GLFW_CURSOR_HIDDEN
+	};
+	namespace Flow
+	{
+		enum Flow
+		{
+			INPUT, OUTPUT, EXIT, ERROR, EXPECTED, ABORT, PRINT, READ, PROCESS, WARNING
+		};
+	}
+	namespace Colors
+	{
+		enum ConsoleColor
+		{
+			BLACK = '\33', RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE,
+			BRIGHT_BLACK = 90, BRIGHT_RED, BRIGHT_GREEN, BRIGH_YELLOW, BRIGHT_BLUE,
+			BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
+		};
+	}
 	
 	//Structs
 	struct Version
@@ -28,13 +77,18 @@ namespace Lightning
 		const char* Text = "";
 		Version()
 		{
-			string temp = "";
+			
 			this->Major = 0;
 			this->Minor = 0;
 			this->Release = 0;
 			this->Revision = 0;
-			temp = "(" + to_string(Major) + '.' + to_string(Minor) + '.' + to_string(Release) + '.' + to_string(Revision) + ')';
-			this->Text = temp.c_str();
+			
+			string mj = to_string(Major);
+			string mn = to_string(Minor);
+			string rel = to_string(Release);
+			string rev = to_string(Revision);
+			string text = "(" + mj + '.' + mn + '.' + rel + '.' + rev + ")";
+			this->Text = text.c_str();
 		}
 		Version(int MAJOR, int MINOR, int RELEASE, int REVISION)
 		{
@@ -43,8 +97,13 @@ namespace Lightning
 			this->Minor = MINOR;
 			this->Release = RELEASE;
 			this->Revision = REVISION;
-			temp = "(" + to_string(Major) + '.' + to_string(Minor) + '.' + to_string(Release) + '.' + to_string(Revision) + ')';
-			this->Text = temp.c_str();
+
+			string mj = to_string(Major);
+			string mn = to_string(Minor);
+			string rel = to_string(Release);
+			string rev = to_string(Revision);
+			string text = "(" + mj + "." + mn + "." + rel + "." + rev + ")";
+			this->Text = text.c_str();
 		}
 	};
 

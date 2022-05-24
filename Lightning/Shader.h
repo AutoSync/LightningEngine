@@ -55,6 +55,10 @@ namespace Lightning
 		void SetV2(const char* name, V2 value);
 		void SetV3(const char* name, V3 value);
 		void SetV4(const char* name, V4 value);
+		void SetMat2(const char* name, glm::mat2& m);
+		void SetMat3(const char* name, glm::mat3& m);
+		void SetMat4(const char* name, glm::mat4& m);
+
 	private:
 		void InitializeShader(ShaderSource _source);
 	};

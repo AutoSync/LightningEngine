@@ -68,6 +68,22 @@ void Lightning::Shader::SetV4(const char* name, V4 value)
 	glUniform4f(glGetUniformLocation(Id, name), value.x, value.y, value.z, value.w);
 }
 
+void Lightning::Shader::SetMat2(const char* name, glm::mat2& m)
+{
+	glUniformMatrix2fv(glGetUniformLocation(Id, name),1, GL_FALSE, &m[0][0]);
+}
+
+void Lightning::Shader::SetMat3(const char* name, glm::mat3& m)
+{
+	glUniformMatrix3fv(glGetUniformLocation(Id, name), 1, GL_FALSE, &m[0][0]);
+}
+
+void Lightning::Shader::SetMat4(const char* name, glm::mat4& m)
+{
+	glUniformMatrix4fv(glGetUniformLocation(Id, name), 1, GL_FALSE, &m[0][0]);
+}
+
+
 void Lightning::Shader::InitializeShader(ShaderSource _source)
 {
 	source = _source;

@@ -60,3 +60,26 @@ void Lightning::Msg::When(bool condition, Flow::Flow flag, string message, void 
 		Emit(flag, message);
 	}
 }
+
+Lightning::Msg::Console::Console()
+{
+	Init();
+}
+
+void Lightning::Msg::Console::Init()
+{
+	Start = steady_clock::now();
+}
+
+void Lightning::Msg::Console::Log(string message)
+{
+	End = steady_clock::now();
+	string t = "[" + durationProcess(Start, End) + "] " + message;
+	Emit(Flow::PRINT, t);
+}
+
+std::string Lightning::Msg::Console::durationProcess(now Start, now End)
+{
+	duration<double> time = duration_cast<duration<double>>(End - Start);
+	return std::to_string(time.count()) + " seconds";
+}

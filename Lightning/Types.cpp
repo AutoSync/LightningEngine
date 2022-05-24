@@ -12,11 +12,11 @@ float Lightning::IncrementRangef(char signal, float target, float value, float m
 		{
 		case '+':
 			target += value;
-			return target;
+			break;
 		case '-':
 			target -= value;
-			return target;
+			break;
 		}
 	}
-	
+	return target;	
 }

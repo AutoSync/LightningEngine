@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(SolutionDir)source\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)source\Assimp\lib;$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(SolutionDir)source\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)source\Assimp\lib;$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(SolutionDir)source\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)source\Assimp\lib;$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)source;$(SolutionDir)source\GLFW\include;$(SolutionDir)source\GLEW\include;$(SolutionDir)source\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)source\Assimp\lib;$(SolutionDir)source\GLFW\lib-vc2022;$(SolutionDir)source\GLEW\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,6 +151,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Inputs.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Preview_Lightning.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Geometry.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Inputs.h" />
     <ClInclude Include="Lights.h" />
     <ClInclude Include="Msg.h" />
