@@ -66,7 +66,6 @@ namespace Lightning
 			BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
 		};
 	}
-	
 	//Structs
 	struct Version
 	{
@@ -87,7 +86,7 @@ namespace Lightning
 			string mn = to_string(Minor);
 			string rel = to_string(Release);
 			string rev = to_string(Revision);
-			string text = "(" + mj + '.' + mn + '.' + rel + '.' + rev + ")";
+			string text = "(" + mj + "." + mn + "." + rel + "." + rev + ")";
 			this->Text = text.c_str();
 		}
 		Version(int MAJOR, int MINOR, int RELEASE, int REVISION)
@@ -466,6 +465,74 @@ namespace Lightning
 			return temp;
 		}
 
+	};
+	struct C3
+	{
+		int r = 0.0f;
+		int g = 0.0f;
+		int b = 0.0f;
+		C3()
+		{
+			this->r = 0.0f;
+			this->g = 0.0f;
+			this->b = 0.0f;
+		}
+		C3(int all)
+		{
+			this->r = all > 255 ? 255 : all || all < 0 ? 0 : all;
+			this->g = all > 255 ? 255 : all || all < 0 ? 0 : all;
+			this->b = all > 255 ? 255 : all || all < 0 ? 0 : all;
+		}
+		C3(int Red, int Green, int Blue)
+		{
+			this->r = Red > 255 ? 255 : Red || Red < 0 ? 0 : Red;
+			this->g = Green > 255 ? 255 : Green || Green < 0 ? 0 : Green;
+			this->b = Blue > 255 ? 255 : Blue || Blue < 0 ? 0 : Blue;
+		}
+		void operator=(const C3& c)
+		{
+			this->r = c.r;
+			this->g = c.g;
+			this->b = c.b;
+		}
+	};
+	struct C4
+	{
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		int a = 0;
+		C4()
+		{
+			this->r = 0;
+			this->g = 0;
+			this->b = 0;
+			this->a = 0;
+
+		}
+		C4(int all)
+		{
+			this->r = all > 255 ? 255 : all || all < 0 ? 0 : all;
+			this->g = all > 255 ? 255 : all || all < 0 ? 0 : all;
+			this->b = all > 255 ? 255 : all || all < 0 ? 0 : all;
+			this->a = all > 255 ? 255 : all || all < 0 ? 0 : all;
+
+		}
+		C4(int Red, int Green, int Blue, int Alpha)
+		{
+			this->r = Red > 255 ? 255 : Red || Red < 0 ? 0 : Red;
+			this->g = Green > 255 ? 255 : Green || Green < 0 ? 0 : Green;
+			this->b = Blue > 255 ? 255 : Blue || Blue < 0 ? 0 : Blue;
+			this->a = Alpha > 255 ? 255 : Alpha || Alpha < 0 ? 0 : Alpha;
+
+		}
+		void operator=(const C4& c)
+		{
+			this->r = c.r;
+			this->g = c.g;
+			this->b = c.b;
+			this->a = c.a;
+		}
 	};
 
 	struct name

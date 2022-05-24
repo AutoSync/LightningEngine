@@ -270,7 +270,7 @@ std::vector<Lightning::Texture> Lightning::MeshComponent::LoadMaterialTextures(a
         {   // if texture hasn't been loaded already, load it
             Texture texture;
 
-            texture.ID = importer->TextureFromFile(str.C_Str(), this->directory);
+            texture.Id = importer->TextureFromFile(str.C_Str(), this->directory);
             texture.type = TypeName;
             texture.path = str.C_Str();
             textures.push_back(texture);

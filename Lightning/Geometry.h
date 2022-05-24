@@ -14,16 +14,17 @@ namespace Lightning
 {
 	struct Vertex
 	{
-		V3 Position;
-		V3 Normal;
-		V3 Tangent;
-		V3 Bitangent;
-		V2 TexCoords;
+		V3 Position;		// Position Vertex
+		V2 TexCoords;		// Texture Cordinates
+		V3 Normal;			// Normal Vertex 
+		V3 Tangent;			// Tangents Vertex 
+		V3 Bitangent;		// Bitangens Vertex
 	};
 	struct Texture
 	{
-		uint Id;
+		uint	 Id;
 		string type;
+		string path;
 	};
 
 	class GeometryComponent
@@ -50,8 +51,8 @@ namespace Lightning
 		Transform					 transform;
 		Transform						 pivot;
 		glm::mat4						 model;
-		std::vector<Texture>    texturesLoaded;
-		std::vector<GeometryComponent>  meshes;
+		vector<Texture>			texturesLoaded;
+		vector<GeometryComponent>		meshes;
 		string						 directory;
 		bool		   gammacorrection = false;
 		bool					visible = true;
