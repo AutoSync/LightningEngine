@@ -31,3 +31,11 @@ inline void Lightning::Camera::InitializeCamera(Transform T)
 	this->transform = T;
 }
 
+void Lightning::Camera::UpdateCameraVectors()
+{
+	front = MakeRotate(glm::vec3(Rotation.x, Rotation.y, Rotation.z));
+	// Also re-calculate the Right and Up vector
+	right = glm::normalize(glm::cross(front.glm, worldUp.glm));
+	Up = glm::normalize(glm::cross(right, front.glm));
+}
+

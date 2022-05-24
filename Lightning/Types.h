@@ -18,6 +18,12 @@
 //GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#define LIGHTNING_PI 3.141592653589
+#define LIGHTNING_RADIANS 0.01745329251994329576923690768489
+#define LIGHTNING_DEGREES 57.21684788166867
+
 
 using namespace std;
 using namespace std::chrono;
@@ -163,6 +169,12 @@ namespace Lightning
 			this->y = V.y;
 			this->z = V.z;
 			glm::vec3 glm = glm::vec3(x, y, z);
+		}
+		void operator=(const glm::vec3& V)
+		{
+			this->x = V.x;
+			this->y = V.y;
+			this->z = V.z;
 		}
 		V3 operator+=(const V3& V)
 		{
@@ -592,5 +604,10 @@ namespace Lightning
 	//Functions
 
 	float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f);
+
+	glm::vec3 MakeRotate(glm::vec3 rotation);
+
+	float radians(float degrees);
+	float degrees(float radians);
 
 }
