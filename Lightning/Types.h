@@ -20,10 +20,39 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//MACROS
+
+//MATH  
 #define LIGHTNING_PI 3.141592653589
 #define LIGHTNING_RADIANS 0.01745329251994329576923690768489
 #define LIGHTNING_DEGREES 57.21684788166867
 
+
+// Lightning Bool
+#define LFALSE			 0x0000		// Lightning Bool False
+#define LTRUE			 0x0001		// Lightning Bool True
+#define LDEFAULT		 0x0002		// Lightning Default Command
+
+//Lightning Rendering
+//
+#define LR_DEPTH		0x0003	//Flag * Rendering Depth
+#define DEPTH_ALWAYS	4		//Function fn The depth test always passes.
+#define DEPTH_NEVER		5		//Function fn The depth test never passes.
+#define DEPTH_LESS		6		//Function fn Passes if depth < Buffer stored
+#define DEPTH_EQUAL		7		//Function fn Passes if depth == Buffer stored
+#define DEPTH_LEQUAL	8		//
+#define DEPTH_GREATER	9
+#define DEPTH_NOTEQUAL	10 
+#define DEPTH_GEQUAL	11
+#define DEPTH_NOMASK	12		//Condition * disable mask depth
+#define LR_STENCIL		200
+#define LR_BLEND		201
+#define LR_CULL			202
+#define LR_CULL_BACK	203
+#define LR_CULL_CCW		204
+#define LR_				205
+
+//usings
 
 using namespace std;
 using namespace std::chrono;
@@ -38,6 +67,18 @@ namespace Lightning
 	typedef steady_clock::time_point now;
 
 	//Enums
+	
+	//Selectable Light type
+	enum LightType
+	{
+		Direct, Spotlight, Point, Rect
+	};
+	//Mobility objects
+	enum Mobility
+	{
+		Static, Mutable, Mobile
+	};
+
 	enum Keyboard
 	{
 		NUM_1, NUM_2, NUM_3, NUM_4, NUM_5, NUM_6, NUM_7, NUM_8, NUM_9, NUM_0,
@@ -72,43 +113,34 @@ namespace Lightning
 			BRIGHT_MAGENTA, BRIGHT_CYAN, BRIGHT_WHITE
 		};
 	}
+	
+	
 	//Structs
+
+	//VERSION
 	struct Version
 	{
 		int Major = 0;
 		int Minor = 10;
 		int Release = 0;
 		int Revision = 0;
-		const char* Text = "";
-		int ver[4] = { Major, Minor, Release, Revision };
+		const char* Text = " ";
 		Version()
 		{		
 			this->Major = 0;
 			this->Minor = 0;
 			this->Release = 0;
 			this->Revision = 0;
-			this->Text = version_string();
+			this->Text = "";
 		}
-		Version(int MAJOR, int MINOR, int RELEASE, int REVISION)
+		Version(int MAJOR, int MINOR, int RELEASE, int REVISION, const char* TEXT)
 		{
 			this->Major = MAJOR;
 			this->Minor = MINOR;
 			this->Release = RELEASE;
 			this->Revision = REVISION;
-			this->Text = version_string();
-		}
-	private:
-		const char* version_string()
-		{
-			string temp = " ";
-			for (int i = 0; i < 4; i++)
-			{
-				temp += to_string(ver[i]);
-				if(i != 3)
-					temp += '.';
-			}
-			return temp.c_str();
-		}
+			this->Text = TEXT;
+		}	
 	};
 
 	struct V2
@@ -404,7 +436,7 @@ namespace Lightning
 
 };
 	
-	//Color range 0 - 1
+	//Color range V4 0 - 1
 	struct LinearColor
 	{
 		float r = 0.0f;

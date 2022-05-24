@@ -8,6 +8,7 @@
 #endif
 
 //Tools Engine
+#include "System.h"
 #include "Msg.h"
 #include "Types.h"
 #include "Inputs.h"
@@ -24,11 +25,10 @@ namespace Lightning
 	//Initial setup to define window creation
 	struct EngineSettings
 	{
-		//
 		int width = 840;
 		int height = 480;
 		const char* title = "Lightning Engine";
-		Version version = Version(0, 10, 0, 0);
+		Version version = Version(0, 10, 0, 0, APP_VERSION_STRING);
 		int version_major = 4;
 		int version_minor = 5;
 		bool vsync = false;
@@ -36,7 +36,6 @@ namespace Lightning
 		bool framerate = false;
 		bool AA = false;
 	};
-
 	//OpenGL window and context initialization object
 	class Engine
 	{
@@ -61,15 +60,12 @@ namespace Lightning
 		virtual void End();
 		//Last component to be rendered
 		virtual void LateUpdate();
-
 	public:
 		void ExitProgram();
 		void SetWindowSize(int width, int height);
 		void SetWindowTitle(string title);
 		void SetShowFramerate(bool framerate);
-
 	private:
-
 		void OnInit();
 		void OnRender();
 		void OnRender(RenderSettings settings);

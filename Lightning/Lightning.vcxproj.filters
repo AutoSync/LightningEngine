@@ -116,5 +116,6 @@
     <None Include="vert.vert">
       <Filter>Shader Files</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

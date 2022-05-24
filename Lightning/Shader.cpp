@@ -63,6 +63,11 @@ void Lightning::Shader::SetV3(const char* name, V3 value)
 	glUniform3f(glGetUniformLocation(Id, name), value.x, value.y, value.z);
 }
 
+void Lightning::Shader::SetLinearColor(const char* name, LinearColor value)
+{
+	glUniform3f(glGetUniformLocation(Id, name), value.r, value.g, value.b);
+}
+
 void Lightning::Shader::SetV4(const char* name, V4 value)
 {
 	glUniform4f(glGetUniformLocation(Id, name), value.x, value.y, value.z, value.w);
@@ -81,6 +86,14 @@ void Lightning::Shader::SetMat3(const char* name, glm::mat3& m)
 void Lightning::Shader::SetMat4(const char* name, glm::mat4& m)
 {
 	glUniformMatrix4fv(glGetUniformLocation(Id, name), 1, GL_FALSE, &m[0][0]);
+}
+
+const char* Lightning::Shader::MatrixChars(const char* ArrayName, int Position, const char* member)
+{
+	string an = ArrayName;
+	string mb = member;
+	string data = an + "[" + std::to_string(Position) + "]" + "." + mb;
+	return data.c_str();
 }
 
 
