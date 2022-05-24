@@ -82,7 +82,6 @@ void Lightning::GeometryComponent::MeshBuild()
 
 Lightning::MeshComponent::MeshComponent(string const& path, bool gamma)
 {
-    Count();
     console.Init();
     console.Log("IMPORT MESH INSTANCE" + std::to_string(countmodel) + " ->START ");
     LoadMesh(path);
@@ -92,7 +91,6 @@ Lightning::MeshComponent::MeshComponent(string const& path, bool gamma)
 
 Lightning::MeshComponent::MeshComponent()
 {
-    Count();
     console.Log("MESH INSTANCE" + std::to_string(countmodel) + " -> INICIALIZATION");
 }
 

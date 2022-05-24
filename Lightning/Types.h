@@ -8,10 +8,10 @@
 #include <sstream>
 #include <iostream>
 
-//GLFW
-#include <GLFW/glfw3.h>
 //GLEW
 #include <GLEW/glew.h>
+//GLFW
+#include <GLFW/glfw3.h>
 //STB Image importer
 #include "stb_image.h"
 
@@ -80,35 +80,34 @@ namespace Lightning
 		int Release = 0;
 		int Revision = 0;
 		const char* Text = "";
+		int ver[4] = { Major, Minor, Release, Revision };
 		Version()
-		{
-			
+		{		
 			this->Major = 0;
 			this->Minor = 0;
 			this->Release = 0;
 			this->Revision = 0;
-			
-			string mj = to_string(Major);
-			string mn = to_string(Minor);
-			string rel = to_string(Release);
-			string rev = to_string(Revision);
-			string text = "(" + mj + "." + mn + "." + rel + "." + rev + ")";
-			this->Text = text.c_str();
+			this->Text = version_string();
 		}
 		Version(int MAJOR, int MINOR, int RELEASE, int REVISION)
 		{
-			string temp = "";
 			this->Major = MAJOR;
 			this->Minor = MINOR;
 			this->Release = RELEASE;
 			this->Revision = REVISION;
-
-			string mj = to_string(Major);
-			string mn = to_string(Minor);
-			string rel = to_string(Release);
-			string rev = to_string(Revision);
-			string text = "(" + mj + "." + mn + "." + rel + "." + rev + ")";
-			this->Text = text.c_str();
+			this->Text = version_string();
+		}
+	private:
+		const char* version_string()
+		{
+			string temp = " ";
+			for (int i = 0; i < 4; i++)
+			{
+				temp += to_string(ver[i]);
+				if(i != 3)
+					temp += '.';
+			}
+			return temp.c_str();
 		}
 	};
 
@@ -480,14 +479,14 @@ namespace Lightning
 	};
 	struct C3
 	{
-		int r = 0.0f;
-		int g = 0.0f;
-		int b = 0.0f;
+		int r = 0;
+		int g = 0;
+		int b = 0;
 		C3()
 		{
-			this->r = 0.0f;
-			this->g = 0.0f;
-			this->b = 0.0f;
+			this->r = 0;
+			this->g = 0;
+			this->b = 0;
 		}
 		C3(int all)
 		{
