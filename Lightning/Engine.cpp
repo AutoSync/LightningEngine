@@ -3,54 +3,103 @@
 Lightning::Engine::Engine()
 {
 	window = NULL;
-	EngineSettings sts;
-	InitializeWindow(sts);
+	InitializeWindow(eng_sets);
 }
 
 Lightning::Engine::Engine(EngineSettings settings)
 {
-	InitializeWindow(settings);
+	eng_sets = settings;
+	InitializeWindow(eng_sets);
 }
 
-void Lightning::Engine::InitializeComponent()
+void Lightning::Engine::InitializeEngine()
 {
 #if defined(WIN32)
 	FreeConsole();
 #endif
-	Begin();
-	Render();
-	End();
+	OnInit();
+	OnRender();
+	OnTerminate();
 }
 
-void Lightning::Engine::Begin()
+void Lightning::Engine::Update(){ /* empty implementation */ }
+
+void Lightning::Engine::Start()
+{
+	Msg::Emit(Flow::INPUT, "[Program Started]");
+}
+
+void Lightning::Engine::End()
+{
+	Msg::Emit(Flow::INPUT, "[Program Finished]");
+}
+
+void Lightning::Engine::ExitProgram()
+{
+	glfwSetWindowShouldClose(window, true);
+	Msg::Emit(Flow::PROCESS, "Command Exit");
+}
+
+void Lightning::Engine::SetWindowSize(int width, int height)
+{
+	glfwSetWindowSize(window, width, height);
+}
+
+void Lightning::Engine::SetWindowTitle(string _title)
+{
+	float fps = ceil(1.0 / Time->deltaTime);
+	int ifps = (int)fps;
+	std::string titleInfo, titteVersion, fpsCount;
+	fpsCount = "FPS: " + std::to_string(ifps);
+	titleInfo = eng_sets.title;
+	titteVersion = eng_sets.version.Text;
+	std::string title = titleInfo + titteVersion + fpsCount;
+
+	glfwSetWindowTitle(window, title.c_str());
+}
+
+void Lightning::Engine::LateUpdate()
+{
+}
+
+void Lightning::Engine::SetShowFramerate(bool framerate)
+{
+	this->framerate = framerate;
+}
+
+
+void Lightning::Engine::OnInit()
 {
 	//glfwMakeContextCurrent(window);
 }
 
-void Lightning::Engine::Render()
+void Lightning::Engine::OnRender()
 {
 	RenderSettings settings;
-	Render(settings);
+	OnRender(settings);
 }
 
-void Lightning::Engine::Render(RenderSettings settings)
+void Lightning::Engine::OnRender(RenderSettings settings)
 {
-	BeginPlay();
+	Start();
 	while (!glfwWindowShouldClose(window))
 	{
+		//Initial Program
+		SetWindowTitle(eng_sets.title);
+		Time->SetDeltaTime((float)glfwGetTime());
 		//Initial Data
 		glClear(GL_COLOR_BUFFER_BIT);
-		Time::SetDeltaTime((float)glfwGetTime());
 		//Msg::Emit(Flow::PRINT, Time::deltaTime);
 		Update();
 
+		LateUpdate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	EndPlay();
+	End();
 }
 
-void Lightning::Engine::End()
+void Lightning::Engine::OnTerminate()
 {
 	glfwTerminate();
 	Msg::Emit(Flow::EXIT, "[Program Finished]");
@@ -77,11 +126,12 @@ void Lightning::Engine::InitializeWindow(EngineSettings settings)
 
 
 	Msg::When(!window, Flow::ERROR, "Failed to create Glfw Window");
+	Input = new Inputs(window);
 }
 
-void Lightning::Time::SetDeltaTime(float dt)
+void Lightning::Engine::SetWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
-	currentTime = dt;
-	deltaTime = currentTime - lastTime;
-	lastTime = currentTime;
+	eng_sets.width = width;
+	eng_sets.height = height;
 }
+

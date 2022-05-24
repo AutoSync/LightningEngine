@@ -15,42 +15,42 @@ void Lightning::SceneComponent::UpdateByNodes()
         this->transform += Parent->transform;
 }
 
-void Lightning::SceneComponent::SetTransform(Transform T)
+void Lightning::SceneComponent::SetRelativeTransform(Transform T)
 {
     transform = T;
 }
 
-Lightning::Transform Lightning::SceneComponent::GetTransform()
+Lightning::Transform Lightning::SceneComponent::GetRelativeTransform()
 {
     return transform;
 }
 
-void Lightning::SceneComponent::SetPosition(V3 P)
+void Lightning::SceneComponent::SetRelativePosition(V3 P)
 {
     this->transform.Position = P;
 }
 
-Lightning::V3 Lightning::SceneComponent::GetPosition()
+Lightning::V3 Lightning::SceneComponent::GetRelativePosition()
 {
     return transform.Position;
 }
 
-void Lightning::SceneComponent::SetRotation(V3 R)
+void Lightning::SceneComponent::SetRelativeRotation(V3 R)
 {
     this->transform.Rotation = R;
 }
 
-Lightning::V3 Lightning::SceneComponent::GetRotation()
+Lightning::V3 Lightning::SceneComponent::GetRelativeRotation()
 {
     return transform.Rotation;
 }
 
-void Lightning::SceneComponent::SetScale(V3 S)
+void Lightning::SceneComponent::SetRelativeScale(V3 S)
 {
     this->transform.Scale = S;
 }
 
-Lightning::V3 Lightning::SceneComponent::GetScale()
+Lightning::V3 Lightning::SceneComponent::GetRelativeScale()
 {
     return transform.Scale;
 }

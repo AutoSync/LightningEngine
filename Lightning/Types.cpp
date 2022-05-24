@@ -1,13 +1,22 @@
 #include "Types.h"
 
-float Lightning::Clampf(float value, float min, float max)
+float Lightning::IncrementRangef(char signal, float target, float value, float min, float max)
 {
-	float t;
-	if (value >= max)
-		t = max;
-	else if (value <= min)
-		t = min;
+	if (target > max)
+		target = max;
+	else if (target < min)
+		target = min;
 	else
-		t = value;
-	return t;
+	{
+		switch (signal)
+		{
+		case '+':
+			target += value;
+			return target;
+		case '-':
+			target -= value;
+			return target;
+		}
+	}
+	
 }

@@ -10,6 +10,8 @@
 //Tools Engine
 #include "Msg.h"
 #include "Types.h"
+#include "Inputs.h"
+#include "GameTime.h"
 
 namespace Lightning
 {
@@ -22,13 +24,17 @@ namespace Lightning
 	//Initial setup to define window creation
 	struct EngineSettings
 	{
+		//
 		int width = 840;
 		int height = 480;
 		const char* title = "Lightning Engine";
+		Version version = Version(0, 10, 0, 0);
 		int version_major = 4;
-		int version_minor = 3;
+		int version_minor = 5;
 		bool vsync = false;
 		bool core_profile = true;
+		bool framerate = false;
+		bool AA = false;
 	};
 
 	//OpenGL window and context initialization object
@@ -37,28 +43,38 @@ namespace Lightning
 	public:
 		bool ShowConsole = false;
 	private:
+		EngineSettings eng_sets;
 		GLFWwindow* window = NULL;
+		bool framerate = false;
 	public:
+		Inputs* Input = new Inputs(window);
+		GameTime* Time = new GameTime();
 		Engine();
 		Engine(EngineSettings settings);
-		void InitializeComponent();
-		virtual void Update() = 0;
-		virtual void BeginPlay() = 0;
-		virtual void EndPlay() = 0;
+		//Call to start the engine
+		void InitializeEngine();
+		//[Required] Called every frame
+		virtual void Update();
+		//[Required] Called when starting the program
+		virtual void Start();
+		//[Required] Called when the program ends
+		virtual void End();
+		//Last component to be rendered
+		virtual void LateUpdate();
+
+	public:
+		void ExitProgram();
+		void SetWindowSize(int width, int height);
+		void SetWindowTitle(string title);
+		void SetShowFramerate(bool framerate);
+
 	private:
-		void Begin();
-		void Render();
-		void Render(RenderSettings settings);
-		void End();
+
+		void OnInit();
+		void OnRender();
+		void OnRender(RenderSettings settings);
+		void OnTerminate();
 		void InitializeWindow(EngineSettings settings);
+		void SetWindowSizeCallback(GLFWwindow* window, int width, int height);
 	};
-
-	namespace Time
-	{
-		static float deltaTime = 0;
-		static float currentTime = 0;
-		static float lastTime = 0;
-
-		void SetDeltaTime(float dt);
-	}
 }

@@ -16,7 +16,37 @@ namespace Lightning
 	//
 	typedef unsigned int uint;
 
+	//Enums
+	
 	//Structs
+	struct Version
+	{
+		int Major = 0;
+		int Minor = 10;
+		int Release = 0;
+		int Revision = 0;
+		const char* Text = "";
+		Version()
+		{
+			string temp = "";
+			this->Major = 0;
+			this->Minor = 0;
+			this->Release = 0;
+			this->Revision = 0;
+			temp = "(" + to_string(Major) + '.' + to_string(Minor) + '.' + to_string(Release) + '.' + to_string(Revision) + ')';
+			this->Text = temp.c_str();
+		}
+		Version(int MAJOR, int MINOR, int RELEASE, int REVISION)
+		{
+			string temp = "";
+			this->Major = MAJOR;
+			this->Minor = MINOR;
+			this->Release = RELEASE;
+			this->Revision = REVISION;
+			temp = "(" + to_string(Major) + '.' + to_string(Minor) + '.' + to_string(Release) + '.' + to_string(Revision) + ')';
+			this->Text = temp.c_str();
+		}
+	};
 
 	struct V2
 	{
@@ -144,7 +174,6 @@ namespace Lightning
 			temp.z = this->z / V.z;
 			return temp;
 		}
-
 	};
 	struct V4
 	{
@@ -278,8 +307,108 @@ namespace Lightning
 			temp.Scale = this->Scale /= T.Scale;
 			return temp;
 		}
+		void SetPosition(V3 position)
+		{
+			this->Position = position;
+		}
+		V3 GetPosition()
+		{
+			return this->Position;
+		}
+		void SetRotation(V3 rotation)
+		{
+			this->Rotation = rotation;
+		}
+		V3 GetRotation()
+		{
+			return this->Rotation;
+		}
+		void SetScale(V3 scale)
+		{
+			this->Scale = scale;
+		}
+		V3 GetScale()
+		{
+			return this->Scale;
+		}
+
+
+};
+	
+	//Color range 0 - 1
+	struct LinearColor
+	{
+		float r = 0.0f;
+		float g = 0.0f;
+		float b = 0.0f;
+		float a = 0.0f;
+		LinearColor()
+		{
+			this->r = 0.0f;
+			this->g = 0.0f;
+			this->b = 0.0f;
+			this->a = 0.0f;
+		}
+		LinearColor(float all)
+		{
+			this->r = all > 1.0f ? 1.0f : all || all < 0.0f ? 0.0f : all;
+			this->g = all > 1.0f ? 1.0f : all || all < 0.0f ? 0.0f : all;
+			this->b = all > 1.0f ? 1.0f : all || all < 0.0f ? 0.0f : all;
+			this->a = all > 1.0f ? 1.0f : all || all < 0.0f ? 0.0f : all;
+		}
+		LinearColor(float _r, float _g, float _b, float _a)
+		{
+			this->r = _r > 1.0f ? 1.0f : _r || _r < 0.0f ? 0.0f : _r;
+			this->g = _g > 1.0f ? 1.0f : _g || _g < 0.0f ? 0.0f : _g;
+			this->b = _b > 1.0f ? 1.0f : _b || _b < 0.0f ? 0.0f : _b;
+			this->a = _a > 1.0f ? 1.0f : _a || _a < 0.0f ? 0.0f : _a;
+		}
+		void operator=(const LinearColor& l)
+		{
+			this->r = l.r;
+			this->g = l.g;
+			this->b = l.b;
+			this->a = l.a;
+		}
+		LinearColor operator+(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r + l.r;
+			temp.g = this->g + l.g;
+			temp.b = this->b + l.b;
+			temp.a = this->a + l.a;
+			return temp;
+		}
+		LinearColor operator-(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r - l.r;
+			temp.g = this->g - l.g;
+			temp.b = this->b - l.b;
+			temp.a = this->a - l.a;
+			return temp;
+		}
+		LinearColor operator*(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r * l.r;
+			temp.g = this->g * l.g;
+			temp.b = this->b * l.b;
+			temp.a = this->a * l.a;
+			return temp;
+		}
+		LinearColor operator/(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r / l.r;
+			temp.g = this->g / l.g;
+			temp.b = this->b / l.b;
+			temp.a = this->a / l.a;
+			return temp;
+		}
 
 	};
+
 	struct name
 	{
 	private:
@@ -332,6 +461,10 @@ namespace Lightning
 
 		}
 	};
+	
+
 	//Functions
-	float Clampf(float value, float min, float max);
+
+	float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f);
+
 }
