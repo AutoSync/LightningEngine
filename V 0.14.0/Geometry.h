@@ -52,7 +52,7 @@ namespace Lightning
 		void Draw(Shader* shader);
 		void Load(string const& path);
 		void SetVisible(bool newVisibility);
-		int countmodel;
+		int countmodel = 0;
 	private:
 		void Count();
 		void LoadMesh(string const& path);

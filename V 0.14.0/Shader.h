@@ -35,6 +35,10 @@ namespace Lightning
 	{
 		Standard, Opaque, Translucent, PBR, Unlit, PostProcess, LightMaterial
 	};
+	enum TypeProgram
+	{
+		VERTEX, FRAGMENT, PROGRAM, GEOMETRY
+	};
 	class Shader
 	{
 	private:
@@ -46,6 +50,7 @@ namespace Lightning
 		Shader(ShaderSource _source);
 		Shader(ShaderType type, ShaderSource _source);
 		Shader(const char* vert_path, const char* frag_path, const char* geo_path = " ");
+		Shader(const char* vert_path, const char* frag_path, bool debug ,const char* geo_path = " ");
 		void Render();
 		void SetBool(const char* name, bool value);
 		void SetInt(const char* name, int value);
@@ -62,7 +67,7 @@ namespace Lightning
 
 	private:
 		void InitializeShader(ShaderSource _source);
-		void ShaderMessageError(GLint shader, string type);
+		void ShaderMessageError(GLint shader, TypeProgram type);
 	};
 	void LoadShader(Shader& shader, const char* vertex_path, const char* fragment_path, const char* geometry_path = "");
 	void LoadShader(ShaderSource& source, const char* vertex_path, const char* fragment_path, const char* geometry_path = "");

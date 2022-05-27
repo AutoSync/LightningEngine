@@ -135,7 +135,7 @@ void Lightning::MeshComponent::LoadMesh(string const& path)
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
         string error_msg = importer.GetErrorString();
-        Msg::Emit(Flow::OUTPUT, "ERROR::IMPORT-MODEL::ASSIMP:: " + error_msg);
+        Msg::Emit(Flow::OUTPUT, "ERROR TO IMPORT MODEL USING ASSIMP " + error_msg);
         return;
     }
     // retrieve the directory path of the filepath

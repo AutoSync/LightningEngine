@@ -10,6 +10,9 @@
 #include "Inputs.h"
 #include "GameTime.h"
 
+//Welcome
+#define LIGHTNING_WELCOME "2022 (C) LIGHTNING ENGINE"
+
 namespace Lightning
 {
 	//Has a set of definitions for rendering OpenGL
@@ -28,19 +31,20 @@ namespace Lightning
 		int version_major = 3;
 		int version_minor = 3;
 		bool vsync = false;
-		bool core_profile = false;
-		bool framerate = false;
+		bool core_profile = true;
+		bool doubleFrame = false;
+		bool framerate = true;
+		bool displayVersion = true;
 		bool AA = false;
 	};
+
 	//OpenGL window and context initialization object
 	class Engine
 	{
 	public:
-		bool ShowConsole = false;
 		EngineSettings engine_settings;
 	private:
 		GLFWwindow* window = NULL;
-		bool framerate = false;
 	public:
 		Inputs* Input = new Inputs(window);
 		GameTime* Time = new GameTime();
@@ -56,11 +60,15 @@ namespace Lightning
 		virtual void End();
 		//Last component to be rendered
 		virtual void LateUpdate();
+		//When program terminate
+		virtual void WhenEnd();
 	public:
 		void ExitProgram();
 		void SetWindowSize(int width, int height);
+		void SetDisplayVersion(bool enable = false);
 		void SetWindowTitle(string title);
-		void SetShowFramerate(bool framerate);
+		void SetShowFramerate(bool enable = false);
+		void SetDoubleframe(bool enable = false);
 		void RenderCommand(int flag, int value);
 	private:
 		void OnInit();
@@ -69,5 +77,6 @@ namespace Lightning
 		void OnTerminate();
 		void InitializeWindow(EngineSettings settings);
 		void SetWindowSizeCallback(GLFWwindow* window, int width, int height);
+		void UpdateTitlebar();
 	};
 }

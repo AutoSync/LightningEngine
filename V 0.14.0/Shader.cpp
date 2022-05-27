@@ -35,6 +35,61 @@ Lightning::Shader::Shader(ShaderType type, ShaderSource _source)
 
 Lightning::Shader::Shader(const char* vert_path, const char* frag_path, const char* geo_path)
 {
+	std::string vertexSource, fragmentSource;
+	std::fstream vertexFile, fragmentFile;
+
+	vertexFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	fragmentFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		vertexFile.open(vert_path);
+		fragmentFile.open(frag_path);
+
+		std::stringstream vertexStream, fragmentStream;
+
+		vertexStream << vertexFile.rdbuf();
+		fragmentStream << fragmentFile.rdbuf();
+
+		vertexFile.close();
+		fragmentFile.close();
+
+		vertexSource = vertexStream.str();
+		fragmentSource = fragmentStream.str();
+	}
+	catch (std::ifstream::failure fail)
+	{
+		std::cout << "ERROR TO READ SHADER FILE: " << std::endl;
+	}
+
+	const char* Vshader = vertexSource.c_str();
+	const char* Fshader = fragmentSource.c_str();
+
+	uint vertexShader, fragmentShader;
+	int success = 0;
+	char infoLog[512] = { ' ' };
+	//Vertex Shader
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &Vshader, NULL);
+	glCompileShader(vertexShader);
+	ShaderMessageError(vertexShader, TypeProgram::VERTEX);
+	//Fragment Shader
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &Fshader, NULL);
+	glCompileShader(fragmentShader);
+	ShaderMessageError(fragmentShader, TypeProgram::FRAGMENT);
+	//Shader Program
+	id = glCreateProgram();
+	glAttachShader(id, vertexShader);
+	glAttachShader(id, fragmentShader);
+	glLinkProgram(id);
+	ShaderMessageError(id, TypeProgram::PROGRAM);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);	
+}
+
+Lightning::Shader::Shader(const char* vert_path, const char* frag_path, bool debug, const char* geo_path)
+{
 	/*const char* vertex = ReadFile(vert_path, "VERTEX SHADER");
 	const char* fragment = ReadFile(frag_path, "FRAGMENT SHADER");*/
 	std::string vertexSource, fragmentSource;
@@ -60,11 +115,32 @@ Lightning::Shader::Shader(const char* vert_path, const char* frag_path, const ch
 	}
 	catch (std::ifstream::failure fail)
 	{
-		std::cout << "ERROR::EQUINOX::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+		std::cout << "ERROR TO READ SHADER FILE: " << std::endl;
 	}
 
 	const char* Vshader = vertexSource.c_str();
 	const char* Fshader = fragmentSource.c_str();
+	if (debug)
+	{
+		int i = 0;
+		std::cout << "DEBUG VERTEX SOURCE \n";
+		while (Vshader[i] != '\0')
+		{
+			std:: cout << Vshader[i];
+			i++;
+		}
+
+		std::cout << endl;
+		i = 0;
+
+		std::cout << "DEBUG FRAGMENT SOURCE \n";
+		while (Fshader[i] != '\0')
+		{
+			std::cout << Fshader[i];
+			i++;
+		}
+		std::cout << endl;
+	}
 
 	uint vertexShader, fragmentShader;
 	int success = 0;
@@ -73,21 +149,21 @@ Lightning::Shader::Shader(const char* vert_path, const char* frag_path, const ch
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &Vshader, NULL);
 	glCompileShader(vertexShader);
-	ShaderMessageError(vertexShader, "VERTEX");
+	ShaderMessageError(vertexShader, TypeProgram::VERTEX);
 	//Fragment Shader
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &Fshader, NULL);
 	glCompileShader(fragmentShader);
-	ShaderMessageError(fragmentShader, "FRAGMENT");
+	ShaderMessageError(fragmentShader, TypeProgram::FRAGMENT);
 	//Shader Program
 	id = glCreateProgram();
 	glAttachShader(id, vertexShader);
 	glAttachShader(id, fragmentShader);
 	glLinkProgram(id);
-	ShaderMessageError(id, "PROGRAM");
+	ShaderMessageError(id, TypeProgram::PROGRAM);
 
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);	
+	glDeleteShader(fragmentShader);
 }
 
 void Lightning::Shader::Render()
@@ -169,44 +245,62 @@ void Lightning::Shader::InitializeShader(ShaderSource _source)
 	vertex = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertex, 1, &source.vertex, NULL);
 	glCompileShader(vertex);
-	ShaderMessageError(vertex, "VERTEX");
+	ShaderMessageError(vertex, TypeProgram::VERTEX);
 	//Fragment Shader
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragment, 1, &source.fragment, NULL);
 	glCompileShader(fragment);
-	ShaderMessageError(fragment, "FRAGMENT");
+	ShaderMessageError(fragment, TypeProgram::FRAGMENT);
 	//Shader Program
 	id = glCreateProgram();
 	glAttachShader(id, vertex);
 	glAttachShader(id, fragment);
 	glLinkProgram(id);
-	ShaderMessageError(id, "PROGRAM");
+	ShaderMessageError(id, TypeProgram::PROGRAM);
 	// exclua os shaders como eles estão vinculados ao nosso programa agora e não são mais necessários
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
 }
 
-void Lightning::Shader::ShaderMessageError(GLint shader, string type)
+void Lightning::Shader::ShaderMessageError(GLint shader, TypeProgram type)
 {
 	GLint success = 0;
 	GLchar infoLog[1024] = { '0' };
-	if (type != "PROGRAM")
+
+	switch (type)
 	{
+	case Lightning::VERTEX:
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
 			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			std::cout << "ERROR TO COMPILE VERTEX SHADER " << type << "\n" << infoLog << "\n -- --------------------------- " << std::endl;
 		}
-	}
-	else
-	{
+		break;
+	case Lightning::FRAGMENT:
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "ERROR TO COMPILE FRAGMENT SHADER " << type << "\n" << infoLog << "\n -- --------------------------- " << std::endl;
+		}
+		break;
+	case Lightning::PROGRAM:
 		glGetProgramiv(shader, GL_LINK_STATUS, &success);
 		if (!success)
 		{
 			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			std::cout << "ERROR TO PROGRAM(S) LINKING " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
 		}
+		break;
+	case Lightning::GEOMETRY:
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "ERRO TO COMPILE GEOMETRY SHADER " << type << "\n" << infoLog << "\n -- --------------------------- " << std::endl;
+		}
+		break;
 	}
 }
 

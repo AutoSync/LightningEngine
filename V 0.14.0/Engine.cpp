@@ -42,26 +42,32 @@ void Lightning::Engine::SetWindowSize(int width, int height)
 	glfwSetWindowSize(window, width, height);
 }
 
+void Lightning::Engine::SetDisplayVersion(bool enable)
+{
+	this->engine_settings.displayVersion = enable;
+}
+
 void Lightning::Engine::SetWindowTitle(string _title)
 {
-	float fps = ceil(1.0 / Time->deltaTime);
-	int ifps = (int)fps;
-	std::string titleInfo, titteVersion, fpsCount;
-	fpsCount = " FPS: " + std::to_string(ifps);
-	titleInfo = engine_settings.title;
-	titteVersion = engine_settings.version.Text;
-	std::string title = titleInfo + " " + titteVersion + fpsCount;
-
-	glfwSetWindowTitle(window, title.c_str());
+	this->engine_settings.title = _title.c_str();
 }
 
 void Lightning::Engine::LateUpdate()
+{
+}		
+
+void Lightning::Engine::WhenEnd()
 {
 }
 
 void Lightning::Engine::SetShowFramerate(bool framerate)
 {
-	this->framerate = framerate;
+	this->engine_settings.framerate = framerate;
+}
+
+void Lightning::Engine::SetDoubleframe(bool enable)
+{
+	this->engine_settings.doubleFrame = enable;
 }
 
 void Lightning::Engine::RenderCommand(int flag, int value)
@@ -132,7 +138,7 @@ void Lightning::Engine::RenderCommand(int flag, int value)
 
 void Lightning::Engine::OnInit()
 {
-	//glfwMakeContextCurrent(window);
+	
 }
 
 void Lightning::Engine::OnRender()
@@ -143,33 +149,33 @@ void Lightning::Engine::OnRender()
 
 void Lightning::Engine::OnRender(RenderSettings settings)
 {
-	Start();
+	Msg::Emit(Flow::OUTPUT, "Start Engine");
+	Start();				//Begin Play
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		//Initial Program
-		SetWindowTitle(engine_settings.title);
+		UpdateTitlebar();
 		Time->SetDeltaTime((float)glfwGetTime());
-		//Initial Data
-		//glClear(GL_COLOR_BUFFER_BIT);
-		//Msg::Emit(Flow::PRINT, Time::deltaTime);
-		Update();
+		Update();			//Render Loop
 
 		LateUpdate();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	End();
+	End();					//End Play
 }
 
 void Lightning::Engine::OnTerminate()
 {
+	WhenEnd();
 	glfwTerminate();
 	Msg::Emit(Flow::EXIT, "[Program Finished]");
 }
 
 void Lightning::Engine::InitializeWindow(EngineSettings settings)
 {
-	Msg::Emit(Flow::PROCESS, "Lightning Engine");
+	Msg::Emit(Flow::PRINT, LIGHTNING_WELCOME);
 	Msg::When(!glfwInit(), Flow::ERROR, "Failed to Initilize GLFW");
 
 	//Set Opengl version
@@ -195,5 +201,27 @@ void Lightning::Engine::SetWindowSizeCallback(GLFWwindow* window, int width, int
 {
 	engine_settings.width = width;
 	engine_settings.height = height;
+}
+
+void Lightning::Engine::UpdateTitlebar()
+{
+	//Buffers text
+	std::string titleInfo, titteVersion, fpsCount, space;
+
+	space = " | ";
+	float fps = ceil(1.0 / Time->deltaTime);
+	int ifps = (int)fps;
+
+	titleInfo = engine_settings.title;
+
+	if (engine_settings.framerate)
+		fpsCount = space + "FPS: " + std::to_string(ifps);
+	if (engine_settings.displayVersion)
+		titteVersion = engine_settings.version.Text;
+
+	std::string title = titleInfo + titteVersion  + fpsCount;
+
+
+	glfwSetWindowTitle(window, title.c_str());
 }
 
