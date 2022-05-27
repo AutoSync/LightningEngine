@@ -1,0 +1,2 @@
+D:/Developer/ProjektSonne/LNGE_0.11.0/Dependencies/Opengl/include/glm/out/build/x64-Debug (padrão)/CMakeFiles/edit_cache.dir
+D:/Developer/ProjektSonne/LNGE_0.11.0/Dependencies/Opengl/include/glm/out/build/x64-Debug (padrão)/CMakeFiles/rebuild_cache.dir
