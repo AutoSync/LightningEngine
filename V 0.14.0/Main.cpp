@@ -17,6 +17,7 @@ private:
 	Shader* shader;
 	glm::mat4 model, view, projection;
 	uint texture1, texture2;
+	Camera* MainCamera;
 
 public:
 	//Constructor
@@ -25,12 +26,16 @@ public:
 		shader = new Shader("Shaders/vertexshader.glsl", "Shaders/fragmentshader.glsl");
 		texture1 = img_import.TextureFromFile("Samples/texture/box.jpg");
 		texture2 = img_import.TextureFromFile("Samples/texture/le.png");
+
+		MainCamera = new Camera();
+		
 	}
 	// Init Engine
 	void Init()
 	{
 		InitializeEngine();
 	}
+private:
 	void Start()
 	{
 		float vertices[] = {
@@ -81,9 +86,10 @@ public:
 		// activate shader
 		shader->Render();
 
+		CameraMovement(MainCamera, Time->deltaTime);
 		// create transformations
 		model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		view = glm::mat4(1.0f);
+		view = MainCamera->GetViewMatrix();
 		projection = glm::mat4(1.0f);
 		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -105,7 +111,24 @@ public:
 		glDeleteBuffers(1, &VBO);
 		glDeleteBuffers(1, &EBO);
 	}
-
+	void CameraMovement(Camera* camera, float deltaTime)
+	{
+		if (Input->GetMousePress(MouseKeys::MOUSE_RIGHT))
+		{
+			if (Input->GetKeyPress(Keyboard::W))
+				camera->SetInputMovement(Direction::FORWARD, deltaTime);
+			if (Input->GetKeyPress(Keyboard::S))
+				camera->SetInputMovement(Direction::BACKWARD, deltaTime);
+			if (Input->GetKeyPress(Keyboard::A))
+				camera->SetInputMovement(Direction::LEFT, deltaTime);
+			if (Input->GetKeyPress(Keyboard::D))
+				camera->SetInputMovement(Direction::RIGHT, deltaTime);
+			if (Input->GetKeyPress(Keyboard::Q))
+				camera->SetInputMovement(Direction::DOWN, deltaTime);
+			if (Input->GetKeyPress(Keyboard::E))
+				camera->SetInputMovement(Direction::UP, deltaTime);
+		}
+	}
 };
 
 // Program entry point and execution
@@ -114,4 +137,3 @@ int main(int argc, const char* argv[])
 	auto editor = new EditorEngine();
 	editor->Init();
 }
-

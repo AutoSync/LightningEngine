@@ -99,6 +99,11 @@ namespace Lightning
 		Pointer = GLFW_CURSOR_NORMAL,
 		Hide = GLFW_CURSOR_HIDDEN
 	};
+	//Enum Vector Direction
+	enum Direction
+	{
+		FORWARD, BACKWARD, RIGHT, LEFT, UP, DOWN
+	};
 	namespace Flow
 	{
 		enum Flow
@@ -276,6 +281,10 @@ namespace Lightning
 			temp.y = this->y / V.y;
 			temp.z = this->z / V.z;
 			return temp;
+		}
+		glm::vec3 GetGLM()
+		{
+			return glm::vec3(x, y, z);
 		}
 	};
 	struct V4
@@ -656,4 +665,39 @@ namespace Lightning
 	float radians(float degrees);
 	float degrees(float radians);
 
+	//Classes
+
+
+	class SClamp
+	{
+	private:
+		int imin = 0, imax = 1;
+		float fmin = 0.0, fmax = 1.0f;
+		double dmin = 0.0, dmax = 1.0f;
+	public:
+		//Constructor empty
+		SClamp();
+		//Constructor sets min and max values
+		SClamp(int MIN, int MAX);
+		//Constructor sets min and max values
+		SClamp(float MIN, float MAX);
+		//Constructor sets min and max values
+		SClamp(double MIN, double MAX);
+		//Constructor Copy
+		SClamp(const SClamp& clamp);
+		//Initializator void 
+		void operator = (const SClamp& clamp);
+		//Clamp int input
+		int clamp(int INPUT);
+		//Clamp input with min and max values
+		int clamp(int INPUT, int MIN, int MAX);
+		//Clamp float input
+		float clamp(float INPUT);
+		//Clamp input with min and max values
+		float clamp(float INPUT, float MIN, float MAX);
+		//Clamp double input
+		double clamp(double INPUT);
+		//clamp input with min and max values
+		double clamp(double INPUT, double MIN, double MAX);
+	};
 }

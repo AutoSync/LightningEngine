@@ -1,94 +1,82 @@
 #include "Camera.h"
 
-Lightning::Camera::Camera()
-{
-	Transform T = Transform();
-	InitializeCamera(T);
-}
-
-Lightning::Camera::Camera(Transform T)
-{
-	InitializeCamera(T);
-}
-
-void Lightning::Camera::Render()
-{
-	view = glm::lookAt(transform.Position.glm, transform.Position.glm + front.glm, CameraUp);
-}
-
-void Lightning::Camera::SetPosition(V3 position)
-{
-	this->transform.Position = position;
-}
-
-void Lightning::Camera::SetRotation(V3 rotation)
-{
-	this->transform.Rotation = rotation;
-}
-
-void Lightning::Camera::AddInput(float dt)
-{
-	if (Active)
-	{
-		if (Input->GetMousePress(MouseKeys::MOUSE_RIGHT))
-		//if(true)
-		{
-			Input->SetHideCursor(true);
-			if (Input->GetKeyPress(Keyboard::W))
-			{
-				transform.Position.x += MovementSpeed * dt;
-			}
-			if (Input->GetKeyPress(Keyboard::S))
-			{
-				transform.Position.x -= MovementSpeed * dt;
-			}
-			if (Input->GetKeyPress(Keyboard::A))
-			{
-				transform.Position.z -= MovementSpeed * dt;
-			}
-			if (Input->GetKeyPress(Keyboard::D))
-			{
-				transform.Position.z += MovementSpeed * dt;
-			}
-			if (Input->GetKeyPress(Keyboard::Q))
-			{
-				transform.Position.y -= MovementSpeed * dt;
-			}
-			if (Input->GetKeyPress(Keyboard::E))
-			{
-				transform.Position.y += MovementSpeed * dt;
-			}
-			
-		}
-		else
-		{
-			Input->SetHideCursor(false);
-		}
-
-	}
-}
-
 glm::mat4 Lightning::Camera::GetViewMatrix()
 {
-	return glm::lookAt(transform.Position.glm, transform.Position.glm + front.glm, Up.glm);
+    return glm::lookAt(Position.GetGLM(), Position.GetGLM() + Front.GetGLM(), Up.GetGLM());
 }
-
-void Lightning::Camera::SetComponentActive(bool B)
+void Lightning::Camera::SetInputMovement(Direction direction, float deltaTime)
 {
-	this->Active = B;
+	float Velocity = MovementSpeed * deltaTime;
+	switch (direction)
+	{
+	case Lightning::FORWARD:
+		Position += Front * Velocity;
+		break;
+	case Lightning::BACKWARD:
+		Position -= Front * Velocity;
+		break;
+	case Lightning::RIGHT:
+		Position += Right * Velocity;
+		break;
+	case Lightning::LEFT:
+		Position -= Right * Velocity;
+		break;
+	case Lightning::UP:
+		Position += Up * Velocity;
+		break;
+	case Lightning::DOWN:
+		Position -= Up * Velocity;
+		break;
+	}
 }
-
-
-inline void Lightning::Camera::InitializeCamera(Transform T)
+void Lightning::Camera::SetRotation(float YAW, float PITCH, float ROLL)
 {
-	this->transform = T;
+	this->Yaw = YAW;
+	this->Pitch = PITCH;
+	this->Roll = ROLL;
+	UpdateCameraVectors();
 }
-
+void Lightning::Camera::SetInputYaw(double input)
+{
+	input *= Sensitivity;
+	Yaw += input;
+	UpdateCameraVectors();
+}
+void Lightning::Camera::SetInputPitch(double input, bool ConstraintPitch)
+{
+	SClamp AngleConstraint(-89.f, 89.f);
+	input *= Sensitivity;
+	Pitch += input;
+	if (ConstraintPitch)
+		Pitch = AngleConstraint.clamp(Pitch);
+	UpdateCameraVectors();
+}
+void Lightning::Camera::SetInputZoom(double offset_y, float deltatime)
+{
+	SClamp depthConstraint(1.0f, 45.0f);
+	FOV -= offset_y * deltatime;
+	FOV = depthConstraint.clamp(FOV);
+}
+float Lightning::Camera::GetFOV()
+{
+	return FOV;
+}
+void Lightning::Camera::SetFOV(float newFOV)
+{
+	this->FOV = newFOV;
+}
+Lightning::V3 Lightning::Camera::GetLocation()
+{
+	return Position;
+}
+void Lightning::Camera::SetLocation(float x, float y, float z)
+{
+	this->Position = V3(x, y, z);
+}
 void Lightning::Camera::UpdateCameraVectors()
 {
-	front = MakeRotate(glm::vec3(Rotation.x, Rotation.y, Rotation.z));
+	Front = MakeRotate(glm::vec3(Yaw, Pitch, 0.0f));
 	// Also re-calculate the Right and Up vector
-	right = glm::normalize(glm::cross(front.glm, worldUp.glm));
-	Up = glm::normalize(glm::cross(right, front.glm));
+	Right = glm::normalize(glm::cross(Front.GetGLM(), WorldUp.GetGLM()));
+	Up = glm::normalize(glm::cross(Right.GetGLM(), Front.GetGLM()));
 }
-
