@@ -1,2 +1,0 @@
-D:/Developer/ProjektSonne/Lightning/Core/Opengl/include/glm/out/build/x64-Debug (padrão)/CMakeFiles/edit_cache.dir
-D:/Developer/ProjektSonne/Lightning/Core/Opengl/include/glm/out/build/x64-Debug (padrão)/CMakeFiles/rebuild_cache.dir
