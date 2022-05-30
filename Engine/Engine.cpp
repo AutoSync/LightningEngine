@@ -52,13 +52,9 @@ void Lightning::Engine::SetWindowTitle(string _title)
 	this->engine_settings.title = _title.c_str();
 }
 
-void Lightning::Engine::LateUpdate()
-{
-}		
+void Lightning::Engine::LateUpdate() { /* empty implementation */  }
 
-void Lightning::Engine::WhenEnd()
-{
-}
+void Lightning::Engine::WhenEnd() { /* empty implementation */ }
 
 void Lightning::Engine::SetShowFramerate(bool framerate)
 {
@@ -136,10 +132,12 @@ void Lightning::Engine::RenderCommand(int flag, int value)
 	}
 }
 
-void Lightning::Engine::OnInit()
+void Lightning::Engine::SetClearColor(LinearColor clear)
 {
-	
+	glClearColor(clear.r, clear.g, clear.b, clear.a);
 }
+
+void Lightning::Engine::OnInit() { /* empty implementation */ }
 
 void Lightning::Engine::OnRender()
 {

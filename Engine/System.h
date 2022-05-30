@@ -1,5 +1,6 @@
 #pragma once
 #include "Types.h"
+#include "GameTime.h"
 // The system header defines the application data
 
 //Software Version
@@ -8,6 +9,7 @@ using namespace Lightning;
 
 static EngineSettings Settings(840, 480, "Lightning Engine", true);
 static MouseEvents mouse = MouseEvents();
+static GameTime* Time = new GameTime();
 //navigation settings
 static double lastX = Settings.width / 2, lastY = Settings.height / 2;
 static bool firstMouse = true;

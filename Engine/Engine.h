@@ -8,15 +8,12 @@
 #include "System.h"
 #include "Msg.h"
 #include "Inputs.h"
-#include "GameTime.h"
 
 //Welcome
 #define LIGHTNING_WELCOME "2022 (C) LIGHTNING ENGINE"
 
 namespace Lightning
 {
-	
-
 	//OpenGL window and context initialization object
 	class Engine
 	{
@@ -26,7 +23,6 @@ namespace Lightning
 		GLFWwindow* window = NULL;
 	public:
 		Inputs* Input = new Inputs(window);
-		GameTime* Time = new GameTime();
 		Engine();
 		Engine(EngineSettings settings);
 		//Call to start the engine
@@ -49,6 +45,7 @@ namespace Lightning
 		void SetShowFramerate(bool enable = false);
 		void SetDoubleframe(bool enable = false);
 		void RenderCommand(int flag, int value);
+		void SetClearColor(LinearColor clear);
 	private:
 		void OnInit();
 		void OnRender();

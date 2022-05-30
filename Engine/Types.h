@@ -745,78 +745,24 @@ namespace Lightning
 };
 	
 	//Color range V4 0 - 1
-	struct LinearColor
+	struct CA
 	{
-		float r = 0.0f;
-		float g = 0.0f;
-		float b = 0.0f;
-		float a = 0.0f;
-		LinearColor()
+		float alpha = 0.0f;
+		CA()
 		{
-			this->r = 0.0f;
-			this->g = 0.0f;
-			this->b = 0.0f;
-			this->a = 0.0f;
+			this->alpha = 0.0f;
 		}
-		LinearColor(float SCALAR)
+		CA(int ALPHA)
 		{
-			this->r = SCALAR;
-			this->g = SCALAR;
-			this->b = SCALAR;
-			this->a = SCALAR;
+			this->alpha = (ALPHA <= 0) ? 0 : ((float)ALPHA / 255);
 		}
-		LinearColor(float _r, float _g, float _b, float _a)
+		void operator=(const CA& c)
 		{
-			this->r = _r;
-			this->g = _g;
-			this->b = _b;
-			this->a = _a;
+			this->alpha = c.alpha;
 		}
-		void operator=(const LinearColor& l)
-		{
-			this->r = l.r;
-			this->g = l.g;
-			this->b = l.b;
-			this->a = l.a;
-		}
-		LinearColor operator+(const LinearColor& l)
-		{
-			LinearColor temp;
-			temp.r = this->r + l.r;
-			temp.g = this->g + l.g;
-			temp.b = this->b + l.b;
-			temp.a = this->a + l.a;
-			return temp;
-		}
-		LinearColor operator-(const LinearColor& l)
-		{
-			LinearColor temp;
-			temp.r = this->r - l.r;
-			temp.g = this->g - l.g;
-			temp.b = this->b - l.b;
-			temp.a = this->a - l.a;
-			return temp;
-		}
-		LinearColor operator*(const LinearColor& l)
-		{
-			LinearColor temp;
-			temp.r = this->r * l.r;
-			temp.g = this->g * l.g;
-			temp.b = this->b * l.b;
-			temp.a = this->a * l.a;
-			return temp;
-		}
-		LinearColor operator/(const LinearColor& l)
-		{
-			LinearColor temp;
-			temp.r = this->r / l.r;
-			temp.g = this->g / l.g;
-			temp.b = this->b / l.b;
-			temp.a = this->a / l.a;
-			return temp;
-		}
-
+		
 	};
+
 	struct C3
 	{
 		float r = 0;
@@ -884,6 +830,108 @@ namespace Lightning
 			this->b = c.b;
 			this->a = c.a;
 		}
+	};
+	struct LinearColor
+	{
+		float r = 0.0f;
+		float g = 0.0f;
+		float b = 0.0f;
+		float a = 0.0f;
+		LinearColor()
+		{
+			this->r = 0.0f;
+			this->g = 0.0f;
+			this->b = 0.0f;
+			this->a = 0.0f;
+		}
+		LinearColor(float SCALAR)
+		{
+			this->r = SCALAR;
+			this->g = SCALAR;
+			this->b = SCALAR;
+			this->a = SCALAR;
+		}
+		LinearColor(float _r, float _g, float _b, float _a)
+		{
+			this->r = _r;
+			this->g = _g;
+			this->b = _b;
+			this->a = _a;
+		}
+		LinearColor(C3 c, float alpha)
+		{
+			this->r = c.r;
+			this->g = c.g;
+			this->b = c.b;
+			this->a = alpha;
+		}
+		LinearColor(C4 c)
+		{
+			this->r = c.r;
+			this->g = c.g;
+			this->b = c.b;
+			this->a = c.a;
+		}
+		void Red(float red)
+		{
+			this->r = red;
+		}
+		void Green(float green)
+		{
+			this->g = green;
+		}
+		void Blue(float blue)
+		{
+			this->b = blue;
+		}
+		void Alpha(float alpha)
+		{
+			this->a = alpha;
+		}
+		void operator=(const LinearColor& l)
+		{
+			this->r = l.r;
+			this->g = l.g;
+			this->b = l.b;
+			this->a = l.a;
+		}
+		LinearColor operator+(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r + l.r;
+			temp.g = this->g + l.g;
+			temp.b = this->b + l.b;
+			temp.a = this->a + l.a;
+			return temp;
+		}
+		LinearColor operator-(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r - l.r;
+			temp.g = this->g - l.g;
+			temp.b = this->b - l.b;
+			temp.a = this->a - l.a;
+			return temp;
+		}
+		LinearColor operator*(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r * l.r;
+			temp.g = this->g * l.g;
+			temp.b = this->b * l.b;
+			temp.a = this->a * l.a;
+			return temp;
+		}
+		LinearColor operator/(const LinearColor& l)
+		{
+			LinearColor temp;
+			temp.r = this->r / l.r;
+			temp.g = this->g / l.g;
+			temp.b = this->b / l.b;
+			temp.a = this->a / l.a;
+			return temp;
+		}
+
 	};
 
 	struct name

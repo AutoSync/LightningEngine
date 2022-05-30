@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Lights.h"
 #include "Image.h"
+#include "Spectator.h"
 
 using namespace Lightning;
 
@@ -18,14 +19,18 @@ private:
 	glm::mat4 model, view, projection;
 	uint texture1, texture2;
 	Camera* MainCamera;
-
+	Spectator* spec;
+	LinearColor Background;
+	MeshComponent* object;
 public:
 	//Constructor
 	EditorEngine()
 	{
+		Background = LinearColor(C3(211, 231, 246), 1.0f);
 		shader = new Shader("Shaders/vertexshader.glsl", "Shaders/fragmentshader.glsl");
-
+		object = new MeshComponent("Samples/Primitives/box.obj");
 		MainCamera = new Camera();
+		spec = new Spectator(MainCamera);
 		
 	}
 	// Init Engine
@@ -43,7 +48,8 @@ private:
 	//Render Loop
 	void Update()
 	{
-		
+		SetClearColor(Background);
+		spec->AddInputMovement(Time->deltaTime);
 	}
 	//End program
 	void End()
