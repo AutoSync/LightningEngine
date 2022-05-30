@@ -140,6 +140,14 @@ namespace Lightning
 			this->Revision = 0;
 			this->Text = "";
 		}
+		Version(int MAJOR, int MINOR, int RELEASE, int REVISION)
+		{
+			this->Major = MAJOR;
+			this->Minor = MINOR;
+			this->Release = RELEASE;
+			this->Revision = REVISION;
+			this->Text = "";
+		}
 		Version(int MAJOR, int MINOR, int RELEASE, int REVISION, const char* TEXT)
 		{
 			this->Major = MAJOR;
@@ -330,6 +338,282 @@ namespace Lightning
 			this->w -= V.w;
 		}
 
+	};
+	struct D2
+	{
+		double x = 0.f, y = 0.f;
+		D2()
+		{
+			this->x = 0.f;
+			this->y = 0.f;
+		}
+		D2(double SCALAR)
+		{
+			this->x = SCALAR;
+			this->y = SCALAR;
+		}
+		D2(double X, double Y)
+		{
+			this->x = X;
+			this->y = Y;
+		}
+		void operator=(const D2& v)
+		{
+			this->x = v.x;
+			this->y = v.y;
+		}
+		D2 operator+(const D2& v)
+		{
+			D2 t;
+			t.x = this->x + v.x;
+			t.y = this->y + v.y;
+			return t;
+		}
+		D2 operator-(const D2& v)
+		{
+			D2 t;
+			t.x = this->x - v.x;
+			t.y = this->y - v.y;
+			return t;
+		}
+		D2 operator*(const D2& v)
+		{
+			D2 t;
+			t.x = this->x * v.x;
+			t.y = this->y * v.y;
+			return t;
+		}
+		D2 operator/(const D2& v)
+		{
+			D2 t;
+			t.x = this->x / v.x;
+			t.y = this->y / v.y;
+			return t;
+		}
+		D2 operator+=(const D2& v)
+		{
+			D2 t;
+			t.x = this->x += v.x;
+			t.y = this->y += v.y;
+			return t;
+		}
+		D2 operator-=(const D2& v)
+		{
+			D2 t;
+			t.x = this->x -= v.x;
+			t.y = this->y -= v.y;
+			return t;
+		}
+		D2 operator*=(const D2& v)
+		{
+			D2 t;
+			t.x = this->x *= v.x;
+			t.y = this->y *= v.y;
+			return t;
+		}
+		D2 operator/=(const D2& v)
+		{
+			D2 t;
+			t.x = this->x /= v.x;
+			t.y = this->y /= v.y;
+			return t;
+		}
+	};
+	struct D3
+	{
+		double x = 0.f, y = 0.f, z = 0.f;
+		D3()
+		{
+			this->x = 0.f;
+			this->y = 0.f;
+			this->z = 0.f;
+		}
+		D3(double SCALAR)
+		{
+			this->x = SCALAR;
+			this->y = SCALAR;
+			this->z = SCALAR;
+		}
+		D3(double X, double Y, double Z)
+		{
+			this->x = X;
+			this->y = Y;
+			this->z = Z;
+		}
+		void operator=(const D3& v)
+		{
+			this->x = v.x;
+			this->y = v.y;
+			this->z = v.z;
+		}
+		D3 operator+(const D3& v)
+		{
+			D3 t;
+			t.x = this->x + v.x;
+			t.y = this->y + v.y;
+			t.z = this->z + v.z;
+			return t;
+		}
+		D3 operator-(const D3& v)
+		{
+			D3 t;
+			t.x = this->x - v.x;
+			t.y = this->y - v.y;
+			t.z = this->z - v.z;
+			return t;
+		}
+		D3 operator*(const D3& v)
+		{
+			D3 t;
+			t.x = this->x * v.x;
+			t.y = this->y * v.y;
+			t.z = this->z * v.z;
+			return t;
+		}
+		D3 operator/(const D3& v)
+		{
+			D3 t;
+			t.x = this->x / v.x;
+			t.y = this->y / v.y;
+			t.z = this->z / v.z;
+			return t;
+		}
+		D3 operator+=(const D3& v)
+		{
+			D3 t;
+			t.x = this->x += v.x;
+			t.y = this->y += v.y;
+			t.z = this->z += v.z;
+			return t;
+		}
+		D3 operator-=(const D3& v)
+		{
+			D3 t;
+			t.x = this->x -= v.x;
+			t.y = this->y -= v.y;
+			t.z = this->z -= v.z;
+			return t;
+		}
+		D3 operator*=(const D3& v)
+		{
+			D3 t;
+			t.x = this->x *= v.x;
+			t.y = this->y *= v.y;
+			t.z = this->z *= v.z;
+			return t;
+		}
+		D3 operator/=(const D3& v)
+		{
+			D3 t;
+			t.x = this->x /= v.x;
+			t.y = this->y /= v.y;
+			t.z = this->z /= v.z;
+			return t;
+		}
+	};
+	struct D4
+	{
+		double x = 0.f, y = 0.f, z = 0.f, w = 0.f;
+		D4()
+		{
+			this->x = 0.f;
+			this->y = 0.f;
+			this->z = 0.f;
+			this->w = 0.f;
+		}
+		D4(double SCALAR)
+		{
+			this->x = SCALAR;
+			this->y = SCALAR;
+			this->z = SCALAR;
+			this->w = SCALAR;
+		}
+		D4(double X, double Y, double Z, double W)
+		{
+			this->x = X;
+			this->y = Y;
+			this->z = Z;
+			this->w = W;
+		}
+		void operator=(const D4& v)
+		{
+			this->x = v.x;
+			this->y = v.y;
+			this->z = v.z;
+			this->w = v.w;
+		}
+		D4 operator+(const D4& v)
+		{
+			D4 t;
+			t.x = this->x + v.x;
+			t.y = this->y + v.y;
+			t.z = this->z + v.z;
+			t.w = this->w + v.w;
+			return t;
+		}
+		D4 operator-(const D4& v)
+		{
+			D4 t;
+			t.x = this->x - v.x;
+			t.y = this->y - v.y;
+			t.z = this->z - v.z;
+			t.w = this->w - v.w;
+			return t;
+		}
+		D4 operator*(const D4& v)
+		{
+			D4 t;
+			t.x = this->x * v.x;
+			t.y = this->y * v.y;
+			t.z = this->z * v.z;
+			t.w = this->w * v.w;
+			return t;
+		}
+		D4 operator/(const D4& v)
+		{
+			D4 t;
+			t.x = this->x / v.x;
+			t.y = this->y / v.y;
+			t.z = this->z / v.z;
+			t.w = this->w / v.w;
+			return t;
+		}
+		D4 operator+=(const D4& v)
+		{
+			D4 t;
+			t.x = this->x += v.x;
+			t.y = this->y += v.y;
+			t.z = this->z += v.z;
+			t.w = this->w += v.w;
+			return t;
+		}
+		D4 operator-=(const D4& v)
+		{
+			D4 t;
+			t.x = this->x -= v.x;
+			t.y = this->y -= v.y;
+			t.z = this->z -= v.z;
+			t.w = this->w -= v.w;
+			return t;
+		}
+		D4 operator*=(const D4& v)
+		{
+			D4 t;
+			t.x = this->x *= v.x;
+			t.y = this->y *= v.y;
+			t.z = this->z *= v.z;
+			t.w = this->w *= v.w;
+			return t;
+		}
+		D4 operator/=(const D4& v)
+		{
+			D4 t;
+			t.x = this->x /= v.x;
+			t.y = this->y /= v.y;
+			t.z = this->z /= v.z;
+			t.w = this->w /= v.w;
+			return t;
+		}
 	};
 	struct Vertex
 	{
@@ -655,19 +939,152 @@ namespace Lightning
 		}
 	};
 	
+	//ENGINE STRUCTS
+	//Has a set of definitions for rendering OpenGL
+	struct RenderSettings
+	{
+		bool Recolor = false;
+		V4 color = V4();
+	};
+	//Initial setup to define window creation
+	struct EngineSettings
+	{
+		int width = 840;
+		int height = 480;
+		const char* title = "Lightning Engine";
+		Version version = Version(0,10,0,0);
+		int version_major = 4;
+		int version_minor = 5;
+		bool vsync = false;
+		bool core_profile = true;
+		bool doubleFrame = false;
+		bool framerate = true;
+		bool displayVersion = true;
+		bool AA = false;
+		bool cansize = true;
+		EngineSettings()
+		{
+			width = 840;
+			height = 480;
+			title = "Lightning Engine";
+			version = Version(0, 10, 0, 0);
+			version_major = 4;
+			version_minor = 5;
+			vsync = false;
+			core_profile = true;
+			doubleFrame = false;
+			framerate = true;
+			displayVersion = true;
+			AA = false;
+			cansize = true;
+		}
+		EngineSettings(int W, int H, const char* TITLE, bool CANSIZE)
+		{
+			width = W;
+			height = H;
+			title = TITLE;
+			version = Version(0, 10, 0, 0);
+			version_major = 4;
+			version_minor = 5;
+			vsync = false;
+			core_profile = true;
+			doubleFrame = false;
+			framerate = true;
+			displayVersion = true;
+			AA = false;
+			cansize = CANSIZE;
+		}
+	};
+	struct MouseEvents
+	{
+		D2 position = D2(0.0, 0.0);			//Mouse position relative to your window
+		D2 scroll = D2(0.0, 0.0);				//Scroll scroll relative to your window
+		bool scrollUp = false, scrollDown = false;
+		MouseEvents()
+		{
+			position = D2(0.0);
+			scroll = D2(0.0);
+			scrollUp = false;
+			scrollDown = false;
+		}
+		MouseEvents(D2 MOUSE, D2 SCROLL)
+		{
+			this->position = MOUSE;
+			this->scroll = SCROLL;
+		}
+		MouseEvents(double mx, double my, double sx, double sy)
+		{
+			this->position.x = mx;
+			this->position.y = my;
+			this->scroll.x = sx;
+			this->scroll.y = sy;
+		}
+		MouseEvents(const MouseEvents& m)
+		{
+			position = m.position;
+			scroll = m.scroll;
+		}
+		void operator = (const MouseEvents& m)
+		{
+			position = m.position;
+			scroll = m.scroll;
+		}
+		bool GetScrollUp()
+		{
+			return scrollUp;
+		}
+		bool GetScrollDown()
+		{
+			return scrollDown;
+		}
+	};
 
 	//Functions
 
-	float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f);
-
-	glm::vec3 MakeRotate(glm::vec3 rotation);
-
-	float radians(float degrees);
-	float degrees(float radians);
+	//Increment into range float
+	float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f)
+	{
+		if (target > max)
+			target = max;
+		else if (target < min)
+			target = min;
+		else
+		{
+			switch (signal)
+			{
+			case '+':
+				target += value;
+				break;
+			case '-':
+				target -= value;
+				break;
+			}
+		}
+		return target;
+	}
+	//Rotate by vector 3
+	glm::vec3 MakeRotate(glm::vec3 rotation)
+	{
+		glm::vec3 vector;
+		vector.x = cos(radians(rotation.x) * cos(radians(rotation.y)));
+		vector.y = sin(radians(rotation.y));
+		vector.z = sin(radians(rotation.x) * cos(radians(rotation.y)));
+		return glm::normalize(vector);
+	}
+	//Convert Degress to Radians
+	float radians(float degrees)
+	{
+		return degrees * LIGHTNING_RADIANS;
+	}
+	//Convert Radians to Degress
+	float degrees(float radians)
+	{
+		return radians * LIGHTNING_DEGREES;
+	}
 
 	//Classes
 
-
+	//Class to clamp values 
 	class SClamp
 	{
 	private:
@@ -676,28 +1093,108 @@ namespace Lightning
 		double dmin = 0.0, dmax = 1.0f;
 	public:
 		//Constructor empty
-		SClamp();
+		SClamp()
+		{
+			imin = 0;
+			imax = 1;
+			fmin = 0.0f;
+			fmax = 1.0f;
+			dmin = 0.0;
+			dmax = 1.0;
+		}
 		//Constructor sets min and max values
-		SClamp(int MIN, int MAX);
+		SClamp(int MIN, int MAX)
+		{
+			this->imin = MIN;
+			this->imax = MAX;
+		}
 		//Constructor sets min and max values
-		SClamp(float MIN, float MAX);
+		SClamp(float MIN, float MAX)
+		{
+			this->fmin = MIN;
+			this->fmax = MAX;
+		}
 		//Constructor sets min and max values
-		SClamp(double MIN, double MAX);
+		SClamp(double MIN, double MAX)
+		{
+			this->dmin = MIN;
+			this->dmax = MAX;
+		}
 		//Constructor Copy
-		SClamp(const SClamp& clamp);
+		SClamp(const SClamp& clamp)
+		{
+			fmin = clamp.fmin;
+			fmax = clamp.fmax;
+			dmin = clamp.dmin;
+			dmax = clamp.dmax;
+		}
 		//Initializator void 
-		void operator = (const SClamp& clamp);
+		void operator = (const SClamp& clamp)
+		{
+			fmin = clamp.fmin;
+			fmax = clamp.fmax;
+			dmin = clamp.dmin;
+			dmax = clamp.dmax;
+		}
 		//Clamp int input
-		int clamp(int INPUT);
+		int clamp(int INPUT)
+		{
+			if (INPUT < imin)
+				return imin;
+			if (INPUT > imax)
+				return imax;
+			return INPUT;
+		}
 		//Clamp input with min and max values
-		int clamp(int INPUT, int MIN, int MAX);
+		int clamp(int INPUT, int MIN, int MAX)
+		{
+			this->imin = MIN;
+			this->imax = MAX;
+			if (INPUT < imin)
+				return imin;
+			if (INPUT > imax)
+				return imax;
+			return INPUT;
+		}
 		//Clamp float input
-		float clamp(float INPUT);
+		float clamp(float INPUT)
+		{
+			if (INPUT < fmin)
+				return fmin;
+			if (INPUT > fmax)
+				return fmax;
+			return INPUT;
+		}
 		//Clamp input with min and max values
-		float clamp(float INPUT, float MIN, float MAX);
+		float clamp(float INPUT, float MIN, float MAX)
+		{
+			this->fmin = MIN;
+			this->fmax = MAX;
+			if (INPUT < fmin)
+				return fmin;
+			if (INPUT > fmax)
+				return fmax;
+			return INPUT;
+		}
 		//Clamp double input
-		double clamp(double INPUT);
+		double clamp(double INPUT)
+		{
+			if (INPUT < dmin)
+				return dmin;
+			if (INPUT > dmax)
+				return dmax;
+			return INPUT;
+		}
 		//clamp input with min and max values
-		double clamp(double INPUT, double MIN, double MAX);
+		double clamp(double INPUT, double MIN, double MAX)
+		{
+			this->dmin = MIN;
+			this->dmax = MAX;
+			if (INPUT < dmin)
+				return dmin;
+			if (INPUT > dmax)
+				return dmax;
+			return INPUT;
+		}
 	};
 }

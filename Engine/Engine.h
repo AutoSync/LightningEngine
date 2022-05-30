@@ -4,9 +4,9 @@
 #include <GLFW/glfw3.h>
 
 //Tools Engine
+#include "Types.h"
 #include "System.h"
 #include "Msg.h"
-#include "Types.h"
 #include "Inputs.h"
 #include "GameTime.h"
 
@@ -15,28 +15,7 @@
 
 namespace Lightning
 {
-	//Has a set of definitions for rendering OpenGL
-	struct RenderSettings
-	{
-		bool Recolor = false;
-		V4 color = V4();
-	};
-	//Initial setup to define window creation
-	struct EngineSettings
-	{
-		int width = 840;
-		int height = 480;
-		const char* title = "Lightning Engine";
-		Version version = Version(0, 14, 0, 0, APP_VERSION_STRING);
-		int version_major = 3;
-		int version_minor = 3;
-		bool vsync = false;
-		bool core_profile = true;
-		bool doubleFrame = false;
-		bool framerate = true;
-		bool displayVersion = true;
-		bool AA = false;
-	};
+	
 
 	//OpenGL window and context initialization object
 	class Engine
