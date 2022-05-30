@@ -38,6 +38,7 @@ public:
 	{
 		InitializeEngine();
 	}
+
 private:
 	void Start()
 	{
@@ -49,36 +50,21 @@ private:
 	void Update()
 	{
 		SetClearColor(Background);
-		spec->AddInputMovement(Time->deltaTime);
+		//spec->AddInputMovement(Time->deltaTime);
+
+
+
 	}
 	//End program
 	void End()
 	{
 
 	}
-	void CameraMovement(Camera* camera, float deltaTime)
-	{
-		if (Input->GetMousePress(MouseKeys::MOUSE_RIGHT))
-		{
-			if (Input->GetKeyPress(Keyboard::W))
-				camera->SetInputMovement(Direction::FORWARD, deltaTime);
-			if (Input->GetKeyPress(Keyboard::S))
-				camera->SetInputMovement(Direction::BACKWARD, deltaTime);
-			if (Input->GetKeyPress(Keyboard::A))
-				camera->SetInputMovement(Direction::LEFT, deltaTime);
-			if (Input->GetKeyPress(Keyboard::D))
-				camera->SetInputMovement(Direction::RIGHT, deltaTime);
-			if (Input->GetKeyPress(Keyboard::Q))
-				camera->SetInputMovement(Direction::DOWN, deltaTime);
-			if (Input->GetKeyPress(Keyboard::E))
-				camera->SetInputMovement(Direction::UP, deltaTime);
-		}
-	}
 };
 
 // Program entry point and execution
 int main(int argc, const char* argv[])
 {
-	auto editor = new EditorEngine();
+	EditorEngine* editor = new EditorEngine();
 	editor->Init();
 }

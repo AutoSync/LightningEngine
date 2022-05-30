@@ -1110,15 +1110,6 @@ namespace Lightning
 		}
 		return target;
 	}
-	//Rotate by vector 3
-	glm::vec3 MakeRotate(glm::vec3 rotation)
-	{
-		glm::vec3 vector;
-		vector.x = cos(radians(rotation.x) * cos(radians(rotation.y)));
-		vector.y = sin(radians(rotation.y));
-		vector.z = sin(radians(rotation.x) * cos(radians(rotation.y)));
-		return glm::normalize(vector);
-	}
 	//Convert Degress to Radians
 	float radians(float degrees)
 	{
@@ -1128,6 +1119,15 @@ namespace Lightning
 	float degrees(float radians)
 	{
 		return radians * LIGHTNING_DEGREES;
+	}
+	//Rotate by vector 3
+	glm::vec3 MakeRotate(glm::vec3 rotation)
+	{
+		glm::vec3 vector;
+		vector.x = cos(radians(rotation.x) * cos(radians(rotation.y)));
+		vector.y = sin(radians(rotation.y));
+		vector.z = sin(radians(rotation.x) * cos(radians(rotation.y)));
+		return glm::normalize(vector);
 	}
 
 	//Classes
