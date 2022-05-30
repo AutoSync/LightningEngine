@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Core\Atom\Atom_camera.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Atom\Atom_Light.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Atom\Atom_mesh.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Atom\Atom_model.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Atom\Atom_print.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Atom\Atom_shader.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Atom\Atom_texture.h">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Elements\Element_CameraController.h">
+      <Filter>Engine\Features\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemStart.h">
+      <Filter>Engine\src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\Atom\Atom_mesh.cpp">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Atom\Atom_shader.cpp">
+      <Filter>Engine\Features\Atomic</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Elements\Element_CameraController.cpp">
+      <Filter>Engine\Features\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Engine\src</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Engine\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EngineContents\Shaders\MaterialSample.frag">
+      <Filter>Engine\Shaders</Filter>
+    </None>
+    <None Include="EngineContents\Shaders\MaterialSample.vert">
+      <Filter>Engine\Shaders</Filter>
+    </None>
+    <None Include="EngineContents\Shaders\ObjectOutline.frag">
+      <Filter>Engine\Shaders</Filter>
+    </None>
+    <None Include="EngineContents\Shaders\ScreenShader.vert" />
+    <None Include="EngineContents\Shaders\ScreenShader.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="App">
+      <UniqueIdentifier>{2d39442b-d27d-4fb6-acdb-548a87c8454f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{166cdbce-8825-4c75-b04c-001b6b01f205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders">
+      <UniqueIdentifier>{78028512-32d1-4088-8e91-95f58d5c0d30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Features">
+      <UniqueIdentifier>{6483bbaa-baad-4d9f-9126-bbfe8dbb88d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Features\Atomic">
+      <UniqueIdentifier>{e52cb116-6e2e-4dd8-a170-b5fb2167df81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Features\Elements">
+      <UniqueIdentifier>{e47f225b-9a2f-4b4b-82a6-cb23c1c7075a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\src">
+      <UniqueIdentifier>{427db68c-3f99-446e-89bd-f52bdb9c50cd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
