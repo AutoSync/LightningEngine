@@ -66,9 +66,8 @@ namespace Lightning
 		V3 GetLocation();
 		void SetLocation(float x, float y, float z);
 
-		//Set Shaders
-		void SetView(glm::mat4& View);
-		void SetProjection(glm::mat4& Projection);
+		//Render in Shader
+		void Render();
 	private:
 		void UpdateCameraVectors();
 

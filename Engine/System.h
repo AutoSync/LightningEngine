@@ -14,3 +14,5 @@ static GameTime* Time = new GameTime();
 static double lastX = Settings.width / 2, lastY = Settings.height / 2;
 static bool firstMouse = true;
 static bool isProjection = true;
+//Rendering by System
+static glm::mat4 model = glm::mat4(1.0f), view = glm::mat4(1.0f), projection = glm::mat4(1.0f);

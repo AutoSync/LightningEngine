@@ -132,7 +132,7 @@ namespace Lightning
 		int Revision = 0;
 		const char* Text = " ";
 		Version()
-		{		
+		{
 			this->Major = 0;
 			this->Minor = 0;
 			this->Release = 0;
@@ -154,7 +154,7 @@ namespace Lightning
 			this->Release = RELEASE;
 			this->Revision = REVISION;
 			this->Text = TEXT;
-		}	
+		}
 	};
 
 	struct V2
@@ -1089,6 +1089,7 @@ namespace Lightning
 	//Functions
 
 	//Increment into range float
+	//Increment into range float
 	static float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f)
 	{
 		if (target > max)
@@ -1110,10 +1111,12 @@ namespace Lightning
 		return target;
 	}
 	//Convert Degress to Radians
+	//Convert Degress to Radians
 	static float radians(float degrees)
 	{
 		return degrees * LIGHTNING_RADIANS;
 	}
+	//Convert Radians to Degress
 	//Convert Radians to Degress
 	static float degrees(float radians)
 	{

@@ -2,9 +2,9 @@
 //Engine
 #include "Engine.h"
 #include "Import.h"
+#include "System.h"
 
 using namespace std;
-
 namespace Lightning
 {
 	struct ShaderSource
@@ -64,8 +64,9 @@ namespace Lightning
 		void SetMat3(const char* name, glm::mat3& m);
 		void SetMat4(const char* name, glm::mat4& m);
 		const char* MatrixChars(const char* ArrayName, int Position, const char* member);
-		void Projection(glm::mat4 projection);
-		void View(glm::mat4 view);
+		void Projection();
+		void View();
+		void Model();
 
 	private:
 		void InitializeShader(ShaderSource _source);
