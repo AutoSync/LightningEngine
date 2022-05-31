@@ -6,6 +6,11 @@ Lightning::Spectator::Spectator(Camera* Camera)
 	camera = Camera;
 }
 
+Camera* Lightning::Spectator::GetCamera()
+{
+	return camera;
+}
+
 void Lightning::Spectator::AddInputMovement(float dt)
 {
 	double Move_X, Move_Y;

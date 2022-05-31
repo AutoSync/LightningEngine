@@ -151,7 +151,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Cubes.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -169,7 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Cubes.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Geometry.h" />

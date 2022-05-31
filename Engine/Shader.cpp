@@ -234,6 +234,16 @@ const char* Lightning::Shader::MatrixChars(const char* ArrayName, int Position, 
 	return data.c_str();
 }
 
+void Lightning::Shader::Projection(glm::mat4 projection)
+{
+	SetMat4("projection", projection);
+}
+
+void Lightning::Shader::View(glm::mat4 view)
+{
+	SetMat4("view", view);
+}
+
 
 void Lightning::Shader::InitializeShader(ShaderSource _source)
 {

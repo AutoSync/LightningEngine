@@ -14,5 +14,6 @@ namespace Lightning
 	public:
 		Spectator(Camera* Camera);
 		void AddInputMovement(float dt);
+		Camera* GetCamera();
 	};
 }

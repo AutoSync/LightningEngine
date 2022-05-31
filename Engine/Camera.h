@@ -1,6 +1,6 @@
 #pragma once
+#include "System.h"
 #include "Types.h"
-#include "SceneComponent.h"
 #include "Msg.h"
 
 namespace Lightning
@@ -29,9 +29,11 @@ namespace Lightning
 		float Roll = 0.0f;	//
 		//Camera Properties
 
-		float Sensitivity = 0.1f;						//Input Movement
-		float MovementSpeed = 1.0f;						//MovementSpeed
-		float FOV = 45.f;								//Field of View
+		float Sensitivity = 0.1f;					//Input Movement
+		float MovementSpeed = 1.0f;					//MovementSpeed
+		float FOV = 45.f;							//Field of View
+		float NearClip = 0.1f;						//Near Clip
+		float FarClip = 100.f;						//Far Clip
 	public:
 		Camera(V3 position = V3(0.0f), V3 up = V3(0.0f, 1.0f, 0.0f), float yaw = DefaultYaw,
 			float pitch = DefaultPitch) : Front(0.0f, 0.0f, -1.0f), MovementSpeed(DefaultSpeed),
@@ -63,20 +65,12 @@ namespace Lightning
 		void SetFOV(float newFOV);
 		V3 GetLocation();
 		void SetLocation(float x, float y, float z);
+
+		//Set Shaders
+		void SetView(glm::mat4& View);
+		void SetProjection(glm::mat4& Projection);
 	private:
 		void UpdateCameraVectors();
 
-	};
-
-	class CameraHandler
-	{
-	public:
-		CameraHandler();
-		CameraHandler(Camera* NewCamera);
-		~CameraHandler() { delete this; };
-		void setActiveCamera(Camera* NewCamera);
-		Camera* getActiveCamera();
-	private:
-		Camera* defaultCamera;
 	};
 }

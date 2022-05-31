@@ -27,7 +27,6 @@
 #define LIGHTNING_RADIANS 0.01745329251994329576923690768489
 #define LIGHTNING_DEGREES 57.21684788166867
 
-
 // Lightning Bool
 #define LFALSE			 0x0000		// Lightning Bool False
 #define LTRUE			 0x0001		// Lightning Bool True
@@ -1090,7 +1089,7 @@ namespace Lightning
 	//Functions
 
 	//Increment into range float
-	float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f)
+	static float IncrementRangef(char signal, float target, float value, float min = 0.f, float max = 1.f)
 	{
 		if (target > max)
 			target = max;
@@ -1111,17 +1110,17 @@ namespace Lightning
 		return target;
 	}
 	//Convert Degress to Radians
-	float radians(float degrees)
+	static float radians(float degrees)
 	{
 		return degrees * LIGHTNING_RADIANS;
 	}
 	//Convert Radians to Degress
-	float degrees(float radians)
+	static float degrees(float radians)
 	{
 		return radians * LIGHTNING_DEGREES;
 	}
 	//Rotate by vector 3
-	glm::vec3 MakeRotate(glm::vec3 rotation)
+	static glm::vec3 MakeRotation(glm::vec3 rotation)
 	{
 		glm::vec3 vector;
 		vector.x = cos(radians(rotation.x) * cos(radians(rotation.y)));

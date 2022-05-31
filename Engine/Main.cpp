@@ -28,10 +28,9 @@ public:
 	{
 		Background = LinearColor(C3(211, 231, 246), 1.0f);
 		shader = new Shader("Shaders/vertexshader.glsl", "Shaders/fragmentshader.glsl");
-		object = new MeshComponent("Samples/Primitives/box.obj");
-		MainCamera = new Camera();
-		spec = new Spectator(MainCamera);
-		
+		object = new MeshComponent("Samples/Primitives/cube.obj");
+		MainCamera = new Camera;
+		spec = new Spectator(MainCamera);	
 	}
 	// Init Engine
 	void Init()
@@ -50,7 +49,14 @@ private:
 	void Update()
 	{
 		SetClearColor(Background);
-		//spec->AddInputMovement(Time->deltaTime);
+		RenderCommand(LR_CLEAR, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		spec->AddInputMovement(Time->deltaTime);
+
+		spec->GetCamera()->SetProjection(projection);
+		spec->GetCamera()->SetView(view);
+
+		shader->Projection(projection);
+		shader->View(view);
 
 
 

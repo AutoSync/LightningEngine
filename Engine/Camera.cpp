@@ -73,9 +73,19 @@ void Lightning::Camera::SetLocation(float x, float y, float z)
 {
 	this->Position = V3(x, y, z);
 }
+void Lightning::Camera::SetView(glm::mat4& View)
+{
+	View = GetViewMatrix();
+}
+void Lightning::Camera::SetProjection(glm::mat4& Projection)
+{
+	Projection = glm::perspective(glm::radians(GetFOV()),
+		(float)Settings.width / (float)Settings.height,
+		NearClip, FarClip);
+}
 void Lightning::Camera::UpdateCameraVectors()
 {
-	Front = MakeRotate(glm::vec3(Yaw, Pitch, 0.0f));
+	Front = Lightning::MakeRotation(glm::vec3(Yaw, Pitch, 0.0f));
 	// Also re-calculate the Right and Up vector
 	Right = glm::normalize(glm::cross(Front.GetGLM(), WorldUp.GetGLM()));
 	Up = glm::normalize(glm::cross(Right.GetGLM(), Front.GetGLM()));
