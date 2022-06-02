@@ -16,7 +16,7 @@ namespace Lightning
 	public:
 		//Object Params
 		//Camera Atributes
-
+		
 		V3 Position;								// Relative Location
 		V3 Front;									// Front Camera
 		V3 Up;										// Camera Up Vector

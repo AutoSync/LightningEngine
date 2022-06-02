@@ -75,9 +75,7 @@ void Lightning::Camera::SetLocation(float x, float y, float z)
 }
 void Lightning::Camera::Render()
 {
-	projection = glm::perspective(glm::radians(FOV),
-		(float)Settings.width / (float)Settings.height,
-		NearClip, FarClip);
+	projection = glm::perspective(glm::radians(FOV),(float)Settings.width / (float)Settings.height,NearClip, FarClip);
 	view = GetViewMatrix();
 }
 void Lightning::Camera::UpdateCameraVectors()

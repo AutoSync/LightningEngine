@@ -7,9 +7,21 @@ Lightning::GameTime::GameTime()
 	lastFrame = 0;
 }
 
-void Lightning::GameTime::SetDeltaTime(float deltatTime)
+void Lightning::GameTime::SetDeltaTime(double deltatTime)
 {
-	currentTime = deltatTime;
+	time = deltaTime;
+	currentTime = time;
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
 }
+
+double Lightning::GameTime::GetTime()
+{
+	return time;
+}
+
+void Lightning::GameTime::SetTime(double t)
+{
+	this->time = t;
+}
+

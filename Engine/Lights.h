@@ -8,7 +8,7 @@ namespace Lightning
 	class Light : SceneComponent
 	{
 	public:
-		LightType Type = LightType::Direct;
+		LightType Type = LightType::Directional;
 		Mobility Mobility = Mobility::Mobile;
 		Transform transform;
 		C3 diffuse = 1.0f;			//Light color		

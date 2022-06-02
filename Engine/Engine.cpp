@@ -58,7 +58,7 @@ void Lightning::Engine::WhenEnd() { /* empty implementation */ }
 
 void Lightning::Engine::SetShowFramerate(bool framerate)
 {
-	this->engine_settings.framerate = framerate;
+	this->engine_settings.displayFPS = framerate;
 }
 
 void Lightning::Engine::SetDoubleframe(bool enable)
@@ -137,6 +137,11 @@ void Lightning::Engine::SetClearColor(LinearColor clear)
 	glClearColor(clear.r, clear.g, clear.b, clear.a);
 }
 
+void Lightning::Engine::SetFramerate(Framerate framerate)
+{
+	this->framerate = framerate;
+}
+
 void Lightning::Engine::OnInit() { /* empty implementation */ }
 
 void Lightning::Engine::OnRender()
@@ -153,12 +158,15 @@ void Lightning::Engine::OnRender(RenderSettings settings)
 	while (!glfwWindowShouldClose(window))
 	{
 		//Initial Program
+
 		UpdateTitlebar();
-		Time->SetDeltaTime((float)glfwGetTime());
+		Time.SetTime(glfwGetTime());
+
 		Update();			//Render Loop
 
 		LateUpdate();
-		glfwSwapBuffers(window);
+		UpdateFramerate();
+		glFlush();
 		glfwPollEvents();
 	}
 	End();					//End Play
@@ -212,7 +220,7 @@ void Lightning::Engine::UpdateTitlebar()
 
 	titleInfo = engine_settings.title;
 
-	if (engine_settings.framerate)
+	if (engine_settings.displayFPS)
 		fpsCount = space + "FPS: " + std::to_string(ifps);
 	if (engine_settings.displayVersion)
 		titteVersion = engine_settings.version.Text;
@@ -221,5 +229,10 @@ void Lightning::Engine::UpdateTitlebar()
 
 
 	glfwSetWindowTitle(window, title.c_str());
+}
+
+void Lightning::Engine::UpdateFramerate()
+{
+	glfwSwapBuffers(window);
 }
 

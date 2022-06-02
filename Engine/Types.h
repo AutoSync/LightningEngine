@@ -72,7 +72,7 @@ namespace Lightning
 	//Selectable Light type
 	enum LightType
 	{
-		Direct, Spotlight, Point, Rect
+		Directional, Spotlight, Point, Rect
 	};
 	//Mobility objects
 	enum Mobility
@@ -102,6 +102,10 @@ namespace Lightning
 	enum Direction
 	{
 		FORWARD, BACKWARD, RIGHT, LEFT, UP, DOWN
+	};
+	enum Framerate
+	{
+		FR15, FR24, FR30, FR60, FR90, FR120, FR240, FR480, UNLIMITED
 	};
 	namespace Flow
 	{
@@ -639,6 +643,12 @@ namespace Lightning
 			this->Rotation = V3(0.f);
 			this->Scale = V3(1.f);
 		}
+		Transform(float SCALAR)
+		{
+			this->Position = V3(SCALAR);
+			this->Rotation = V3(SCALAR);
+			this->Scale = V3(SCALAR);
+		}
 		Transform(V3 _position, V3 _rotation, V3 _scale)
 		{
 			this->Position = _position;
@@ -1000,12 +1010,12 @@ namespace Lightning
 		int height = 480;
 		const char* title = "Lightning Engine";
 		Version version = Version(0,10,0,0);
-		int version_major = 4;
-		int version_minor = 5;
+		int version_major = 3;
+		int version_minor = 3;
 		bool vsync = false;
 		bool core_profile = true;
 		bool doubleFrame = false;
-		bool framerate = true;
+		bool displayFPS = true;
 		bool displayVersion = true;
 		bool AA = false;
 		bool cansize = true;
@@ -1020,7 +1030,7 @@ namespace Lightning
 			vsync = false;
 			core_profile = true;
 			doubleFrame = false;
-			framerate = true;
+			displayFPS = true;
 			displayVersion = true;
 			AA = false;
 			cansize = true;
@@ -1036,7 +1046,7 @@ namespace Lightning
 			vsync = false;
 			core_profile = true;
 			doubleFrame = false;
-			framerate = true;
+			displayFPS = true;
 			displayVersion = true;
 			AA = false;
 			cansize = CANSIZE;
@@ -1132,6 +1142,29 @@ namespace Lightning
 		return glm::normalize(vector);
 	}
 
+	//Float Mix
+	static float Mix(float a, float b, float t)
+	{
+		return a + (b - a) * t;
+	}
+	
+	//V4 Interpolate
+	static V4 Vinterp(V4 a, V4 b, float alpha)
+	{
+		V4 c;
+		c.x = a.x + (b.x - a.x) * alpha;
+		c.y = a.y + (b.y - a.y) * alpha;
+		c.z = a.z + (b.z - a.z) * alpha;
+		c.w = a.w + (b.w - a.w) * alpha;
+		return c;
+	}
+
+	//Linear Color Interpolate
+	static LinearColor Cinterp(LinearColor A, LinearColor B, float alpha)
+	{
+		return A;
+	}
+	//Mix Color
 	//Classes
 
 	//Class to clamp values 

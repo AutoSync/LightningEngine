@@ -4,11 +4,12 @@ namespace Lightning
 	class GameTime
 	{
 	public:
+		static double deltaTime, currentTime, lastFrame, time;
+	public:
 		GameTime();
-		void SetDeltaTime(float deltaTime);
-		float deltaTime;
-	private:
-		float currentTime, lastFrame;
+		void SetDeltaTime(double deltaTime);
+		double GetTime();
+		void SetTime(double t);
 	};
 }
 

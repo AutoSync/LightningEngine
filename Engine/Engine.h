@@ -19,8 +19,10 @@ namespace Lightning
 	{
 	public:
 		EngineSettings engine_settings;
+		Framerate framerate = Framerate::UNLIMITED;
 	private:
 		GLFWwindow* window = NULL;
+		double fpsLimit = 1.0 / 600;
 	public:
 		Inputs* Input = new Inputs(window);
 		Engine();
@@ -46,6 +48,7 @@ namespace Lightning
 		void SetDoubleframe(bool enable = false);
 		void RenderCommand(int flag, int value);
 		void SetClearColor(LinearColor clear);
+		void SetFramerate(Framerate framerate);
 	private:
 		void OnInit();
 		void OnRender();
@@ -54,5 +57,6 @@ namespace Lightning
 		void InitializeWindow(EngineSettings settings);
 		void SetWindowSizeCallback(GLFWwindow* window, int width, int height);
 		void UpdateTitlebar();
+		void UpdateFramerate();
 	};
 }

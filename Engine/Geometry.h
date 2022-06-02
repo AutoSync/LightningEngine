@@ -4,6 +4,7 @@
 #include "SceneComponent.h"
 #include "Msg.h"
 #include "Image.h"
+#include "System.h"
 
 
 #include <assimp/Importer.hpp>		// * Assimp
@@ -13,8 +14,6 @@
 using namespace Lightning::Msg;
 namespace Lightning
 {
-	
-
 	class GeometryComponent
 	{
 	private:
@@ -38,7 +37,6 @@ namespace Lightning
 		Console						   console;
 		//Transform					 transform;
 		Transform						 pivot;
-		glm::mat4						 model;
 		vector<Texture>			texturesLoaded;
 		vector<GeometryComponent>		meshes;
 		string						 directory;

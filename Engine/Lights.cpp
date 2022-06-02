@@ -3,7 +3,7 @@
 Lightning::Light::Light()
 {
 	Transform T;
-	LightType type = LightType::Direct;
+	LightType type = LightType::Directional;
 	InitializeLight(T, type);
 }
 
@@ -16,7 +16,7 @@ void Lightning::Light::Render(Shader* shader)
 {
 	switch (Type)
 	{
-	case Lightning::Direct:
+	case Lightning::Directional:
 		shader->SetV3("LD.direction", this->transform.Position);
 		shader->SetColor("LD.diffuse", this->diffuse);
 		shader->SetColor("LD.ambient", this->ambient);
@@ -42,7 +42,7 @@ void Lightning::Light::Render(int iterator, Shader* shader)
 {
 	switch (Type)
 	{
-	case Lightning::Direct:
+	case Lightning::Directional:
 		shader->SetV3("LD.direction", this->transform.Position);
 		shader->SetColor("LD.diffuse", this->diffuse);
 		shader->SetColor("LD.ambient", this->ambient);
@@ -92,7 +92,7 @@ void Lightning::Light::InitializeLight(Transform T, LightType type)
 	this->transform = T;
 	switch (type)
 	{
-	case Lightning::Direct:
+	case Lightning::Directional:
 		CreateDirectionLight();
 		break;
 	case Lightning::Spotlight:

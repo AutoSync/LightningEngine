@@ -69,7 +69,6 @@ void main()
 	vec4 result = vec4(getLightDirectional(LD, norm, ViewDirection), 1.0);
 	
 	//Light Point
-
 	for(int i = 0; i < numLights; i++)
 			result += vec4(getLightPoint(LP[i], norm, FragLocation, ViewDirection), 1.0);
 	//Light Spot
