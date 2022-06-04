@@ -26,7 +26,7 @@ public:
 	{
 		Background = LinearColor(C3(211, 231, 246), 1.0f);
 		shader = new Shader("Shaders/vertexshader.glsl", "Shaders/fragmentshader.glsl");
-		object = new MeshComponent("Samples/Primitives/sphere.obj");
+		object = new MeshComponent("Samples/Primitives/cube.obj");
 		
 		light = new Light(Transform(0.0f), LightType::Directional);
 		light->diffuse = C3(245, 245, 211);

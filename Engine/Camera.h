@@ -30,8 +30,8 @@ namespace Lightning
 		//Camera Properties
 
 		float Sensitivity = 0.1f;					//Input Movement
-		float MovementSpeed = 1.0f;					//MovementSpeed
-		float FOV = 45.f;							//Field of View
+		float MovementSpeed = 1.0f;					//Movement Speed
+		float FOV =	90.f;							//Field of View 90 Default
 		float NearClip = 0.1f;						//Near Clip
 		float FarClip = 100.f;						//Far Clip
 	public:
