@@ -4,7 +4,7 @@ namespace Lightning
 	class GameTime
 	{
 	public:
-		static double deltaTime, currentTime, lastFrame, time;
+		double deltaTime, currentTime, lastFrame, time;
 	public:
 		GameTime();
 		void SetDeltaTime(double deltaTime);

@@ -9,7 +9,7 @@ using namespace Lightning;
 
 static EngineSettings Settings(840, 480, "Lightning Engine", true);
 static MouseEvents mouse = MouseEvents();
-GameTime Time = GameTime();
+static GameTime* Time = new GameTime();
 //navigation settings
 static double lastX = Settings.width / 2, lastY = Settings.height / 2;
 static bool firstMouse = true;

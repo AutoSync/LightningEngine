@@ -36,7 +36,7 @@ namespace Lightning
 	private:
 		Console						   console;
 		//Transform					 transform;
-		Transform						 pivot;
+		Transform					 transform;
 		vector<Texture>			texturesLoaded;
 		vector<GeometryComponent>		meshes;
 		string						 directory;
@@ -50,6 +50,10 @@ namespace Lightning
 		void Draw(Shader* shader);
 		void Load(string const& path);
 		void SetVisible(bool newVisibility);
+		void SetTransform(Transform T);
+		void SetPosition(V3 newPosition);
+		void SetRotation(V3 newRotation);
+		void SetScale(V3 newScale);	
 		int countmodel = 0;
 	private:
 		void Count();

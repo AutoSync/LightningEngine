@@ -43,6 +43,8 @@ namespace Lightning
 	{
 	private:
 		ShaderSource source;
+		bool started = false;
+		bool warning = false;
 	public:
 		uint id = 0;
 	public:
@@ -51,7 +53,7 @@ namespace Lightning
 		Shader(ShaderType type, ShaderSource _source);
 		Shader(const char* vert_path, const char* frag_path, const char* geo_path = " ");
 		Shader(const char* vert_path, const char* frag_path, bool debug ,const char* geo_path = " ");
-		void Render();
+		void Init();
 		void SetBool(const char* name, bool value);
 		void SetInt(const char* name, int value);
 		void SetFloat(const char* name, float value);
@@ -69,6 +71,7 @@ namespace Lightning
 		void Model();
 
 	private:
+		void ShaderStarted();
 		void InitializeShader(ShaderSource _source);
 		void ShaderMessageError(GLint shader, TypeProgram type);
 	};

@@ -36,7 +36,10 @@ void Lightning::Msg::Emit(Flow::Flow flag, string message)
 		std::cout << "[%] " << message << std::endl;
 		break;
 	case Lightning::Flow::WARNING:
-		std::cout << "[!WARNING] " << message << std::endl;
+		std::cout << "[!] WARNING " << message << std::endl;
+		break;
+	case Lightning::Flow::WARNING_WNL:
+		std::cout << "[!] WARNING " << message;
 		break;
 	default:
 		break;

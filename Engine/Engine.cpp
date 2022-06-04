@@ -158,14 +158,13 @@ void Lightning::Engine::OnRender(RenderSettings settings)
 	while (!glfwWindowShouldClose(window))
 	{
 		//Initial Program
-
 		UpdateTitlebar();
-		Time.SetTime(glfwGetTime());
+		Time->SetDeltaTime(glfwGetTime());
+		UpdateFramerate();
 
 		Update();			//Render Loop
 
 		LateUpdate();
-		UpdateFramerate();
 		glFlush();
 		glfwPollEvents();
 	}
@@ -235,4 +234,3 @@ void Lightning::Engine::UpdateFramerate()
 {
 	glfwSwapBuffers(window);
 }
-

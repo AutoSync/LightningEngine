@@ -166,68 +166,89 @@ Lightning::Shader::Shader(const char* vert_path, const char* frag_path, bool deb
 	glDeleteShader(fragmentShader);
 }
 
-void Lightning::Shader::Render()
+void Lightning::Shader::Init()
 {
 	glUseProgram(id);
+	started = true;
 }
 
 void Lightning::Shader::SetBool(const char* name, bool value)
 {
+	ShaderStarted();
 	glUniform1i(glGetUniformLocation(id, name), (int)value);
 }
 
 void Lightning::Shader::SetInt(const char* name, int value)
 {
+	ShaderStarted();
 	glUniform1i(glGetUniformLocation(id, name), value);
 }
 
 void Lightning::Shader::SetFloat(const char* name, float value)
 {
+	ShaderStarted();
 	glUniform1f(glGetUniformLocation(id, name), value);
 }
 
 void Lightning::Shader::SetV2(const char* name, V2 value)
 {
+	ShaderStarted();
+	
 	glUniform2f(glGetUniformLocation(id, name), value.x, value.y);
 }
 
 void Lightning::Shader::SetV3(const char* name, V3 value)
 {
+	ShaderStarted();
+	
 	glUniform3f(glGetUniformLocation(id, name), value.x, value.y, value.z);
 }
 
 void Lightning::Shader::SetLinearColor(const char* name, LinearColor value)
 {
+	ShaderStarted();
+	
 	glUniform3f(glGetUniformLocation(id, name), value.r, value.g, value.b);
 }
 
 void Lightning::Shader::SetColor(const char* name, C3 value)
 {
+	ShaderStarted();
+	
 	glUniform3f(glGetUniformLocation(id, name), value.r, value.g, value.b);
 }
 
 void Lightning::Shader::SetV4(const char* name, V4 value)
 {
+	ShaderStarted();
+	
 	glUniform4f(glGetUniformLocation(id, name), value.x, value.y, value.z, value.w);
 }
 
 void Lightning::Shader::SetMat2(const char* name, glm::mat2& m)
 {
+	ShaderStarted();
+	
 	glUniformMatrix2fv(glGetUniformLocation(id, name),1, GL_FALSE, &m[0][0]);
 }
 
 void Lightning::Shader::SetMat3(const char* name, glm::mat3& m)
 {
+	ShaderStarted();
+	
 	glUniformMatrix3fv(glGetUniformLocation(id, name), 1, GL_FALSE, &m[0][0]);
 }
 
 void Lightning::Shader::SetMat4(const char* name, glm::mat4& m)
 {
+	ShaderStarted();
+
 	glUniformMatrix4fv(glGetUniformLocation(id, name), 1, GL_FALSE, &m[0][0]);
 }
 
 const char* Lightning::Shader::MatrixChars(const char* ArrayName, int Position, const char* member)
 {
+	ShaderStarted();
 	string an = ArrayName;
 	string mb = member;
 	string data = an + "[" + std::to_string(Position) + "]" + "." + mb;
@@ -236,22 +257,38 @@ const char* Lightning::Shader::MatrixChars(const char* ArrayName, int Position, 
 
 void Lightning::Shader::Projection()
 {
+	ShaderStarted();
 	projection = glm::mat4(1.0f);
 	SetMat4("projection", projection);
 }
 
 void Lightning::Shader::View()
 {
+	ShaderStarted();
+	
 	view = glm::mat4(1.0f);
 	SetMat4("view", view);
 }
 
 void Lightning::Shader::Model()
 {
+	ShaderStarted();
+	
 	model = glm::mat4(1.0f);
 	SetMat4("model", model);
 }
 
+
+void Lightning::Shader::ShaderStarted()
+{	
+	//the use of warning avoids the constant call of the message
+	if (!started && warning == false)
+	{		
+		Msg::Emit(Flow::WARNING_WNL, "Failed to initialize Shader -> ");
+		cout << typeid(*this).name() << endl;
+	}
+	warning = true;
+}
 
 void Lightning::Shader::InitializeShader(ShaderSource _source)
 {
@@ -282,6 +319,7 @@ void Lightning::Shader::InitializeShader(ShaderSource _source)
 
 void Lightning::Shader::ShaderMessageError(GLint shader, TypeProgram type)
 {
+
 	GLint success = 0;
 	GLchar infoLog[1024] = { '0' };
 

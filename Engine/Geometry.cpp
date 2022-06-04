@@ -84,10 +84,10 @@ Lightning::MeshComponent::MeshComponent(string const& path, bool gamma)
 {
     ++countmodel;
     console.Init();
-    console.Log("IMPORT MESH INSTANCE" + std::to_string(countmodel) + " ->START ");
+    console.Log("IMPORT MESH INSTANCE" + std::to_string(countmodel) + " -> START ");
     LoadMesh(path);
-    pivot.Rotation = V3(0.5, 0.5f, 0.5f);
-    console.Log("IMPORT MESH -> COMPLETED");
+    transform.Rotation = V3(0.5, 0.5f, 0.5f);
+    console.Log("IMPORT MESH -> COMPLETED ");
 }
 
 Lightning::MeshComponent::MeshComponent()
@@ -100,8 +100,12 @@ void Lightning::MeshComponent::Draw(Shader* shader)
 {
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(transform.Position.x, transform.Position.y, transform.Position.z));
+	model = glm::scale(model, glm::vec3(transform.Scale.x, transform.Scale.y, transform.Scale.z));
+	model = glm::rotate(model, transform.Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, transform.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, transform.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	
     shader->SetMat4("model", model);
-
     if (visible)
     {
         for (uint i = 0; i < meshes.size(); i++)
@@ -119,6 +123,26 @@ void Lightning::MeshComponent::Load(string const& path)
 void Lightning::MeshComponent::SetVisible(bool newVisibility)
 {
     this->visible = newVisibility;
+}
+
+void Lightning::MeshComponent::SetTransform(Transform T)
+{
+    this->transform = T;
+}
+
+void Lightning::MeshComponent::SetPosition(V3 newPosition)
+{
+    this->transform.SetPosition(newPosition);
+}
+
+void Lightning::MeshComponent::SetRotation(V3 newRotation)
+{
+	this->transform.SetRotation(newRotation);
+}
+
+void Lightning::MeshComponent::SetScale(V3 newScale)
+{
+	this->transform.SetScale(newScale);
 }
 
 void Lightning::MeshComponent::Count()

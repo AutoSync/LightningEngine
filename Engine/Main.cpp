@@ -25,7 +25,7 @@ public:
 	EditorEngine()
 	{
 		Background = LinearColor(C3(211, 231, 246), 1.0f);
-		shader = new Shader("Shaders/vertphong.vert", "Shaders/fragphong.frag");
+		shader = new Shader("Shaders/vertexshader.glsl", "Shaders/fragmentshader.glsl");
 		object = new MeshComponent("Samples/Primitives/sphere.obj");
 		
 		light = new Light(Transform(0.0f), LightType::Directional);
@@ -52,23 +52,26 @@ private:
 	void Update()
 	{
 		float t = (float)Time->GetTime();
-		cout << Mix(1.0, 0.0, sin(t)) << endl;
+		//cout << Mix(1.0, 0.0, sin(t)) << endl;
 		LinearColor YellowBackground = LinearColor(C3(245, 245, 211), 1.0f);
 		LinearColor NewBackground = Cinterp(Background, YellowBackground, sin(t));
 		SetClearColor(NewBackground);
+
 		RenderCommand(LR_CLEAR, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		spec->AddInputMovement(Time->deltaTime);
-		shader->Render();
 		
-		shader->Projection();
-		shader->View();
+		
+		shader->Init();
+		
+		shader->SetMat4("projection", projection);
+		shader->SetMat4("view", view);
 	
 		light->Render(shader);
 		shader->SetV3("ViewLocation", spec->GetCamera()->GetLocation());
-		shader->SetInt("renderMode", 1);
 		
 		object->Draw(shader);
+		object->SetScale(V3(0.5f));
 	}
 
 };
