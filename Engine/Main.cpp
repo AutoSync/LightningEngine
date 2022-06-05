@@ -1,6 +1,5 @@
 #include "Engine.h"
 
-#include "System.h"
 #include "Types.h"
 #include "Shader.h"
 #include "Geometry.h"
@@ -8,8 +7,17 @@
 #include "Lights.h"
 #include "Image.h"
 #include "Spectator.h"
+#include "System.h"
 
 using namespace Lightning;
+
+void SizeCallback(GLFWwindow* wnd, int width, int height)
+{
+	Settings.width = width;
+	Settings.height = height;
+	glViewport(0, 0, width, height);
+	Msg::Emit(Flow::OUTPUT, "Window size changed to: " + to_string(width) + " X " + to_string(height));
+}
 
 class EditorEngine : Engine
 {
@@ -27,6 +35,7 @@ public:
 	//Constructor
 	EditorEngine()
 	{
+		glfwSetWindowSizeCallback(glfwGetCurrentContext(), SizeCallback);
 		//Initialize Color
 		Background = LinearColor(C3(125, 125, 125), 1.0f);
 		//Set path to vertex shader
@@ -36,8 +45,9 @@ public:
 		//Create shader
 		shader = new Shader(v_path, f_path);
 		//Set Camera to default position
-		camera = new Camera(V3(0, 0, 0));
-		//Set Spectator
+		camera = new Camera();
+		camera->SetPosition(4.0f, 3.0f, 3.0f);
+		//Set Spectator to default position
 		spec = new Spectator(camera);
 
 		
@@ -91,7 +101,7 @@ private:
 		
 		projection = spec->GetCamera()->GetPespective();
 		view = spec->GetCamera()->GetViewMatrix();
-		ResetM4(model);
+		model = glm::mat4(1.0f);
 		
 		glm::mat4 MVP = projection * view * model;
 		shader->SetMat4("MVP", MVP);
@@ -110,5 +120,6 @@ int main(int argc, const char* argv[])
 {
 	EditorEngine* editor = new EditorEngine();
 	editor->Init();
+	
 	
 }
