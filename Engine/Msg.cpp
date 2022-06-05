@@ -11,19 +11,19 @@ void Lightning::Msg::Emit(Flow::Flow flag, string message)
 		printf("\x1B[90m>> %s\033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::EXIT:
-		printf("\x1B[94m[EXIT] %s\033[0m\n", message.c_str());
+		printf("\033[3;30;44m[EXIT] %s \033[0m\n", message.c_str());
 		exit(0);
 		break;
 	case Lightning::Flow::ERROR:
-		printf("\x1B[31m[ERROR] %s\033[0m\n", message.c_str());
+		printf("\033[3;30;41m[ERROR] %s \033[0m\n", message.c_str());
 		exit(1);
 		break;
 	case Lightning::Flow::EXPECTED:
-		printf("\x1B[33m[EXPECTED] %s\033[0m\n", message.c_str());
+		printf("\033[3;30;45m[EXPECTED] %s \033[0m\n", message.c_str());
 		exit(2);
 		break;
 	case Lightning::Flow::ABORT:
-		printf("\x1B[31m[ABORT] %s\033[0m\n", message.c_str());
+		printf("\033[3;30;41m[ABORT] %s \033[0m\n", message.c_str());
 		exit(-1);
 		break;
 	case Lightning::Flow::PRINT:
@@ -33,15 +33,13 @@ void Lightning::Msg::Emit(Flow::Flow flag, string message)
 		std::cout << message;
 		break;
 	case Lightning::Flow::PROCESS:
-		printf("\x1B[34m[%] %s\033[0m\n", message.c_str());
+		printf("\033[3;30;44m[%%] %s \033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::WARNING:
-		printf("\x1B[93m[!] %s\033[0m\n", message.c_str());
+		printf("\033[3;30;43m[!] %s \033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::WARNING_WNL:
-		printf("\x1B[93m[!] %s\033[0m\n", message.c_str());
-		break;
-	default:
+		printf("\033[3;30;43m[!] %s \033[0m\n", message.c_str());
 		break;
 	}
 }

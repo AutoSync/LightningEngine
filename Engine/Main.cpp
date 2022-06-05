@@ -145,6 +145,13 @@ private:
 // Program entry point and execution
 int main(int argc, const char* argv[])
 {
+	Msg::Emit(Flow::INPUT, "INPUT");
+	Msg::Emit(Flow::OUTPUT, "OUTPUT");
+	Msg::Emit(Flow::WARNING, "WARNING");
+	Msg::Emit(Flow::PROCESS, "PROCESS");
+	Msg::Emit(Flow::ERROR, "ERROR");
+
+	
 	EditorEngine* editor = new EditorEngine();
 	editor->Run();
 		
