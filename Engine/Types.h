@@ -1165,6 +1165,11 @@ namespace Lightning
 		return A;
 	}
 	//Mix Color
+	static void ResetM4(glm::mat4& matrix)
+	{
+		matrix = glm::mat4(1.0f);
+	}
+	
 	//Classes
 
 	//Class to clamp values 

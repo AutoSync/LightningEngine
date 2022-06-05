@@ -17,6 +17,7 @@ private:
 	Shader* shader;
 	LinearColor Background;
 	Camera* camera;
+	Spectator *spec;
 	const char* v_path;
 	const char* f_path;
 	
@@ -35,7 +36,9 @@ public:
 		//Create shader
 		shader = new Shader(v_path, f_path);
 		//Set Camera to default position
-		camera = new Camera(V3(4, 3, 3));
+		camera = new Camera(V3(0, 0, 0));
+		//Set Spectator
+		spec = new Spectator(camera);
 
 		
 	}
@@ -84,6 +87,14 @@ private:
 		SetClearColor(Background, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader->Init();
 		
+		spec->AddInputMovement(Time->deltaTime);
+		
+		projection = spec->GetCamera()->GetPespective();
+		view = spec->GetCamera()->GetViewMatrix();
+		ResetM4(model);
+		
+		glm::mat4 MVP = projection * view * model;
+		shader->SetMat4("MVP", MVP);
 		glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 	}
 	void End()

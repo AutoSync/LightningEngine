@@ -4,6 +4,10 @@ glm::mat4 Lightning::Camera::GetViewMatrix()
 {
     return glm::lookAt(Position.GetGLM(), Position.GetGLM() + Front.GetGLM(), Up.GetGLM());
 }
+glm::mat4 Lightning::Camera::GetPespective()
+{
+	return glm::perspective(glm::radians(FOV), float(Settings.width) / float(Settings.height), NearClip, FarClip);
+}
 void Lightning::Camera::SetInputMovement(Direction direction, float deltaTime)
 {
 	float Velocity = MovementSpeed * deltaTime;

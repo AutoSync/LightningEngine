@@ -1,7 +1,7 @@
 #pragma once
-#include "System.h"
 #include "Types.h"
 #include "Msg.h"
+#include "System.h"
 
 namespace Lightning
 {
@@ -56,6 +56,7 @@ namespace Lightning
 		}
 		~Camera() { /*DESTRUCTOR*/ }
 		glm::mat4 GetViewMatrix();
+		glm::mat4 GetPespective();
 		void SetInputMovement(Direction direction, float deltaTime);
 		void SetRotation(float YAW, float PITCH, float ROLL);
 		void SetInputYaw(double input);
