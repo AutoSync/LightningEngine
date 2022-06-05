@@ -70,6 +70,9 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="Match.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Msg.h">
@@ -120,6 +123,9 @@
     <ClInclude Include="GameObject.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="Match.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="frag.frag">
@@ -151,6 +157,12 @@
       <Filter>Shader</Filter>
     </None>
     <None Include="Shaders\fragmentshader.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\v_test.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shaders\f_test.glsl">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>

@@ -63,8 +63,8 @@ namespace Lightning
 		void SetInputZoom(double offset_y, float deltatime);
 		float GetFOV();
 		void SetFOV(float newFOV);
-		V3 GetLocation();
-		void SetLocation(float x, float y, float z);
+		V3 GetPosition();
+		void SetPosition(float x, float y, float z);
 
 		//Render in Shader
 		void Render();

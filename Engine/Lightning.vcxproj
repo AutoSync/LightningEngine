@@ -160,6 +160,7 @@
     <ClCompile Include="Import.cpp" />
     <ClCompile Include="Inputs.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Match.cpp" />
     <ClCompile Include="Preview_Lightning.cpp" />
     <ClCompile Include="Lights.cpp" />
     <ClCompile Include="Msg.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Import.h" />
     <ClInclude Include="Inputs.h" />
     <ClInclude Include="Lights.h" />
+    <ClInclude Include="Match.h" />
     <ClInclude Include="Msg.h" />
     <ClInclude Include="SceneComponent.h" />
     <ClInclude Include="Shader.h" />
@@ -196,9 +198,11 @@
     <None Include="Shaders\fraglight.frag" />
     <None Include="Shaders\fragphong.frag" />
     <None Include="Shaders\fragsolid.frag" />
+    <None Include="Shaders\f_test.glsl" />
     <None Include="Shaders\vertlight.vert" />
     <None Include="Shaders\vertphong.vert" />
     <None Include="Shaders\vertsolid.vert" />
+    <None Include="Shaders\v_test.glsl" />
     <None Include="vert.vert" />
     <None Include="Shaders\vertexshader.glsl" />
   </ItemGroup>

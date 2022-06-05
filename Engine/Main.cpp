@@ -15,26 +15,29 @@ class EditorEngine : Engine
 {
 private:
 	Shader* shader;
-	Camera* MainCamera;
-	Spectator* spec;
 	LinearColor Background;
-	MeshComponent* object;
-	Light* light;
+	Camera* camera;
+	const char* v_path;
+	const char* f_path;
+	
+	GLuint VertexArrayID, vertexbuffer;
+
 public:
 	//Constructor
 	EditorEngine()
 	{
-		Background = LinearColor(C3(211, 231, 246), 1.0f);
-		shader = new Shader("Shaders/vertexshader.glsl", "Shaders/fragmentshader.glsl");
-		object = new MeshComponent("Samples/Primitives/cube.obj");
+		//Initialize Color
+		Background = LinearColor(C3(125, 125, 125), 1.0f);
+		//Set path to vertex shader
+		v_path = "Shaders/v_test.glsl";
+		//Set path to fragment shader
+		f_path = "Shaders/f_test.glsl";
+		//Create shader
+		shader = new Shader(v_path, f_path);
+		//Set Camera to default position
+		camera = new Camera(V3(4, 3, 3));
+
 		
-		light = new Light(Transform(0.0f), LightType::Directional);
-		light->diffuse = C3(245, 245, 211);
-		light->ambient = C3(52, 62, 103);
-		
-		MainCamera = new Camera;
-		MainCamera->SetLocation(0.0f, 1.0f, -3.0f);
-		spec = new Spectator(MainCamera);	
 	}
 	// Init Engine
 	void Init()
@@ -46,32 +49,47 @@ private:
 	//When Start Program
 	void Start()
 	{
+		static const GLfloat g_vertex_buffer_data[] = {
+		   -1.0f, -1.0f, 0.0f,
+		   1.0f, -1.0f, 0.0f,
+		   0.0f,  1.0f, 0.0f,
+		};
+
+		glGenVertexArrays(1, &VertexArrayID);
+		glBindVertexArray(VertexArrayID);
+
+		// Generate 1 buffer, put the resulting identifier in vertexbuffer
+		glGenBuffers(1, &vertexbuffer);
+		// The following commands will talk about our 'vertexbuffer' buffer
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		// Give our vertices to OpenGL.
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 		
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glVertexAttribPointer(
+			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+		// Draw the triangle !
+
 	}
 	//Render Loop
 	void Update()
 	{
-		float t = (float)Time->GetTime();
-		//cout << Mix(1.0, 0.0, sin(t)) << endl;
-		LinearColor YellowBackground = LinearColor(C3(245, 245, 211), 1.0f);
-		LinearColor NewBackground = Cinterp(Background, YellowBackground, sin(t));
-		SetClearColor(NewBackground);
-
-		RenderCommand(LR_CLEAR, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		spec->AddInputMovement(Time->deltaTime);
-		
-		
+		SetClearColor(Background, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader->Init();
 		
-		shader->SetMat4("projection", projection);
-		shader->SetMat4("view", view);
-	
-		light->Render(shader);
-		shader->SetV3("ViewLocation", spec->GetCamera()->GetLocation());
-		
-		object->Draw(shader);
-		object->SetScale(V3(0.5f));
+		glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	}
+	void End()
+	{
+		glDisableVertexAttribArray(0);
+
 	}
 
 };
@@ -81,4 +99,5 @@ int main(int argc, const char* argv[])
 {
 	EditorEngine* editor = new EditorEngine();
 	editor->Init();
+	
 }

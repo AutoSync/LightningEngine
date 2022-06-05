@@ -1,15 +1,20 @@
 #include "Engine.h"
 
+void FixedRender(void(*function)(void))
+{
+	function();
+}
+
 Lightning::Engine::Engine()
 {
 	window = NULL;
-	InitializeWindow(engine_settings);
+	InitializeWindow(engs);
 }
 
 Lightning::Engine::Engine(EngineSettings settings)
 {
-	engine_settings = settings;
-	InitializeWindow(engine_settings);
+	engs = settings;
+	InitializeWindow(engs);
 }
 
 void Lightning::Engine::InitializeEngine()
@@ -44,26 +49,28 @@ void Lightning::Engine::SetWindowSize(int width, int height)
 
 void Lightning::Engine::SetDisplayVersion(bool enable)
 {
-	this->engine_settings.displayVersion = enable;
+	this->engs.displayVersion = enable;
 }
 
 void Lightning::Engine::SetWindowTitle(string _title)
 {
-	this->engine_settings.title = _title.c_str();
+	this->engs.title = _title.c_str();
 }
 
 void Lightning::Engine::LateUpdate() { /* empty implementation */  }
+
+void Lightning::Engine::FixedUpdate(){ /* empty implementation */ }
 
 void Lightning::Engine::WhenEnd() { /* empty implementation */ }
 
 void Lightning::Engine::SetShowFramerate(bool framerate)
 {
-	this->engine_settings.displayFPS = framerate;
+	this->engs.displayFPS = framerate;
 }
 
 void Lightning::Engine::SetDoubleframe(bool enable)
 {
-	this->engine_settings.doubleFrame = enable;
+	this->engs.doubleFrame = enable;
 }
 
 void Lightning::Engine::RenderCommand(int flag, int value)
@@ -137,6 +144,12 @@ void Lightning::Engine::SetClearColor(LinearColor clear)
 	glClearColor(clear.r, clear.g, clear.b, clear.a);
 }
 
+void Lightning::Engine::SetClearColor(LinearColor clear, int buffer)
+{
+	SetClearColor(clear);
+	RenderCommand(LR_CLEAR, buffer);
+}
+
 void Lightning::Engine::SetFramerate(Framerate framerate)
 {
 	this->framerate = framerate;
@@ -153,29 +166,57 @@ void Lightning::Engine::OnRender()
 void Lightning::Engine::OnRender(RenderSettings settings)
 {
 	Msg::Emit(Flow::OUTPUT, "Start Engine");
-	Start();				//Begin Play
+
+	//Begin Play
+	Start();				
 	
 	while (!glfwWindowShouldClose(window))
 	{
-		//Initial Program
-		UpdateTitlebar();
 		Time->SetDeltaTime(glfwGetTime());
-		UpdateFramerate();
-
-		Update();			//Render Loop
-
-		LateUpdate();
-		glFlush();
-		glfwPollEvents();
+		UpdateTitlebar();
+		SetLimiter();
+		
+		if (framerate != Framerate::UNLIMITED)
+		{
+			if (FPS >= limiter)
+			{
+				Time->SetDeltaTime(glfwGetTime());
+				Rendering();
+				SetWindowTitle(to_string(FPS));
+			}
+		}
+		else
+		{
+			Rendering();
+		}
 	}
-	End();					//End Play
+	
+	//End Play
+	End();					
 }
+
+
 
 void Lightning::Engine::OnTerminate()
 {
 	WhenEnd();
 	glfwTerminate();
 	Msg::Emit(Flow::EXIT, "[Program Finished]");
+}
+
+void Lightning::Engine::Rendering()
+{
+	//Render Loop
+	Update();
+	if (framerate != Framerate::UNLIMITED)
+	{
+		FixedUpdate();
+	}
+	//Last Update
+	LateUpdate();
+	glfwSwapBuffers(window);
+	glFlush();
+	glfwPollEvents();
 }
 
 void Lightning::Engine::InitializeWindow(EngineSettings settings)
@@ -204,8 +245,8 @@ void Lightning::Engine::InitializeWindow(EngineSettings settings)
 
 void Lightning::Engine::SetWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
-	engine_settings.width = width;
-	engine_settings.height = height;
+	engs.width = width;
+	engs.height = height;
 }
 
 void Lightning::Engine::UpdateTitlebar()
@@ -214,15 +255,15 @@ void Lightning::Engine::UpdateTitlebar()
 	std::string titleInfo, titteVersion, fpsCount, space;
 
 	space = " | ";
-	float fps = ceil(1.0 / Time->deltaTime);
-	int ifps = (int)fps;
+	double fps = ceil(1.0 / Time->deltaTime);
+	FPS = (int)fps;
 
-	titleInfo = engine_settings.title;
+	titleInfo = engs.title;
 
-	if (engine_settings.displayFPS)
-		fpsCount = space + "FPS: " + std::to_string(ifps);
-	if (engine_settings.displayVersion)
-		titteVersion = engine_settings.version.Text;
+	if (engs.displayFPS)
+		fpsCount = space + "FPS: " + std::to_string(FPS);
+	if (engs.displayVersion)
+		titteVersion = engs.version.Text;
 
 	std::string title = titleInfo + titteVersion  + fpsCount;
 
@@ -230,7 +271,36 @@ void Lightning::Engine::UpdateTitlebar()
 	glfwSetWindowTitle(window, title.c_str());
 }
 
-void Lightning::Engine::UpdateFramerate()
-{
-	glfwSwapBuffers(window);
+void Lightning::Engine::SetLimiter()
+{ 
+	switch (framerate)
+	{
+	case Lightning::FR15:
+		limiter = 15;
+		break;
+	case Lightning::FR24:
+		limiter = 24;
+		break;
+	case Lightning::FR30:
+		limiter = 30;
+		break;
+	case Lightning::FR60:
+		limiter = 60;
+		break;
+	case Lightning::FR90:
+		limiter = 90;
+		break;
+	case Lightning::FR120:
+		limiter = 120;
+		break;
+	case Lightning::FR240:
+		limiter = 240;
+		break;
+	case Lightning::FR480:
+		limiter = 480;
+		break;
+	case Lightning::UNLIMITED:
+		limiter = 0;
+		break;
+	}
 }

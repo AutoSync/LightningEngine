@@ -28,6 +28,7 @@ void Lightning::Camera::SetInputMovement(Direction direction, float deltaTime)
 		Position -= Up * Velocity;
 		break;
 	}
+	UpdateCameraVectors();
 }
 void Lightning::Camera::SetRotation(float YAW, float PITCH, float ROLL)
 {
@@ -65,11 +66,11 @@ void Lightning::Camera::SetFOV(float newFOV)
 {
 	this->FOV = newFOV;
 }
-Lightning::V3 Lightning::Camera::GetLocation()
+Lightning::V3 Lightning::Camera::GetPosition()
 {
 	return Position;
 }
-void Lightning::Camera::SetLocation(float x, float y, float z)
+void Lightning::Camera::SetPosition(float x, float y, float z)
 {
 	this->Position = V3(x, y, z);
 }

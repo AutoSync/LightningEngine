@@ -7,7 +7,7 @@ namespace Lightning
 		double deltaTime, currentTime, lastFrame, time;
 	public:
 		GameTime();
-		void SetDeltaTime(double deltaTime);
+		void SetDeltaTime(double dt);
 		double GetTime();
 		void SetTime(double t);
 	};
