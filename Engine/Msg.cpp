@@ -5,25 +5,25 @@ void Lightning::Msg::Emit(Flow::Flow flag, string message)
 	switch (flag)
 	{
 	case Lightning::Flow::INPUT:
-		std::cout << "<< " << message << std::endl;
+		printf("\x1B[92m<< %s\033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::OUTPUT:
-		std::cout << ">> " << message << std::endl;
+		printf("\x1B[90m>> %s\033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::EXIT:
-		std::cout << "[Exit] " << message << std::endl;
+		printf("\x1B[94m[EXIT] %s\033[0m\n", message.c_str());
 		exit(0);
 		break;
 	case Lightning::Flow::ERROR:
-		std::cout << "[Error] " << message << std::endl;
+		printf("\x1B[31m[ERROR] %s\033[0m\n", message.c_str());
 		exit(1);
 		break;
 	case Lightning::Flow::EXPECTED:
-		std::cout << "[Expected] " << message << std::endl;
+		printf("\x1B[33m[EXPECTED] %s\033[0m\n", message.c_str());
 		exit(2);
 		break;
 	case Lightning::Flow::ABORT:
-		std::cout << "[Abort] " << message << std::endl;
+		printf("\x1B[31m[ABORT] %s\033[0m\n", message.c_str());
 		exit(-1);
 		break;
 	case Lightning::Flow::PRINT:
@@ -33,13 +33,13 @@ void Lightning::Msg::Emit(Flow::Flow flag, string message)
 		std::cout << message;
 		break;
 	case Lightning::Flow::PROCESS:
-		std::cout << "[%] " << message << std::endl;
+		printf("\x1B[34m[%] %s\033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::WARNING:
-		std::cout << "[!] WARNING " << message << std::endl;
+		printf("\x1B[93m[!] %s\033[0m\n", message.c_str());
 		break;
 	case Lightning::Flow::WARNING_WNL:
-		std::cout << "[!] WARNING " << message;
+		printf("\x1B[93m[!] %s\033[0m\n", message.c_str());
 		break;
 	default:
 		break;

@@ -39,7 +39,7 @@ namespace Lightning
 		//Destructor
 		~Engine(){ delete this; }
 		//[Required] Initializer with InitializeComponent
-		virtual void Init() = 0;						
+		virtual void Run() = 0;						
 		//Call to start the engine
 		void InitializeEngine();						
 		//Called every frame
