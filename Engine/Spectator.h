@@ -12,7 +12,7 @@ namespace Lightning
 		Camera* camera;
 		Inputs* Input;
 	public:
-		Spectator(Camera* Camera);
+		Spectator(Camera& Camera);
 		void AddInputMovement(float dt);
 		Camera* GetCamera();
 	};

@@ -1,9 +1,9 @@
 #include "Spectator.h"
 
-Lightning::Spectator::Spectator(Camera* Camera)
+Lightning::Spectator::Spectator(Camera& Camera)
 {
 	Input = new Inputs(glfwGetCurrentContext());
-	camera = Camera;
+	camera = &Camera;
 }
 
 Camera* Lightning::Spectator::GetCamera()
