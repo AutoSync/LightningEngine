@@ -6,6 +6,12 @@ void Lightning::When(bool condition, void(*function)(void))
 		function();
 }
 
+void Lightning::Expected(bool condition, const char* message)
+{
+	if (condition)
+		Msg::Emit(Flow::EXPECTED, message);
+}
+
 void Lightning::Expected(bool condition, void(*function)(void), const char* message)
 {
 	if (!condition)

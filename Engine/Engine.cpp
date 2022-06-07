@@ -155,6 +155,11 @@ void Lightning::Engine::SetFramerate(Framerate framerate)
 	this->framerate = framerate;
 }
 
+void Lightning::Engine::Timer()
+{
+	Time->SetDeltaTime(glfwGetTime());
+}
+
 void Lightning::Engine::OnInit() { /* empty implementation */ }
 
 void Lightning::Engine::OnRender()
@@ -172,23 +177,10 @@ void Lightning::Engine::OnRender(RenderSettings settings)
 	
 	while (!glfwWindowShouldClose(window))
 	{
-		Time->SetDeltaTime(glfwGetTime());
+		//Timer();
 		UpdateTitlebar();
 		SetLimiter();
-		
-		if (framerate != Framerate::UNLIMITED)
-		{
-			if (FPS >= limiter)
-			{
-				Time->SetDeltaTime(glfwGetTime());
-				Rendering();
-				SetWindowTitle(to_string(FPS));
-			}
-		}
-		else
-		{
-			Rendering();
-		}
+		Rendering();
 	}
 	
 	//End Play
@@ -243,25 +235,20 @@ void Lightning::Engine::InitializeWindow(EngineSettings settings)
 	Input = new Inputs(window);
 }
 
-void Lightning::Engine::SetWindowSizeCallback(GLFWwindow* window, int width, int height)
-{
-	engs.width = width;
-	engs.height = height;
-}
-
 void Lightning::Engine::UpdateTitlebar()
 {
 	//Buffers text
-	std::string titleInfo, titteVersion, fpsCount, space;
+	std::string titleInfo, titteVersion, fpsCount, space, delta;
 
 	space = " | ";
 	double fps = ceil(1.0 / Time->deltaTime);
 	FPS = (int)fps;
+	delta = std::to_string(Time->deltaTime);
 
 	titleInfo = engs.title;
 
 	if (engs.displayFPS)
-		fpsCount = space + "FPS: " + std::to_string(FPS);
+		fpsCount = space + "FPS: " + std::to_string(FPS) + space + "dt: " + delta;
 	if (engs.displayVersion)
 		titteVersion = engs.version.Text;
 

@@ -17,9 +17,9 @@ namespace Lightning
 		//Object Params
 		//Camera Atributes
 		
-		V3 Position;								// Relative Location
-		V3 Front;									// Front Camera
-		V3 Up;										// Camera Up Vector
+		V3 Position = V3(0);						// Relative Location
+		V3 Front = V3(0, 0, -1);					// Front Camera
+		V3 Up = V3(0, 1, 0);						// Camera Up Vector
 		V3 Right;									// Camera Right vector
 		V3 WorldUp;									// Absolute World Location
 		// Euler Angles	
@@ -34,11 +34,15 @@ namespace Lightning
 		float FOV =	90.f;							//Field of View 90 Default
 		float NearClip = 0.1f;						//Near Clip
 		float FarClip = 100.f;						//Far Clip
+		glm::mat4 viewMatrix = glm::mat4(1.0f);
+		glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	public:
 		Camera(V3 position = V3(0.0f), V3 up = V3(0.0f, 1.0f, 0.0f), float yaw = DefaultYaw,
 			float pitch = DefaultPitch) : Front(0.0f, 0.0f, -1.0f), MovementSpeed(DefaultSpeed),
 			Sensitivity(DefaultSensitivity), FOV(DefaultFOV)
 		{
+			_idc("Initialized");
+
 			this->Position = position;
 			this->WorldUp = up;
 			this->Yaw = yaw;
@@ -48,6 +52,7 @@ namespace Lightning
 		Camera(float PositionX, float PositionY, float PositionZ, float UpX, float UpY, float UpZ, float yaw, float pitch)
 			: Front(V3(0.0f, 0.0f, -1.0f)), MovementSpeed(DefaultSpeed), Sensitivity(DefaultSensitivity)
 		{
+			_idc("Initialized");
 			this->Position = glm::vec3(PositionX, PositionY, PositionZ);
 			this->WorldUp = glm::vec3(UpX, UpY, UpZ);
 			this->Yaw = yaw;
@@ -55,7 +60,11 @@ namespace Lightning
 			UpdateCameraVectors();
 		}
 		~Camera() { /*DESTRUCTOR*/ }
+		void _idc(const char* message);
 		glm::mat4 GetViewMatrix();
+		glm::mat4 GetLookAt();
+		void SetViewMatrix(glm::mat4 mat);
+		void SetProjectionMatrix(glm::mat4 mat);
 		glm::mat4 GetPespective();
 		void SetInputMovement(Direction direction, float deltaTime);
 		void SetRotation(float YAW, float PITCH, float ROLL);

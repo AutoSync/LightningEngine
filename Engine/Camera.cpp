@@ -1,8 +1,26 @@
 #include "Camera.h"
 
+void Lightning::Camera::_idc(const char* message)
+{
+	cout << "Camera: " << typeid(*this).name() << " " << message << endl;
+}
+
 glm::mat4 Lightning::Camera::GetViewMatrix()
 {
-    return glm::lookAt(Position.GetGLM(), Position.GetGLM() + Front.GetGLM(), Up.GetGLM());
+    return viewMatrix;
+}
+glm::mat4 Lightning::Camera::GetLookAt()
+{
+	view = glm::lookAt(Position.GetGLM(), Position.GetGLM() + Front.GetGLM(), Up.GetGLM());
+	return view;
+}
+void Lightning::Camera::SetViewMatrix(glm::mat4 mat)
+{
+	viewMatrix = mat;
+}
+void Lightning::Camera::SetProjectionMatrix(glm::mat4 mat)
+{
+	projectionMatrix = mat;
 }
 glm::mat4 Lightning::Camera::GetPespective()
 {
@@ -11,28 +29,52 @@ glm::mat4 Lightning::Camera::GetPespective()
 void Lightning::Camera::SetInputMovement(Direction direction, float deltaTime)
 {
 	float Velocity = MovementSpeed * deltaTime;
+	string l = "", dir = "", message = "";
 	switch (direction)
 	{
 	case Lightning::FORWARD:
 		Position += Front * Velocity;
+		l = to_string(Position.x);
+		dir = "Forward";
+		message = dir + ": " + l;
+		_idc(message.c_str());
 		break;
 	case Lightning::BACKWARD:
 		Position -= Front * Velocity;
+		l = to_string(Position.x);
+		dir = "Backward";
+		message = dir + ": " + l;
+		_idc(message.c_str());
 		break;
 	case Lightning::RIGHT:
 		Position += Right * Velocity;
+		l = to_string(Position.z);
+		dir = "Right";
+		message = dir + ": " + l;
+		_idc(message.c_str());
 		break;
 	case Lightning::LEFT:
 		Position -= Right * Velocity;
+		l = to_string(Position.z);
+		dir = "Left";
+		message = dir + ": " + l;
+		_idc(message.c_str());
 		break;
 	case Lightning::UP:
 		Position += Up * Velocity;
+		l = to_string(Position.y);
+		dir = "Up";
+		message = dir + ": " + l;
+		_idc(message.c_str());
 		break;
 	case Lightning::DOWN:
 		Position -= Up * Velocity;
+		l = to_string(Position.y);
+		dir = "Down";
+		message = dir + ": " + l;
+		_idc(message.c_str());
 		break;
 	}
-	UpdateCameraVectors();
 }
 void Lightning::Camera::SetRotation(float YAW, float PITCH, float ROLL)
 {

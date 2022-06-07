@@ -11,40 +11,12 @@
 
 using namespace Lightning;
 
-void printex()
+void Resize(GLFWwindow* window, int width, int height)
 {
-	printf("\n");
-	printf("\x1B[31mTexting\033[0m\t\t");
-	printf("\x1B[32mTexting\033[0m\t\t");
-	printf("\x1B[33mTexting\033[0m\t\t");
-	printf("\x1B[34mTexting\033[0m\t\t");
-	printf("\x1B[35mTexting\033[0m\n");
-
-	printf("\x1B[36mTexting\033[0m\t\t");
-	printf("\x1B[36mTexting\033[0m\t\t");
-	printf("\x1B[36mTexting\033[0m\t\t");
-	printf("\x1B[37mTexting\033[0m\t\t");
-	printf("\x1B[93mTexting\033[0m\n");
-
-	printf("\033[3;42;30mTexting\033[0m\t\t");
-	printf("\033[3;43;30mTexting\033[0m\t\t");
-	printf("\033[3;44;30mTexting\033[0m\t\t");
-	printf("\033[3;104;30mTexting\033[0m\t\t");
-	printf("\033[3;100;30mTexting\033[0m\n");
-
-	printf("\033[3;47;35mTexting\033[0m\t\t");
-	printf("\033[2;47;35mTexting\033[0m\t\t");
-	printf("\033[1;47;35mTexting\033[0m\t\t");
-	printf("\t\t");
-	printf("\n");
-}
-
-void SizeCallback(GLFWwindow* wnd, int width, int height)
-{
+	glViewport(0, 0, width, height);
 	Settings.width = width;
 	Settings.height = height;
-	glViewport(0, 0, width, height);
-	Msg::Emit(Flow::OUTPUT, "Window size changed to: " + to_string(width) + " X " + to_string(height));
+	Msg::Emit(Flow::PRINT, "Resize:" + std::to_string(width) + "x" + std::to_string(height));
 }
 
 class EditorEngine : Engine
@@ -54,16 +26,17 @@ private:
 	LinearColor Background;
 	Camera camera;
 	Spectator* spec;
+	MeshComponent* mesh;
 	const char* v_path;
 	const char* f_path;
 	
-	GLuint VertexArrayID, vertexbuffer, colorbuffer;
+	uint VertexArrayID, vertexbuffer, colorbuffer;
 
 public:
 	//Constructor
 	EditorEngine()
 	{
-		glfwSetWindowSizeCallback(glfwGetCurrentContext(), SizeCallback);
+		glfwSetWindowSizeCallback(glfwGetCurrentContext(), Resize);
 		//Initialize Color
 		Background = LinearColor(C3(125, 125, 125), 1.0f);
 		//Set path to vertex shader
@@ -74,11 +47,12 @@ public:
 		shader = new Shader(v_path, f_path);
 		//Set Camera to default position
 		camera = Camera();
-		camera.SetPosition(4.0f, 3.0f, 3.0f);
+		camera.SetPosition(4,3,3);
 		//Set Spectator to default position
 		spec = new Spectator(camera);
+		//Set mesh
+		mesh = new MeshComponent("Samples/Primitives/cube.obj");
 
-		
 	}
 	// Init Engine
 	void Run()
@@ -90,7 +64,7 @@ private:
 	//When Start Program
 	void Start()
 	{
-		static const GLfloat g_vertex_buffer_data[] = {
+		static const float g_vertex_buffer_data[] = {
 		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
 		-1.0f,-1.0f, 1.0f,
 		-1.0f, 1.0f, 1.0f, // triangle 1 : end
@@ -128,7 +102,7 @@ private:
 		-1.0f, 1.0f, 1.0f,
 		1.0f,-1.0f, 1.0f
 		};
-		static const GLfloat g_color_buffer_data[] = {
+		static const float g_color_buffer_data[] = {
 		0.583f,  0.771f,  0.014f,
 		0.609f,  0.115f,  0.436f,
 		0.327f,  0.483f,  0.844f,
@@ -209,18 +183,28 @@ private:
 	//Render Loop
 	void Update()
 	{
+		Timer();
 		SetClearColor(Background, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader->Init();
 		
-		spec->AddInputMovement(Time->deltaTime);
+		spec->AddInputMovement();
 		
 		projection = glm::perspective(glm::radians(45.f), (float)Settings.width / (float)Settings.height, 0.1f, 100.0f);
-		view =	glm::lookAt(glm::vec3(4,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+		//view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+		//spec->GetCamera()->SetViewMatrix(glm::lookAt(glm::vec3(4, 3, 3), 
+		//	spec->GetCamera()->GetPosition().GetGLM() + glm::vec3(1, 0, 0), 
+		//	glm::vec3(0, 1, 0)) );
+		view = spec->GetCamera()->GetLookAt();
 		model = glm::mat4(1.0f);
 		
 		glm::mat4 MVP = projection * view * model;
 		shader->SetMat4("MVP", MVP);
+		
+		
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+
+		mesh->SetPosition(V3(0, 0, 3));
+		//mesh->Draw(shader);
 	}
 	void End()
 	{

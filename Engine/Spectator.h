@@ -1,8 +1,9 @@
 #pragma once
 #include "Types.h"
-#include "System.h"
 #include "Camera.h"
 #include "Inputs.h"
+#include "System.h"
+#include "Match.h"
 
 namespace Lightning
 {
@@ -13,7 +14,7 @@ namespace Lightning
 		Inputs* Input;
 	public:
 		Spectator(Camera& Camera);
-		void AddInputMovement(float dt);
+		void AddInputMovement();
 		Camera* GetCamera();
 	};
 }

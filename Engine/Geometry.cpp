@@ -105,7 +105,9 @@ void Lightning::MeshComponent::Draw(Shader* shader)
 	model = glm::rotate(model, transform.Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::rotate(model, transform.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	
-    shader->SetMat4("model", model);
+    //shader->SetMat4("model", model);
+    glm::mat4 mvp = projection * view * model;
+	shader->SetMat4("MVP", mvp);
     if (visible)
     {
         for (uint i = 0; i < meshes.size(); i++)

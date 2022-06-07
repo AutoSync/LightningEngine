@@ -75,6 +75,8 @@ namespace Lightning
 		void SetClearColor(LinearColor clear, int buffer);
 		//Set Framerate Limit
 		void SetFramerate(Framerate framerate);
+		// Update Time
+		void Timer();
 	private:
 		//Initialze engine
 		void OnInit();
@@ -88,8 +90,6 @@ namespace Lightning
 		void Rendering();
 		//Initialize Window
 		void InitializeWindow(EngineSettings settings);
-		//Set Window Callback
-		void SetWindowSizeCallback(GLFWwindow* window, int width, int height);
 		//Update Title bar informations
 		void UpdateTitlebar();
 		//Update Framerate
