@@ -14,7 +14,7 @@ namespace Lightning
 		Inputs* Input;
 	public:
 		//Constructor
-		Spectator(Camera& Camera);
+		Spectator(Camera* Camera);
 		//Camera Movement
 		void AddInputMovement();
 		//Get Camera

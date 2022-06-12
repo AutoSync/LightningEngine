@@ -1,9 +1,9 @@
 #include "Spectator.h"
 
-Lightning::Spectator::Spectator(Camera& Camera)
+Lightning::Spectator::Spectator(Camera* Camera)
 {
 	Input = new Inputs(glfwGetCurrentContext());
-	camera = &Camera;
+	camera = Camera;
 }
 
 Camera* Lightning::Spectator::GetCamera()
@@ -25,24 +25,44 @@ void Lightning::Spectator::SetPespective(bool Perspective)
 
 void Lightning::Spectator::AddInputMovement()
 {
-	double Move_X, Move_Y, delta = 0.005;
+	double Move_X, Move_Y;
+	double delta = 0.005;
+	//double delta = Time->deltaTime;
 	
 	if (Input->GetMousePress(MouseKeys::MOUSE_RIGHT))
 	{
 		Input->SetHideCursor(true);
 
 		if (Input->GetKeyPress(Keyboard::W))
-			camera->SetInputMovement(Direction::FORWARD, delta);
+		{
+			camera->Position += V3(camera->Position.x, 0, 0) * delta;
+			cout << "W " << camera->Position.x << endl;
+		}
 		if (Input->GetKeyPress(Keyboard::S))
-			camera->SetInputMovement(Direction::BACKWARD, delta);
+		{
+			camera->Position -= V3(camera->Position.x, 0, 0) * delta;
+			cout << "S " << camera->Position.x << endl;
+		}
 		if (Input->GetKeyPress(Keyboard::A))
-			camera->SetInputMovement(Direction::LEFT, delta);
+		{
+			camera->Position -= V3(0, 0, camera->Position.z) * delta;
+			cout << "A " << camera->Position.z << endl;
+		}
 		if (Input->GetKeyPress(Keyboard::D))
-			camera->SetInputMovement(Direction::RIGHT, delta);
+		{
+			camera->Position += V3(0, 0, camera->Position.z) * delta;
+			cout << "D " << camera->Position.z << endl;
+		}
 		if (Input->GetKeyPress(Keyboard::Q))
-			camera->SetInputMovement(Direction::DOWN, delta);
+		{
+			camera->Position -= V3(0, camera->Position.y, 0) * delta;
+			cout << "Q " << camera->Position.y << endl;
+		}
 		if (Input->GetKeyPress(Keyboard::E))
-			camera->SetInputMovement(Direction::UP, delta);
+		{
+			camera->Position += V3(0, camera->Position.y, 0) * delta;
+			cout << "E " << camera->Position.y << endl;
+		}
 		
 		if (firstMouse)
 		{

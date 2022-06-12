@@ -24,7 +24,7 @@ class EditorEngine : Engine
 private:
 	Shader* shader;
 	LinearColor Background;
-	Camera camera;
+	Camera* camera;
 	Spectator* spec;
 	MeshComponent* mesh;
 	const char* v_path;
@@ -46,8 +46,8 @@ public:
 		//Create shader
 		shader = new Shader(v_path, f_path);
 		//Set Camera to default position
-		camera = Camera();
-		camera.SetPosition(4,3,3);
+		camera = new Camera();
+		camera->SetPosition(4,3,3);
 		//Set Spectator to default position
 		spec = new Spectator(camera);
 		//Set mesh
@@ -187,7 +187,8 @@ private:
 		shader->Init();
 		
 		spec->AddInputMovement();
-		spec->Update();
+		projection = spec->GetCamera()->GetPespective();
+		view = spec->GetCamera()->GetLookAt();
 		
 		model = glm::mat4(1.0f);
 		
