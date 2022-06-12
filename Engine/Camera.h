@@ -36,6 +36,7 @@ namespace Lightning
 		float FarClip = 100.f;						//Far Clip
 		glm::mat4 viewMatrix = glm::mat4(1.0f);
 		glm::mat4 projectionMatrix = glm::mat4(1.0f);
+		bool usePerspective = true;
 	public:
 		Camera(V3 position = V3(0.0f), V3 up = V3(0.0f, 1.0f, 0.0f), float yaw = DefaultYaw,
 			float pitch = DefaultPitch) : Front(0.0f, 0.0f, -1.0f), MovementSpeed(DefaultSpeed),

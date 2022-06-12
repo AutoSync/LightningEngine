@@ -11,8 +11,8 @@ glm::mat4 Lightning::Camera::GetViewMatrix()
 }
 glm::mat4 Lightning::Camera::GetLookAt()
 {
-	view = glm::lookAt(Position.GetGLM(), Position.GetGLM() + Front.GetGLM(), Up.GetGLM());
-	return view;
+	viewMatrix = glm::lookAt(Position.GetGLM(), Position.GetGLM() + Front.GetGLM(), Up.GetGLM());
+	return viewMatrix;
 }
 void Lightning::Camera::SetViewMatrix(glm::mat4 mat)
 {
@@ -24,12 +24,18 @@ void Lightning::Camera::SetProjectionMatrix(glm::mat4 mat)
 }
 glm::mat4 Lightning::Camera::GetPespective()
 {
-	return glm::perspective(glm::radians(FOV), float(Settings.width) / float(Settings.height), NearClip, FarClip);
+	glm::mat4 _projection;
+	if(usePerspective)
+		_projection = glm::perspective(glm::radians(FOV), (float)Settings.width / (float)Settings.height, NearClip, FarClip);
+	else
+		_projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, NearClip, FarClip);
+	return projection;
 }
 void Lightning::Camera::SetInputMovement(Direction direction, float deltaTime)
 {
 	float Velocity = MovementSpeed * deltaTime;
 	string l = "", dir = "", message = "";
+	
 	switch (direction)
 	{
 	case Lightning::FORWARD:

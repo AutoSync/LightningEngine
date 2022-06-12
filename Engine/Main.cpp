@@ -1,5 +1,5 @@
-#include "Engine.h"
 
+#include "Engine.h"
 #include "Types.h"
 #include "Shader.h"
 #include "Geometry.h"
@@ -52,7 +52,6 @@ public:
 		spec = new Spectator(camera);
 		//Set mesh
 		mesh = new MeshComponent("Samples/Primitives/cube.obj");
-
 	}
 	// Init Engine
 	void Run()
@@ -183,18 +182,13 @@ private:
 	//Render Loop
 	void Update()
 	{
-		Timer();
+		Time->SetDeltaTime(glfwGetTime());
 		SetClearColor(Background, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		shader->Init();
 		
 		spec->AddInputMovement();
+		spec->Update();
 		
-		projection = glm::perspective(glm::radians(45.f), (float)Settings.width / (float)Settings.height, 0.1f, 100.0f);
-		//view = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
-		//spec->GetCamera()->SetViewMatrix(glm::lookAt(glm::vec3(4, 3, 3), 
-		//	spec->GetCamera()->GetPosition().GetGLM() + glm::vec3(1, 0, 0), 
-		//	glm::vec3(0, 1, 0)) );
-		view = spec->GetCamera()->GetLookAt();
 		model = glm::mat4(1.0f);
 		
 		glm::mat4 MVP = projection * view * model;
@@ -203,7 +197,7 @@ private:
 		
 		glDrawArrays(GL_TRIANGLES, 0, 12*3); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
-		mesh->SetPosition(V3(0, 0, 3));
+		;; mesh->SetPosition(V3(0, 0, 3));
 		//mesh->Draw(shader);
 	}
 	void End()

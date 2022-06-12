@@ -11,11 +11,21 @@ Camera* Lightning::Spectator::GetCamera()
 	return camera;
 }
 
+void Lightning::Spectator::Update()
+{
+	
+	projection = camera->GetPespective();
+	view = camera->GetLookAt();
+}
+
+void Lightning::Spectator::SetPespective(bool Perspective)
+{
+	camera->usePerspective = Perspective;
+}
+
 void Lightning::Spectator::AddInputMovement()
 {
-	Expected(Time->deltaTime == 0.0f, "delta time cannot be null, try a manual approach");
-	double Move_X, Move_Y, delta = Time->deltaTime;
-	
+	double Move_X, Move_Y, delta = 0.005;
 	
 	if (Input->GetMousePress(MouseKeys::MOUSE_RIGHT))
 	{
@@ -48,7 +58,7 @@ void Lightning::Spectator::AddInputMovement()
 		camera->SetInputYaw(Move_X);
 		camera->SetInputPitch(Move_Y);
 
-		Msg::Emit(Flow::PRINT, "Delta Time: " + std::to_string(delta));
+		//Msg::Emit(Flow::PRINT, "Delta Time: " + std::to_string(delta));
 	}
 	else
 		Input->SetHideCursor();

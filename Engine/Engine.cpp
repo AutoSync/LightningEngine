@@ -173,16 +173,9 @@ void Lightning::Engine::OnRender(RenderSettings settings)
 	Msg::Emit(Flow::OUTPUT, "Start Engine");
 
 	//Begin Play
-	Start();				
-	
-	while (!glfwWindowShouldClose(window))
-	{
-		//Timer();
-		UpdateTitlebar();
-		SetLimiter();
-		Rendering();
-	}
-	
+	Start();
+	//Render Loop
+	Rendering();
 	//End Play
 	End();					
 }
@@ -198,17 +191,20 @@ void Lightning::Engine::OnTerminate()
 
 void Lightning::Engine::Rendering()
 {
-	//Render Loop
-	Update();
-	if (framerate != Framerate::UNLIMITED)
+	while (!glfwWindowShouldClose(window))
 	{
-		FixedUpdate();
+		//Set Time
+		Timer();
+		//Update Title bar informations
+		UpdateTitlebar();
+		//Render Loop
+		Update();
+		//Last Update
+		LateUpdate();
+		glfwSwapBuffers(window);
+		glFlush();
+		glfwPollEvents();
 	}
-	//Last Update
-	LateUpdate();
-	glfwSwapBuffers(window);
-	glFlush();
-	glfwPollEvents();
 }
 
 void Lightning::Engine::InitializeWindow(EngineSettings settings)
