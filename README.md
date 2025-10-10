@@ -1,6 +1,6 @@
-# Lightning Engine V0.14.0 [WIP]
+# Lightning Engine Migration 0.14.0 to -> V0.15.0 [WIP]
 
-- [Lightning Engine V0.14.0 [WIP]](#lightning-engine-v0140-wip)
+- [Lightning Engine V0.15.0 [WIP]](#lightning-engine-v0150-wip)
 - [Presentation](#presentation)
   - [Engine Progress](#engine-progress)
   - [API](#api)
@@ -9,18 +9,16 @@
 
 # Presentation
 
+# MIGRATION 0.14.0 -> 0.15.0
+
 <p>Lightning engine is a game engine that is currently under development. </p>
 
 ## Engine Progress
 - [x] Window Handler
-  - [x] OpenGL Context
-    - [x] GLFW
-    - [x] GLEW
-    - [x] RenderLoop
-    - [x] BeginPlay
-    - [x] EndPlay
-  - [ ] Class Input
-  - [ ] Class Object
+  - [x] SDL BASE
+  - [x] Class Input
+  - [ ] Game Instance
+  - [ ] Renderer
   - [x] Engine Settings
     - [ ] Framebuffer
     - [ ] ClearColor

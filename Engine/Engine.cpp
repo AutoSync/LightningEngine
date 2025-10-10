@@ -223,10 +223,6 @@ void Lightning::Engine::InitializeWindow(EngineSettings settings)
 	window = glfwCreateWindow(settings.width, settings.height, settings.title, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
-	GLenum gl_error = glewInit();
-	Msg::When(GLEW_OK != gl_error, Flow::ERROR, "Failed to Initialize GLEW", glfwTerminate);
-
-
 	Msg::When(!window, Flow::ERROR, "Failed to create Glfw Window");
 	Input = new Inputs(window);
 }

@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.16)
+project(LightningEngine)
+
+set(CMAKE_CXX_STANDARD 17)
+
+# Encontrar SDL3
+find_package(SDL3 REQUIRED)
+
+# Configuração do executável
+add_executable(LightningEngine
+    src/main.cpp
+    src/core/Engine.cpp
+    src/core/Game.cpp
+    src/graphics/Renderer.cpp
+    src/input/InputManager.cpp
+)
+
+# Link com SDL3
+target_link_libraries(LightningEngine SDL3::SDL3)
+
+# Incluir diretórios
+target_include_directories(LightningEngine PRIVATE include)

@@ -1,6 +1,16 @@
+/*
+* AutoSync Lightning Engine by Erick Andrade
+* 2018 - 2025 - Copyright Lightning Engine - All Rights Reserved
+* Engine main window class
+
+
+*/
+
+
+
 #pragma once
 #define GLEW_STATIC 
-#include <GLEW/glew.h> 
+#include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 
 //Tools Engine
@@ -11,7 +21,7 @@
 #include "Match.h"			//Match Functions
 
 //Welcome
-#define LIGHTNING_WELCOME "2022 (C) LIGHTNING ENGINE"
+#define LIGHTNING_WELCOME "2025 (C) LIGHTNING ENGINE"
 
 namespace Lightning
 {
