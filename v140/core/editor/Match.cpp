@@ -1,0 +1,21 @@
+#include "../../Match.h"
+
+void LightningEngine::When(bool condition, void(*function)(void))
+{
+	if (condition)
+		function();
+}
+
+void LightningEngine::Expected(bool condition, const char* message)
+{
+	if (condition)
+		Msg::Emit(Flow::EXPECTED, message);
+}
+
+void LightningEngine::Expected(bool condition, void(*function)(void), const char* message)
+{
+	if (!condition)
+		Msg::Emit(Flow::EXPECTED, message);
+	else
+		function();
+}

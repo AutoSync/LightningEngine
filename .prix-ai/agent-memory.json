@@ -1,0 +1,482 @@
+{
+  "version": 2,
+  "lastUpdated": "2026-03-09T18:42:58.343Z",
+  "workspaceRoot": "d:\\Arquivos\\Developers\\CPP\\LightningEngine",
+  "goals": [
+    "analise o projeto e entenda o proposito",
+    "Criar make para este projeto",
+    "Revise o código do arquivo atual, apontando bugs, melhorias e uma versão sugerida."
+  ],
+  "actions": [
+    {
+      "timestamp": "2026-03-09T15:03:55.537Z",
+      "type": "decision",
+      "content": "session-start goal=analise o projeto e entenda o proposito"
+    },
+    {
+      "timestamp": "2026-03-09T15:03:58.712Z",
+      "type": "tool-call",
+      "content": "analyze_project {}"
+    },
+    {
+      "timestamp": "2026-03-09T15:03:58.723Z",
+      "type": "tool-result",
+      "content": "analyze_project: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:01.376Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\".\",\"maxItems\":50}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:01.416Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:04.450Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"README.md\"}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:04.459Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:07.616Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"v140\",\"maxItems\":30}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:07.734Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:11.794Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"v150\",\"maxItems\":30}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:11.819Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:15.715Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"Plan\",\"maxItems\":30}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:15.722Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:18.764Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"v150/Editor.cpp\"}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:18.787Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:22.169Z",
+      "type": "tool-call",
+      "content": "search_code {\"pattern\":\"#include.*Engine\",\"path\":\"v150\",\"maxResults\":10}"
+    },
+    {
+      "timestamp": "2026-03-09T15:04:41.546Z",
+      "type": "tool-result",
+      "content": "search_code: ok"
+    },
+    {
+      "timestamp": "2026-03-09T15:05:13.696Z",
+      "type": "decision",
+      "content": "session-end: max-steps reached"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:01.683Z",
+      "type": "decision",
+      "content": "session-start goal=Criar make para este projeto"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:04.088Z",
+      "type": "tool-call",
+      "content": "analyze_project {}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:04.095Z",
+      "type": "tool-result",
+      "content": "analyze_project: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:06.281Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"V150\",\"maxItems\":50}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:06.301Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:08.664Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"V150/src\",\"maxItems\":50}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:08.670Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:11.084Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/LightningEngine.vcxproj\"}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:11.090Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:13.589Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/Editor.cpp\",\"startLine\":1,\"endLine\":50}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:13.594Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:16.526Z",
+      "type": "tool-call",
+      "content": "search_code {\"pattern\":\"SDL3\",\"path\":\"V150\",\"maxResults\":5}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:16.583Z",
+      "type": "tool-result",
+      "content": "search_code: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:20.383Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"V150/third_party\",\"maxItems\":20}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:20.399Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:23.826Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"V150/third_party/SDL3\",\"maxItems\":20}"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:23.832Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:41:45.880Z",
+      "type": "decision",
+      "content": "session-end: max-steps reached"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:38.045Z",
+      "type": "decision",
+      "content": "session-start goal=Revise o código do arquivo atual, apontando bugs, melhorias e uma versão sugerida."
+    },
+    {
+      "timestamp": "2026-03-09T18:42:40.764Z",
+      "type": "tool-call",
+      "content": "analyze_project {}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:40.770Z",
+      "type": "tool-result",
+      "content": "analyze_project: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:42.927Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"V150\",\"maxItems\":50}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:42.950Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:45.392Z",
+      "type": "tool-call",
+      "content": "list_files {\"path\":\"V150/src\",\"maxItems\":50}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:45.398Z",
+      "type": "tool-result",
+      "content": "list_files: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:47.471Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/Editor.cpp\"}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:47.476Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:49.539Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/src/include/Engine.h\"}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:49.545Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:53.043Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/src/core/Engine.cpp\"}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:53.050Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:55.633Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/src/include/GameInstance.h\"}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:55.642Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:58.337Z",
+      "type": "tool-call",
+      "content": "read_file {\"path\":\"V150/src/include/Renderer.h\"}"
+    },
+    {
+      "timestamp": "2026-03-09T18:42:58.343Z",
+      "type": "tool-result",
+      "content": "read_file: ok"
+    }
+  ],
+  "insights": [
+    "[max-steps] ## Análise do Projeto Lightning Engine\n\n**Objetivo:** Analisar o projeto e entender seu propósito.\n\n### O que foi feito:\n1. **Análise da estrutura do projeto** - Identificou-se que o workspace contém duas versões principais: `v140` (versão 0.14.0) e `v150` (versão 0.15.0), indicando uma migração em"
+  ],
+  "patterns": [],
+  "preferences": {},
+  "referencedFiles": [
+    "d:/Arquivos/Developers/CPP/LightningEngine",
+    "v140/.vs/Lightning Engine/copilot-chat/2658b03e/sessions/f208f8ad-5055-46d8-999b-bae7b988f9e9",
+    "v140/.vs/Lightning Engine/CopilotIndices/17.14.1231.31060/CodeChunks.db",
+    "v140/.vs/Lightning Engine/CopilotIndices/17.14.1231.31060/SemanticSymbols.db",
+    "v140/.vs/Lightning Engine/FileContentIndex/20ab01fc-158d-4e70-b7c8-3b487a2d4dbc.vsidx",
+    "v140/.vs/Lightning Engine/FileContentIndex/536a9029-c543-41f0-b133-3c7796833748.vsidx",
+    "v140/.vs/Lightning Engine/FileContentIndex/66f03b78-29a4-490f-b9be-9e898d706da6.vsidx",
+    "v140/.vs/Lightning Engine/FileContentIndex/6cfa7627-d4dd-4c4e-a477-b701cb0ec31d.vsidx",
+    "v140/.vs/Lightning Engine/FileContentIndex/e517d888-7ebc-420e-b194-17aaa6185fef.vsidx",
+    "v140/.vs/Lightning Engine/v17/.suo",
+    "v140/.vs/Lightning Engine/v17/Browse.VC.db",
+    "v140/.vs/Lightning Engine/v17/DocumentLayout.backup.json",
+    "v140/.vs/Lightning Engine/v17/DocumentLayout.json",
+    "v140/.vs/Lightning Engine/v17/fileList.bin",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/1566a6518c4cf64d/BLOCKBREAKER.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/286778b870e1a5b5/SHAPES.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/31903bc173d8971c/MSG.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/319102930dc7b70/INPUTS.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/34df4fb64e87097d/SCENECOMPONENT.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/39cf4af6a4b0cc94/MAIN.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/3a7db3dca487d05c/GEOMETRY.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/40f20062c6ae4c22/SHAPES.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/43d431233826f46a/CAMERA.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/47bf345b7c373399/GAMEOBJECT.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/4b1897aac4f510f4/OLD_ENGINE.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/600fa959706a2623/LIGHTS.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/64cf814e67c16e00/GEOMETRY.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/6819c3fd7ef2bf08/MSG.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/6dd76612f205ec2d/CAMERA.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/6ec6b490ab34c482/GAMETIME.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/706f0620cdd9fa7c/MATCH.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/85ee264d75e1718/STB_IMAGE.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/995a169f72d6d495/SHADER.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/a1eac7dc192079c4/INPUTS.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/a3ac7438b2b69c93/IMAGE.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/a7f9608345be97fe/ENGINE.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/ace2a0c7830628c2/SHADER.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/afd26d848fc14a98/IMAGE.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/b07fe8aad533a844/IMPORT.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/ba891cf3aa5d291d/TYPES.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/bdff42f5e951b360/MATCH.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/c4a662242ea7dd0/LIGHTS.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/cd316cf45c9a236/ENGINE.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/cdb0138fde9010a3/GAMETIME.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/db6db9a057b4f6d7/GLAD.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/dd7091593267d779/SPECTATOR.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/e1211d0ba52543d4/SHADER.ipch",
+    "v140/.vs/Lightning Engine/v17/ipch/AutoPCH/f16ef8fd22e009eb/SPACEIVADERS.ipch",
+    "README.md",
+    "# Lightning Engine Migration 0.14.0 to -> V0.15.0 [WIP]\n\n- [Lightning Engine V0.15.0 [WIP]](#lightning-engine-v0150-wip)\n- [Presentation](#presentation)\n  - [Engine Progress](#engine-progress)\n  - [API](#api)\n  - [Features](#features)\n  - [Nucleo](#nucleo)\n\n# Presentation\n\n# MIGRATION 0.14.0 -> 0.15.0\n\n<p>Lightning engine is a game engine that is currently under development. </p>\n\n## Engine Progress\n\n- [x] Window Handler\n  - [x] SDL BASE\n  - [x] Class Input\n  - [ ] Game Instance\n  - [ ] Renderer\n  - [x] Engine Settings\n    - [ ] Framebuffer\n    - [ ] ClearColor\n- [x] Class GameEditor\n- [ ] Shader Compiler\n  - [x] Load Shader\n  - [x] Shader Injection\n    - [ ] Vectors\n    - [ ] Lights\n    - [ ] Fog\n    - [ ] Time\n    - [ ] UV Coords\n    - [ ] World Coords\n  - [ ] Shader Engine\n  - [ ] Shader Processor\n  - [ ] Shader Functions\n  - [ ] Shader Instance\n- [ ] Model Object\n  - [ ] Loader\n- [ ] GUI\n  - [ ] Widgets\n  - [ ] Events\n  - [ ] Process\n  - [ ] Responsive\n  - [ ] Scriptable\n\n## API\n\n- [ ] Math\n- [ ] Physics\n- [ ] Particles\n- [ ] GameObject/Prefabs\n- [ ] Inputs\n\n## Features\n\n- [ ] Render 2D\n- [ ] Render 3D\n- [ ] PostFX\n\n## Nucleo\n\n- [ ] Binary\n  - [ ] Read Binary\n  - [ ] Write Binary\n  - [ ] Write Bitecode\n- [ ] Run Game\n  - [ ] Run Game By Nucleo VM\n- [ ] Script Engine\n  - [ ] Link Game With Code\n  - [ ] Realtime gameplay in editor",
+    "v150/.vs/LightningEngine/CopilotIndices/17.14.1231.31060/CodeChunks.db",
+    "v150/.vs/LightningEngine/CopilotIndices/17.14.1231.31060/SemanticSymbols.db",
+    "v150/.vs/LightningEngine/FileContentIndex/07ff4cc7-de14-493e-8c09-c0ee14d78256.vsidx",
+    "v150/.vs/LightningEngine/FileContentIndex/a1a8b8fe-f1c1-4f9f-b07a-3e84e9471fb7.vsidx",
+    "v150/.vs/LightningEngine/FileContentIndex/d5336136-4f34-4865-b9a8-ea9e47468120.vsidx",
+    "v150/.vs/LightningEngine/FileContentIndex/e34ff6c7-c19b-4b78-b6bf-ec10e02bf850.vsidx",
+    "v150/.vs/LightningEngine/FileContentIndex/e86b19bf-c851-4158-8317-1979396d21e6.vsidx",
+    "v150/.vs/LightningEngine/v17/.suo",
+    "v150/.vs/LightningEngine/v17/Browse.VC.db",
+    "v150/.vs/LightningEngine/v17/DocumentLayout.backup.json",
+    "v150/.vs/LightningEngine/v17/DocumentLayout.json",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/17d160fccbf56072/ENGINE.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/3135ef4c92f86f1c/WINDOW.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/3defa7b4d327e453/SPACE_INVADERS.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/54c1ae3c7836e101/RENDERER.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/728597072e5cdbc5/GAMEINSTANCE.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/7d58535e4c6e4b73/THIRD_PERSON_SHOOTER.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/8e431dc690134476/SPACE_INVADERS.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/a1987ff3a3e1cc71/TYPES.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/bb69a93c88ea47c8/WINDOW.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/bd52727409346fd2/LEVEL.ipch",
+    "v150/.vs/LightningEngine/v17/ipch/AutoPCH/efe03dbc209dc8e2/EDITOR.ipch",
+    "v150/.vs/LightningEngine/v17/Solution.VC.db",
+    "v150/.vscode/launch.json",
+    "v150/compile_commands.json",
+    "v150/c_cpp_properties.json",
+    "v150/Editor.cpp",
+    "v150/examples/third_person_shooter.h",
+    "v150/launch.json",
+    "v150/LightningEngine/x64/Debug/Editor.obj",
+    "/*2018 - 2025 (C) AutoSync Lightning Engine - By Erick Andrade All Rights Reserved\n*/\n\n#pragma once\n#include \"src/include/Engine.h\"\n#include \"src/include/GameInstance.h\"\n#include \"src/include/Renderer.h\"\n#include <SDL3/SDL.h>\n\n\n// GAMES\n#include \"examples/third_person_shooter.h\"\n#include <iostream>\n\nclass MyGame : public LightningEngine::GameInstance\n{\nprivate:\n\tstd::unique_ptr<LightningEngine::Renderer> renderer;\n\tSDL_Window* window;\n\tfloat playerx, playery;\npublic:\n\n\tvoid Initialize() override\n\t{\n\t\ttitle = \"My Game\";\n\t\twidth = 800;\n\t\theight = 600;\n\n\t\twindow = SDL_CreateWindow(title, width, height, SDL_WINDOW_RESIZABLE);\n\n\n\t\trenderer = std::make_unique<LightningEngine::Renderer>(window);\n\n\t\tplayerx = 400.f;\n\t\tplayery = 300.f;\n\n\t\tstd::cout << \"Game Started\" << std::endl;\n\t}\n\n\tvoid Shutdown() override\n\t{\n\t\tstd::cout << \"Game Stopped\" << std::endl;\n\t}\n\n\tvoid Update(float dt) override\n\t{\n\t\tauto keyboardState = SDL_GetKeyboardState(NULL);\n\n\t\tif (keyboardState[SDL_SCANCODE_W]) playery -= 10.f * dt;\n\t\tif (keyboardState[SDL_SCANCODE_S]) playery += 10.f * dt;\n\t\tif (keyboardState[SDL_SCANCODE_A]) playerx -= 10.f * dt;\n\t\tif (keyboardState[SDL_SCANCODE_D]) playerx += 10.f * dt;\n\n\t\tif (keyboardState[SDL_SCANCODE_ESCAPE]) {\n\n\t\t}\n\n\t}\n\n\tvoid Render() override\n\t{\n\t\tif (!renderer) return;\n\n\t\trenderer->Clear();\n\n\t\trenderer->SetDrawColor(255, 0, 0, 255);\n\t\trenderer->FillRect(playerx - 25, playery - 25, 50, 50);\n\n\t\trenderer->SetDrawColor(0, 255, 0, 255);\n\t\trenderer->FillRect(100, 100, 30, 30);\n\n\t\trenderer->SetDrawColor(0, 0, 255, 255);\n\t\trenderer->FillRect(600, 400, 40, 40);\n\n\t\trenderer->Present();\n\n\t}\n\n};\n\nint main(int argc, char* argv[]) {\n\n\tLightningEngine::Engine engine;\n\n\tauto game = std::make_unique<MyGame>();\n\tengine.Run(std::move(game), \"Lightning Engine Demo\", 800, 600);\n\n\treturn 0;\n}",
+    "#include \"src/include/Engine.h\"",
+    "v150/src/core/Engine.cpp",
+    "#include \"../include/Engine.h\"",
+    "V150/.vs/LightningEngine/CopilotIndices/17.14.1231.31060/CodeChunks.db",
+    "V150/.vs/LightningEngine/CopilotIndices/17.14.1231.31060/SemanticSymbols.db",
+    "V150/.vs/LightningEngine/FileContentIndex/07ff4cc7-de14-493e-8c09-c0ee14d78256.vsidx",
+    "V150/.vs/LightningEngine/FileContentIndex/a1a8b8fe-f1c1-4f9f-b07a-3e84e9471fb7.vsidx",
+    "V150/.vs/LightningEngine/FileContentIndex/d5336136-4f34-4865-b9a8-ea9e47468120.vsidx",
+    "V150/.vs/LightningEngine/FileContentIndex/e34ff6c7-c19b-4b78-b6bf-ec10e02bf850.vsidx",
+    "V150/.vs/LightningEngine/FileContentIndex/e86b19bf-c851-4158-8317-1979396d21e6.vsidx",
+    "V150/.vs/LightningEngine/v17/.suo",
+    "V150/.vs/LightningEngine/v17/Browse.VC.db",
+    "V150/.vs/LightningEngine/v17/DocumentLayout.backup.json",
+    "V150/.vs/LightningEngine/v17/DocumentLayout.json",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/17d160fccbf56072/ENGINE.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/3135ef4c92f86f1c/WINDOW.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/3defa7b4d327e453/SPACE_INVADERS.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/54c1ae3c7836e101/RENDERER.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/728597072e5cdbc5/GAMEINSTANCE.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/7d58535e4c6e4b73/THIRD_PERSON_SHOOTER.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/8e431dc690134476/SPACE_INVADERS.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/a1987ff3a3e1cc71/TYPES.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/bb69a93c88ea47c8/WINDOW.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/bd52727409346fd2/LEVEL.ipch",
+    "V150/.vs/LightningEngine/v17/ipch/AutoPCH/efe03dbc209dc8e2/EDITOR.ipch",
+    "V150/.vs/LightningEngine/v17/Solution.VC.db",
+    "V150/.vscode/launch.json",
+    "V150/compile_commands.json",
+    "V150/c_cpp_properties.json",
+    "V150/Editor.cpp",
+    "V150/examples/third_person_shooter.h",
+    "V150/launch.json",
+    "V150/LightningEngine/x64/Debug/Editor.obj",
+    "V150/LightningEngine/x64/Debug/Engine.obj",
+    "V150/LightningEngine/x64/Debug/LightningEngine.exe.recipe",
+    "V150/LightningEngine/x64/Debug/LightningEngine.ilk",
+    "V150/LightningEngine/x64/Debug/LightningEngine.log",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/CL.command.1.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/Cl.items.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/CL.read.1.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/CL.write.1.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/LightningEngine.lastbuildstate",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/link.command.1.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/link.read.1.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/link.secondary.1.tlog",
+    "V150/LightningEngine/x64/Debug/LightningEngine.tlog/link.write.1.tlog",
+    "V150/LightningEngine/x64/Debug/Renderer.obj",
+    "V150/LightningEngine/x64/Debug/third_person_shooter.obj",
+    "V150/LightningEngine/x64/Debug/vc143.idb",
+    "V150/LightningEngine/x64/Debug/vc143.pdb",
+    "V150/LightningEngine/x64/Debug/Window.obj",
+    "V150/LightningEngine.sln",
+    "V150/LightningEngine.vcxproj",
+    "V150/src",
+    "V150/src/core/Engine.cpp",
+    "V150/src/core/Window.cpp",
+    "V150/src/graphics/Renderer.cpp",
+    "V150/src/include/Engine.h",
+    "V150/src/include/GameInstance.h",
+    "V150/src/include/InputManager.h",
+    "V150/src/include/Level.h",
+    "V150/src/include/Renderer.h",
+    "V150/src/include/Types.h",
+    "V150/src/include/Window.h",
+    "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<Project DefaultTargets=\"Build\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n  <ItemGroup Label=\"ProjectConfigurations\">\n    <ProjectConfiguration Include=\"Debug|Win32\">\n      <Configuration>Debug</Configuration>\n      <Platform>Win32</Platform>\n    </ProjectConfiguration>\n    <ProjectConfiguration Include=\"Release|Win32\">\n      <Configuration>Release</Configuration>\n      <Platform>Win32</Platform>\n    </ProjectConfiguration>\n    <ProjectConfiguration Include=\"Debug|x64\">\n      <Configuration>Debug</Configuration>\n      <Platform>x64</Platform>\n    </ProjectConfiguration>\n    <ProjectConfiguration Include=\"Release|x64\">\n      <Configuration>Release</Configuration>\n      <Platform>x64</Platform>\n    </ProjectConfiguration>\n  </ItemGroup>\n  <PropertyGroup Label=\"Globals\">\n    <VCProjectVersion>17.0</VCProjectVersion>\n    <Keyword>Win32Proj</Keyword>\n    <ProjectGuid>{005c6a08-6136-4c41-a584-81aaf3238183}</ProjectGuid>\n    <RootNamespace>LightningEngine</RootNamespace>\n    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>\n  </PropertyGroup>\n  <Import Project=\"$(VCTargetsPath)/Microsoft.Cpp.Default.props\" />\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\" Label=\"Configuration\">\n    <ConfigurationType>Application</ConfigurationType>\n    <UseDebugLibraries>true</UseDebugLibraries>\n    <PlatformToolset>v143</PlatformToolset>\n    <CharacterSet>Unicode</CharacterSet>\n  </PropertyGroup>\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\" Label=\"Configuration\">\n    <ConfigurationType>Application</ConfigurationType>\n    <UseDebugLibraries>false</UseDebugLibraries>\n    <PlatformToolset>v143</PlatformToolset>\n    <WholeProgramOptimization>true</WholeProgramOptimization>\n    <CharacterSet>Unicode</CharacterSet>\n  </PropertyGroup>\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\" Label=\"Configuration\">\n    <ConfigurationType>Application</ConfigurationType>\n    <UseDebugLibraries>true</UseDebugLibraries>\n    <PlatformToolset>v143</PlatformToolset>\n    <CharacterSet>Unicode</CharacterSet>\n  </PropertyGroup>\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\" Label=\"Configuration\">\n    <ConfigurationType>Application</ConfigurationType>\n    <UseDebugLibraries>false</UseDebugLibraries>\n    <PlatformToolset>v143</PlatformToolset>\n    <WholeProgramOptimization>true</WholeProgramOptimization>\n    <CharacterSet>Unicode</CharacterSet>\n  </PropertyGroup>\n  <Import Project=\"$(VCTargetsPath)/Microsoft.Cpp.props\" />\n  <ImportGroup Label=\"ExtensionSettings\">\n  </ImportGroup>\n  <ImportGroup Label=\"Shared\">\n  </ImportGroup>\n  <ImportGroup Label=\"PropertySheets\" Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\n    <Import Project=\"$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />\n  </ImportGroup>\n  <ImportGroup Label=\"PropertySheets\" Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\n    <Import Project=\"$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />\n  </ImportGroup>\n  <ImportGroup Label=\"PropertySheets\" Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\n    <Import Project=\"$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />\n  </ImportGroup>\n  <ImportGroup Label=\"PropertySheets\" Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\n    <Import Project=\"$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)/Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />\n  </ImportGroup>\n  <PropertyGroup Label=\"UserMacros\" />\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\n    <IncludePath>$(SolutionDir)third_party/SDL3/include;$(SolutionDir)third_party/glm/include;$(IncludePath)</IncludePath>\n    <LibraryPath>$(SolutionDir)third_party/SDL3/lib/x64;$(LibraryPath)</LibraryPath>\n  </PropertyGroup>\n  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">\n    <ClCompile>\n      <WarningLevel>Level3</WarningLevel>\n      <SDLCheck>true</SDLCheck>\n      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\n      <ConformanceMode>true</ConformanceMode>\n    </ClCompile>\n    <Link>\n      <SubSystem>Console</SubSystem>\n      <GenerateDebugInformation>true</GenerateDebugInformation>\n    </Link>\n  </ItemDefinitionGroup>\n  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">\n    <ClCompile>\n      <WarningLevel>Level3</WarningLevel>\n      <FunctionLevelLinking>true</FunctionLevelLinking>\n      <IntrinsicFunctions>true</IntrinsicFunctions>\n      <SDLCheck>true</SDLCheck>\n      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\n      <ConformanceMode>true</ConformanceMode>\n    </ClCompile>\n    <Link>\n      <SubSystem>Console</SubSystem>\n      <GenerateDebugInformation>true</GenerateDebugInformation>\n    </Link>\n  </ItemDefinitionGroup>\n  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|x64'\">\n    <ClCompile>\n      <WarningLevel>Level3</WarningLevel>\n      <SDLCheck>true</SDLCheck>\n      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\n      <ConformanceMode>true</ConformanceMode>\n    </ClCompile>\n    <Link>\n      <SubSystem>Console</SubSystem>\n      <GenerateDebugInformation>true</GenerateDebugInformation>\n      <AdditionalDependencies>SDL3.lib;%(AdditionalDependencies)</AdditionalDependencies>\n    </Link>\n    <PostBuildEvent>\n      <Command>\n      </Command>\n    </PostBuildEvent>\n    <PreBuildEvent>\n      <Command>xcopy \"$(SolutionDir)/third_party/SDL3/lib/x64/*.dll\" \"$(TargetDir)\" /Y</Command>\n    </PreBuildEvent>\n  </ItemDefinitionGroup>\n  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|x64'\">\n    <ClCompile>\n      <WarningLevel>Level3</WarningLevel>\n      <FunctionLevelLinking>true</FunctionLevelLinking>\n      <IntrinsicFunctions>true</IntrinsicFunctions>\n      <SDLCheck>true</SDLCheck>\n      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>\n      <ConformanceMode>true</ConformanceMode>\n    </ClCompile>\n    <Link>\n      <SubSystem>Console</SubSystem>\n      <GenerateDebugInformation>true</GenerateDebugInformation>\n    </Link>\n  </ItemDefinitionGroup>\n  <ItemGroup>\n    <ClCompile Include=\"Editor.cpp\" />\n    <ClCompile Include=\"examples/third_person_shooter.h\" />\n    <ClCompile Include=\"src/core/Engine.cpp\" />\n    <ClCompile Include=\"src/core/Window.cpp\" />\n    <ClCompile Include=\"src/graphics/Renderer.cpp\" />\n  </ItemGroup>\n  <ItemGroup>\n    <ClInclude Include=\"interfaces/Engine.h\" />\n    <ClInclude Include=\"interfaces/GameInstance.h\" />\n    <ClInclude Include=\"interfaces/InputManager.h\" />\n    <ClInclude Include=\"interfaces/Renderer.h\" />\n    <ClInclude Include=\"src/include/Engine.h\" />\n    <ClInclude Include=\"src/include/GameInstance.h\" />\n    <ClInclude Include=\"src/include/InputManager.h\" />\n    <ClInclude Include=\"src/include/Level.h\" />\n    <ClInclude Include=\"src/include/Renderer.h\" />\n    <ClInclude Include=\"src/include/Types.h\" />\n    <ClInclude Include=\"src/include/Window.h\" />\n  </ItemGroup>\n  <Import Project=\"$(VCTargetsPath)/Microsoft.Cpp.targets\" />\n  <ImportGroup Label=\"ExtensionTargets\">\n  </ImportGroup>\n</Project>",
+    "/*2018 - 2025 (C) AutoSync Lightning Engine - By Erick Andrade All Rights Reserved\n*/\n\n#pragma once\n#include \"src/include/Engine.h\"\n#include \"src/include/GameInstance.h\"\n#include \"src/include/Renderer.h\"\n#include <SDL3/SDL.h>\n\n\n// GAMES\n#include \"examples/third_person_shooter.h\"\n#include <iostream>\n\nclass MyGame : public LightningEngine::GameInstance\n{\nprivate:\n\tstd::unique_ptr<LightningEngine::Renderer> renderer;\n\tSDL_Window* window;\n\tfloat playerx, playery;\npublic:\n\n\tvoid Initialize() override\n\t{\n\t\ttitle = \"My Game\";\n\t\twidth = 800;\n\t\theight = 600;\n\n\t\twindow = SDL_CreateWindow(title, width, height, SDL_WINDOW_RESIZABLE);\n\n\n\t\trenderer = std::make_unique<LightningEngine::Renderer>(window);\n\n\t\tplayerx = 400.f;\n\t\tplayery = 300.f;\n\n\t\tstd::cout << \"Game Started\" << std::endl;\n\t}\n\n\tvoid Shutdown() override\n\t{\n\t\tstd::cout << \"Game Stopped\" << std::endl;\n\t}\n\n\tvoid Update(float dt) override\n\t{\n\t\tauto keyboardState = SDL_GetKeyboardState(NULL);\n\n\t\tif (keyboardState[SDL_SCANCODE_W]) playery -= 10.f * dt;\n\t\tif (keyboardState[SDL_SCANCODE_S]) playery += 10.f * dt;",
+    ".\t�\tb\b�\b�\b-\u0007�\u0007a\u0006�\u0006�\u0006\"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000X\u0004�3\u0001C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt/corecrt_wprocess.h4S\u0004�)\u0001C:/Progra",
+    "�\u0006\u0000\u0000\u0004.\u000f�\u000fH\r�\u000e�\r|\r\r\f�\f<\u000b�\u000eg\b�\b�\b7\u0007�\u0007�\u00072\u0006�\u0006�\u0006,\u0005�\u0005�\u0005A\u0004�\u0004�\u0004S\u0004\u0004\u0003�\u0003g\u0003\u0019\u0002�\u0002{\u0002,\u0001�\u0001�\u0001:\u0000�\u0000�\u000f�\u000fr\u000f)\u000e�\u000e�\u000e@\r�\r�\r[\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000M\u0004�\u001d\u0001C:/Program Files (x86)/Windows Kits/10/Inc",
+    "V\t�\t�\t\u0014\b�\u0003\u0007\u0004\u001d\u0003�\u0003U\u0002�\u0002�\u0002,\u0001�\u0001k\u0001\u0005\u0000�\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0007�\u0000�?\bD:/Arquivos/Developers/CPP/LightningEngine/V150/third_party/SDL3/include/SDL3/SDL_met",
+    "\u0005\u0000�I\bD:/Arquivos/Developers/CPP/LightningEngine/V150/rd\u0005\u0000�W\u0006D:/Arquivos/HDDR/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include/nmmintrin.h\u0001�:L���Wqb\u0005\u0000�U\u0006D:/Arquivos/HDDR/Microso",
+    "V150/third_party",
+    "V150/third_party/Assimp/include/Assimp/ai_assert.h",
+    "V150/third_party/Assimp/include/Assimp/anim.h",
+    "V150/third_party/Assimp/include/Assimp/camera.h",
+    "V150/third_party/Assimp/include/Assimp/cexport.h",
+    "V150/third_party/Assimp/include/Assimp/cfileio.h",
+    "V150/third_party/Assimp/include/Assimp/cimport.h",
+    "V150/third_party/Assimp/include/Assimp/color4.h",
+    "V150/third_party/Assimp/include/Assimp/color4.inl",
+    "V150/third_party/Assimp/include/Assimp/Compiler/poppack1.h",
+    "V150/third_party/Assimp/include/Assimp/Compiler/pstdint.h",
+    "V150/third_party/Assimp/include/Assimp/Compiler/pushpack1.h",
+    "V150/third_party/Assimp/include/Assimp/config.h",
+    "V150/third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+    "V150/third_party/Assimp/include/Assimp/defs.h",
+    "V150/third_party/Assimp/include/Assimp/Exporter.hpp",
+    "V150/third_party/Assimp/include/Assimp/Importer.hpp",
+    "V150/third_party/Assimp/include/Assimp/importerdesc.h",
+    "V150/third_party/Assimp/include/Assimp/IOStream.hpp",
+    "V150/third_party/Assimp/include/Assimp/IOSystem.hpp",
+    "V150/third_party/Assimp/include/Assimp/light.h",
+    "V150/third_party/SDL3",
+    "V150/third_party/SDL3/include/SDL3/SDL.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_assert.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_asyncio.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_atomic.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_audio.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_begin_code.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_bits.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_blendmode.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_camera.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_clipboard.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_close_code.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_copying.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_cpuinfo.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_dialog.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_egl.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_endian.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_error.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_events.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_filesystem.h",
+    "V150/third_party/SDL3/include/SDL3/SDL_gamepad.h",
+    "/* 2018-2025 (C) AutoSync Lightning Engine by Erick Andrade\n* All rights reserved\n* This file is part of Lightning Engine\n* \n*/\n\n#pragma once\n#include <SDL3/SDL.h>\n#include <string>\n#include <memory>\n#include \"GameInstance.h\"\n\nnamespace LightningEngine \n{\n\tclass Engine\n\t{\n\tprivate:\n\t\tbool isRunning;\n\t\tSDL_Window* window;\n\t\tstd::unique_ptr<GameInstance> gameNode;\n\t\tUint64 previewsTime;\n\t\tfloat deltaTime;\n\n\t\tbool Initialize(const std::string& title, int width, int height);\n\t\tvoid Shutdown();\n\t\tvoid Update();\n\t\tvoid HandleEvents();\n\t\tvoid Render();\n\tpublic:\n\t\tEngine();\n\t\t~Engine();\n\n\t\tvoid Run(std::unique_ptr<GameInstance> gameInstance, const std::string& title = \"Lightning Engine\", int width = 1280, int height = 720);\n\t\tfloat getDeltaTime() const { return deltaTime; }\n\n\t};\n}",
+    "#include \"../include/Engine.h\"\n#include \"../include/GameInstance.h\"\n#include \"../include/Renderer.h\"\n#include \"../Include/InputManager.h\"\n#include <iostream>\n\nnamespace LightningEngine {\n\n\t\n\tEngine::Engine() : isRunning(false), window(nullptr), previewsTime(0.0f), deltaTime(0.0f){}\n\tEngine::~Engine() { Shutdown(); }\n\n\tbool Engine::Initialize(const std::string& title, int width, int height)\n\t{\n\t\tif (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS))\n\t\t{\n\t\t\tstd::cerr << \"SDL could not initialize! SDL_Error: \" << SDL_GetError() << std::endl;\n\t\t\treturn false;\n\t\t}\n\n\t\tpreviewsTime = SDL_GetPerformanceCounter();\n\t\treturn true;\n\t}\n\n\tvoid Engine::Shutdown()\n\t{\n\t\tif (this->gameNode)\n\t\t{\n\t\t\tgameNode->Shutdown();\n\t\t}\n\n\t\tif (window)\n\t\t{\n\t\t\tSDL_DestroyWindow(window);\n\t\t\twindow = nullptr;\n\t\t}\n\n\t\tSDL_Quit();\n\t}\n\n\tvoid Engine::HandleEvents()\n\t{\n\t\tSDL_Event event;\n\t\twhile (SDL_PollEvent(&event))\n\t\t{\n\t\t\tif (event.type == SDL_EVENT_QUIT)\n\t\t\t{\n\t\t\t\tisRunning = false;\n\t\t\t}\n\t\t}\n\t}\n\n\tvoid Engine::Update()\n\t{\n\t\tif (gameNode)\n\t\t{\n\t\t\tgameNode->Update(deltaTime);\n\t\t}\n\t}\n\n\tvoid Engine::Render()\n\t{\n\t\tif (gameNode)\n\t\t{\n\t\t\tgameNode->Render();\n\t\t}\n\t}\n\n\tvoid Engine::Run(std::unique_ptr<LightningEngine::GameInstance> gameInstance, const std::string& title, int width, int height)\n\t{\n\t\tif(!Initialize(title, width, height))\n\t\t{\n\t\t\treturn;\n\t\t}\n\n\t\tgameNode = std::move(gameInstance);\n\t\tgameNode->Initialize();\n\n\t\tisRunning = true;\n\t\t\n\t\twhile(isRunning)\n\t\t{\n\t\t\tHandleEvents();\n\t\t\tUpdate();\n\n\t\t\tUint64 currentTime = SDL_GetPerformanceCounter();\n\t\t\tdeltaTime = (float)(currentTime - previewsTime) * 1000 / (double)SDL_GetPerformanceFrequency();\n\t\t\tpreviewsTime = currentTime;\n\t\t\tRender();\n\t\t\tSDL_GL_SwapWindow(window);\n\t\t}\n\n\t\tShutdown();\n\t}\n\n\n\n}",
+    "/*\n\n*/\n#pragma once\n#include <SDL3/SDL.h>\n\nnamespace LightningEngine{\n\nclass GameInstance \n\t{\n\tpublic:\n\t\tGameInstance() { init(); };\n\t\tconst char* title;\n\t\tint width, height;\n\t\tvirtual ~GameInstance() = default;\n\t\tvirtual void Initialize() = 0;\n\t\tvirtual void Shutdown() = 0;\n\t\tvirtual void Update(float deltaTime) = 0;\n\t\tvirtual void Render() = 0;\n\t\tSDL_Renderer* getSDLRenderer() const { return renderer; }\n\tprivate:\n\t\tvoid init();\n\t\tconst char* rendererName;\n\t\tSDL_Renderer* renderer;\n\t\tSDL_Window* window;\n\t};\n}",
+    "#pragma once\n#include <SDL3/SDL.h>\n#include <memory>\n\nnamespace LightningEngine {\n\tclass Renderer\n\t{\n\tprivate:\n\t\tSDL_Renderer* renderer;\n\tpublic:\n\t\tRenderer(SDL_Window* window);\n\t\t~Renderer();\n\n\t\tvoid Clear();\n\t\tvoid Present();\n\t\tvoid SetDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);\n\t\tvoid DrawRect(float x, float y, float w, float h);\n\t\tvoid FillRect(float x, float y, float w, float h);\n\n\t\tSDL_Renderer* GetSDLRenderer() { return renderer; }\n\t};\n}"
+  ],
+  "modifiedFiles": []
+}

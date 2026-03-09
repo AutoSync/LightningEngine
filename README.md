@@ -14,6 +14,7 @@
 <p>Lightning engine is a game engine that is currently under development. </p>
 
 ## Engine Progress
+
 - [x] Window Handler
   - [x] SDL BASE
   - [x] Class Input
@@ -23,8 +24,6 @@
     - [ ] Framebuffer
     - [ ] ClearColor
 - [x] Class GameEditor
-  - [ ] Inheritance
-  - [ ] GL Calls
 - [ ] Shader Compiler
   - [x] Load Shader
   - [x] Shader Injection

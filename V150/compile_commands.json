@@ -1,0 +1,26 @@
+[
+  {
+    "directory": "${workspaceFolder}",
+    "command": "cl.exe /EHsc /W3 /Zc:__cplusplus /std:c++20 /I\"${workspaceFolder}/third_party/SDL3/include\" /I\"${workspaceFolder}/third_party/glm/include\" /I\"${workspaceFolder}/third_party/Assimp/include\" /D_DEBUG /D_CONSOLE /DWIN32 /DUNICODE /D_UNICODE /c Editor.cpp /FoEditor.obj",
+    "file": "Editor.cpp",
+    "output": "Editor.obj"
+  },
+  {
+    "directory": "${workspaceFolder}",
+    "command": "cl.exe /EHsc /W3 /Zc:__cplusplus /std:c++20 /I\"${workspaceFolder}/third_party/SDL3/include\" /I\"${workspaceFolder}/third_party/glm/include\" /I\"${workspaceFolder}/third_party/Assimp/include\" /D_DEBUG /D_CONSOLE /DWIN32 /DUNICODE /D_UNICODE /c src/core/Engine.cpp /FoEngine.obj",
+    "file": "src/core/Engine.cpp",
+    "output": "Engine.obj"
+  },
+  {
+    "directory": "${workspaceFolder}",
+    "command": "cl.exe /EHsc /W3 /Zc:__cplusplus /std:c++20 /I\"${workspaceFolder}/third_party/SDL3/include\" /I\"${workspaceFolder}/third_party/glm/include\" /I\"${workspaceFolder}/third_party/Assimp/include\" /D_DEBUG /D_CONSOLE /DWIN32 /DUNICODE /D_UNICODE /c src/core/Window.cpp /FoWindow.obj",
+    "file": "src/core/Window.cpp",
+    "output": "Window.obj"
+  },
+  {
+    "directory": "${workspaceFolder}",
+    "command": "cl.exe /EHsc /W3 /Zc:__cplusplus /std:c++20 /I\"${workspaceFolder}/third_party/SDL3/include\" /I\"${workspaceFolder}/third_party/glm/include\" /I\"${workspaceFolder}/third_party/Assimp/include\" /D_DEBUG /D_CONSOLE /DWIN32 /DUNICODE /D_UNICODE /c src/graphics/Renderer.cpp /FoRenderer.obj",
+    "file": "src/graphics/Renderer.cpp",
+    "output": "Renderer.obj"
+  }
+]
