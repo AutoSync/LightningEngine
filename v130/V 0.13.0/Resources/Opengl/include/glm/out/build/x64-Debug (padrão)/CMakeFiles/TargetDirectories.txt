@@ -1,0 +1,2 @@
+D:/Developer/ProjektSonne/AutoSync Lightning Engine/src/Opengl/include/glm/out/build/x64-Debug (padrão)/CMakeFiles/edit_cache.dir
+D:/Developer/ProjektSonne/AutoSync Lightning Engine/src/Opengl/include/glm/out/build/x64-Debug (padrão)/CMakeFiles/rebuild_cache.dir

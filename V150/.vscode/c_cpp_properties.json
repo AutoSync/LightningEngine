@@ -1,0 +1,44 @@
+{
+    "configurations": [
+        {
+            "name": "Win32 (MSVC)",
+            "includePath": [
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/third_party/SDL3/include",
+                "${workspaceFolder}/third_party/glm/include",
+                "${workspaceFolder}/third_party/Assimp/include",
+                "${default}"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "_WIN32"
+            ],
+            "windowsSdkVersion": "10.0.26100.0",
+            "compilerPath": "D:\\Arquivos\\HDDR\\Microsoft\\VisualStudio\\VS26\\VC\\Tools\\MSVC\\14.50.35717\\bin\\Hostx64\\x64\\cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        },
+        {
+            "name": "Win32 (MinGW/GCC)",
+            "includePath": [
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/third_party/SDL3/include",
+                "${workspaceFolder}/third_party/glm/include",
+                "${workspaceFolder}/third_party/Assimp/include",
+                "${default}"
+            ],
+            "defines": [
+                "_DEBUG",
+                "_WIN32"
+            ],
+            "compilerPath": "g++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}

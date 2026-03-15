@@ -1,89 +1,63 @@
-/*2018 - 2025 (C) AutoSync Lightning Engine - By Erick Andrade All Rights Reserved
-*/
+// Lightning Engine — Editor / Entry Point
+// 2018-2025 (C) AutoSync Lightning Engine - By Erick Andrade. All Rights Reserved.
+//
+// Extend GameInstance to create your game.
+// Call game.Run("Title", width, height) in main() to start.
 
-#pragma once
-#include "src/include/Engine.h"
 #include "src/include/GameInstance.h"
-#include "src/include/Renderer.h"
-#include <SDL3/SDL.h>
+#include "src/include/Types.h"
 
-
-// GAMES
+// --- Example game scenes ---
 #include "examples/third_person_shooter.h"
-#include <iostream>
+#include "examples/rpg_combat.h"
 
-class MyGame : public LightningEngine::GameInstance
-{
+// -----------------------------------------------------------------------
+// MyGame — minimal sandbox for testing the engine during development.
+// -----------------------------------------------------------------------
+class MyGame : public LightningEngine::GameInstance {
 private:
-	std::unique_ptr<LightningEngine::Renderer> renderer;
-	SDL_Window* window;
-	float playerx, playery;
-public:
+	float playerx = 400.f;
+	float playery = 300.f;
 
+public:
 	void Initialize() override
 	{
-		title = "My Game";
-		width = 800;
-		height = 600;
-
-		window = SDL_CreateWindow(title, width, height, SDL_WINDOW_RESIZABLE);
-
-
-		renderer = std::make_unique<LightningEngine::Renderer>(window);
-
-		playerx = 400.f;
-		playery = 300.f;
-
-		std::cout << "Game Started" << std::endl;
+		renderer.SetClearColor(30, 30, 30);
 	}
 
-	void Shutdown() override
-	{
-		std::cout << "Game Stopped" << std::endl;
-	}
+	void Shutdown() override {}
 
 	void Update(float dt) override
 	{
-		auto keyboardState = SDL_GetKeyboardState(NULL);
+		if (inputManager.IsKeyDown(SDL_SCANCODE_W)) playery -= 0.3f * dt;
+		if (inputManager.IsKeyDown(SDL_SCANCODE_S)) playery += 0.3f * dt;
+		if (inputManager.IsKeyDown(SDL_SCANCODE_A)) playerx -= 0.3f * dt;
+		if (inputManager.IsKeyDown(SDL_SCANCODE_D)) playerx += 0.3f * dt;
 
-		if (keyboardState[SDL_SCANCODE_W]) playery -= 10.f * dt;
-		if (keyboardState[SDL_SCANCODE_S]) playery += 10.f * dt;
-		if (keyboardState[SDL_SCANCODE_A]) playerx -= 10.f * dt;
-		if (keyboardState[SDL_SCANCODE_D]) playerx += 10.f * dt;
-
-		if (keyboardState[SDL_SCANCODE_ESCAPE]) {
-
-		}
-
+		if (inputManager.IsKeyPressed(SDL_SCANCODE_ESCAPE)) Quit();
 	}
 
 	void Render() override
 	{
-		if (!renderer) return;
+		renderer.Clear();
 
-		renderer->Clear();
+		renderer.SetDrawColor(255, 0, 0);
+		renderer.FillRect(playerx - 25.f, playery - 25.f, 50.f, 50.f);
 
-		renderer->SetDrawColor(255, 0, 0, 255);
-		renderer->FillRect(playerx - 25, playery - 25, 50, 50);
+		renderer.SetDrawColor(0, 255, 0);
+		renderer.FillRect(100.f, 100.f, 30.f, 30.f);
 
-		renderer->SetDrawColor(0, 255, 0, 255);
-		renderer->FillRect(100, 100, 30, 30);
+		renderer.SetDrawColor(0, 0, 255);
+		renderer.FillRect(600.f, 400.f, 40.f, 40.f);
 
-		renderer->SetDrawColor(0, 0, 255, 255);
-		renderer->FillRect(600, 400, 40, 40);
-
-		renderer->Present();
-
+		renderer.Present();
 	}
-
 };
 
-int main(int argc, char* argv[]) {
-
-	LightningEngine::Engine engine;
-
-	auto game = std::make_unique<MyGame>();
-	engine.Run(std::move(game), "Lightning Engine Demo", 800, 600);
-
+// -----------------------------------------------------------------------
+int main(int argc, char* argv[])
+{
+	RPGGame game;
+	game.Run("Lightning Engine — RPG Combat 2D", 800, 600);
 	return 0;
 }

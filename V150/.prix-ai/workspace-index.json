@@ -1,0 +1,5904 @@
+{
+  "version": 2,
+  "builtAt": "2026-03-10T02:16:39.891Z",
+  "workspaceRoot": "d:\\Arquivos\\Developers\\CPP\\LightningEngine\\V150",
+  "totalFiles": 417,
+  "symbols": [
+    {
+      "name": "MyGame",
+      "kind": "class",
+      "exported": false,
+      "signature": "class MyGame : public LightningEngine::GameInstance",
+      "file": "Editor.cpp",
+      "line": 15
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "exported": false,
+      "signature": "int main(int argc, char* argv[])",
+      "file": "Editor.cpp",
+      "line": 81
+    },
+    {
+      "name": "Player",
+      "kind": "class",
+      "exported": false,
+      "signature": "class Player",
+      "file": "examples/third_person_shooter.h",
+      "line": 14
+    },
+    {
+      "name": "Level1",
+      "kind": "class",
+      "exported": false,
+      "signature": "class Level1 : public Level {",
+      "file": "examples/third_person_shooter.h",
+      "line": 23
+    },
+    {
+      "name": "SpaceIvaders",
+      "kind": "class",
+      "exported": false,
+      "signature": "class SpaceIvaders : public LightningEngine::Window {",
+      "file": "examples/third_person_shooter.h",
+      "line": 68
+    },
+    {
+      "name": "GameInstance",
+      "kind": "class",
+      "exported": false,
+      "signature": "class GameInstance",
+      "file": "src/include/GameInstance.h",
+      "line": 9
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 3
+    },
+    {
+      "name": "aiVectorKey",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiVectorKey",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 58
+    },
+    {
+      "name": "aiQuatKey",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiQuatKey",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 101
+    },
+    {
+      "name": "aiMeshKey",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMeshKey",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 141
+    },
+    {
+      "name": "aiAnimBehaviour",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiAnimBehaviour",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 188
+    },
+    {
+      "name": "aiNodeAnim",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiNodeAnim",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 230
+    },
+    {
+      "name": "aiMeshAnim",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMeshAnim",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 308
+    },
+    {
+      "name": "aiAnimation",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiAnimation",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 340
+    },
+    {
+      "name": "Interpolator",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct Interpolator",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 415
+    },
+    {
+      "name": "Interpolator",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct Interpolator\t<aiQuaternion>",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 431
+    },
+    {
+      "name": "Interpolator",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct Interpolator\t<unsigned int>",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 440
+    },
+    {
+      "name": "Interpolator",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct Interpolator\t <aiVectorKey>",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 449
+    },
+    {
+      "name": "Interpolator",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct Interpolator <aiQuatKey>",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 459
+    },
+    {
+      "name": "Interpolator",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct Interpolator <aiMeshKey>",
+      "file": "third_party/Assimp/include/Assimp/anim.h",
+      "line": 469
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/camera.h",
+      "line": 3
+    },
+    {
+      "name": "aiCamera",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiCamera",
+      "file": "third_party/Assimp/include/Assimp/camera.h",
+      "line": 98
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/cexport.h",
+      "line": 3
+    },
+    {
+      "name": "aiScene",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiScene;  // aiScene.h",
+      "file": "third_party/Assimp/include/Assimp/cexport.h",
+      "line": 56
+    },
+    {
+      "name": "aiFileIO",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFileIO; // aiFileIO.h",
+      "file": "third_party/Assimp/include/Assimp/cexport.h",
+      "line": 57
+    },
+    {
+      "name": "aiExportFormatDesc",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiExportFormatDesc",
+      "file": "third_party/Assimp/include/Assimp/cexport.h",
+      "line": 64
+    },
+    {
+      "name": "aiExportDataBlob",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiExportDataBlob",
+      "file": "third_party/Assimp/include/Assimp/cexport.h",
+      "line": 194
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/cfileio.h",
+      "line": 3
+    },
+    {
+      "name": "aiFileIO",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFileIO;",
+      "file": "third_party/Assimp/include/Assimp/cfileio.h",
+      "line": 52
+    },
+    {
+      "name": "aiFile",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFile;",
+      "file": "third_party/Assimp/include/Assimp/cfileio.h",
+      "line": 53
+    },
+    {
+      "name": "aiFileIO",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFileIO",
+      "file": "third_party/Assimp/include/Assimp/cfileio.h",
+      "line": 76
+    },
+    {
+      "name": "aiFile",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFile",
+      "file": "third_party/Assimp/include/Assimp/cfileio.h",
+      "line": 100
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/cimport.h",
+      "line": 3
+    },
+    {
+      "name": "aiScene",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiScene;  // aiScene.h",
+      "file": "third_party/Assimp/include/Assimp/cimport.h",
+      "line": 53
+    },
+    {
+      "name": "aiFileIO",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFileIO; // aiFileIO.h",
+      "file": "third_party/Assimp/include/Assimp/cimport.h",
+      "line": 54
+    },
+    {
+      "name": "aiLogStream",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiLogStream",
+      "file": "third_party/Assimp/include/Assimp/cimport.h",
+      "line": 64
+    },
+    {
+      "name": "aiPropertyStore",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiPropertyStore { char sentinel; };",
+      "file": "third_party/Assimp/include/Assimp/cimport.h",
+      "line": 85
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/color4.h",
+      "line": 3
+    },
+    {
+      "name": "aiColor4t",
+      "kind": "class",
+      "exported": false,
+      "signature": "class aiColor4t",
+      "file": "third_party/Assimp/include/Assimp/color4.h",
+      "line": 56
+    },
+    {
+      "name": "aiColor4D",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiColor4D",
+      "file": "third_party/Assimp/include/Assimp/color4.h",
+      "line": 96
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/config.h",
+      "line": 3
+    },
+    {
+      "name": "aiComponent",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiComponent",
+      "file": "third_party/Assimp/include/Assimp/config.h",
+      "line": 383
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+      "line": 2
+    },
+    {
+      "name": "IOStream",
+      "kind": "class",
+      "exported": false,
+      "signature": "class IOStream;",
+      "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+      "line": 53
+    },
+    {
+      "name": "LogStreamInfo",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct LogStreamInfo;",
+      "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+      "line": 54
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API DefaultLogger :",
+      "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+      "line": 72
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/defs.h",
+      "line": 3
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+      "line": 3
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API Exporter",
+      "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+      "line": 75
+    },
+    {
+      "name": "ExportToBlob",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline const aiExportDataBlob* Exporter :: ExportToBlob(  const aiScene* pScene, const std::string& pFormatId,unsigned int pPreprocessing )",
+      "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+      "line": 301
+    },
+    {
+      "name": "Export",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiReturn Exporter :: Export( const aiScene* pScene, const std::string& pFormatId, const std::string& pPath, unsigned int pPreprocessing )",
+      "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+      "line": 307
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+      "line": 3
+    },
+    {
+      "name": "aiScene",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiScene;",
+      "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+      "line": 84
+    },
+    {
+      "name": "aiImporterDesc",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiImporterDesc;",
+      "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+      "line": 87
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API Importer",
+      "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+      "line": 116
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/importerdesc.h",
+      "line": 3
+    },
+    {
+      "name": "aiImporterFlags",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiImporterFlags",
+      "file": "third_party/Assimp/include/Assimp/importerdesc.h",
+      "line": 51
+    },
+    {
+      "name": "aiImporterDesc",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiImporterDesc",
+      "file": "third_party/Assimp/include/Assimp/importerdesc.h",
+      "line": 87
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/IOStream.hpp",
+      "line": 3
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API IOStream",
+      "file": "third_party/Assimp/include/Assimp/IOStream.hpp",
+      "line": 64
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/IOSystem.hpp",
+      "line": 3
+    },
+    {
+      "name": "IOStream",
+      "kind": "class",
+      "exported": false,
+      "signature": "class IOStream;",
+      "file": "third_party/Assimp/include/Assimp/IOSystem.hpp",
+      "line": 57
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API IOSystem",
+      "file": "third_party/Assimp/include/Assimp/IOSystem.hpp",
+      "line": 67
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/light.h",
+      "line": 3
+    },
+    {
+      "name": "aiLightSourceType",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiLightSourceType",
+      "file": "third_party/Assimp/include/Assimp/light.h",
+      "line": 58
+    },
+    {
+      "name": "aiLight",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiLight",
+      "file": "third_party/Assimp/include/Assimp/light.h",
+      "line": 100
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/Logger.hpp",
+      "line": 2
+    },
+    {
+      "name": "LogStream",
+      "kind": "class",
+      "exported": false,
+      "signature": "class LogStream;",
+      "file": "third_party/Assimp/include/Assimp/Logger.hpp",
+      "line": 49
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API Logger",
+      "file": "third_party/Assimp/include/Assimp/Logger.hpp",
+      "line": 59
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/LogStream.hpp",
+      "line": 2
+    },
+    {
+      "name": "IOSystem",
+      "kind": "class",
+      "exported": false,
+      "signature": "class IOSystem;",
+      "file": "third_party/Assimp/include/Assimp/LogStream.hpp",
+      "line": 48
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API LogStream",
+      "file": "third_party/Assimp/include/Assimp/LogStream.hpp",
+      "line": 56
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 3
+    },
+    {
+      "name": "aiTextureOp",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiTextureOp",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 77
+    },
+    {
+      "name": "aiTextureMapMode",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiTextureMapMode",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 113
+    },
+    {
+      "name": "aiTextureMapping",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiTextureMapping",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 153
+    },
+    {
+      "name": "aiTextureType",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiTextureType",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 204
+    },
+    {
+      "name": "aiShadingMode",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiShadingMode",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 323
+    },
+    {
+      "name": "aiTextureFlags",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiTextureFlags",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 399
+    },
+    {
+      "name": "aiBlendMode",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiBlendMode",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 450
+    },
+    {
+      "name": "aiUVTransform",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiUVTransform",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 495
+    },
+    {
+      "name": "aiPropertyTypeInfo",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiPropertyTypeInfo",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 536
+    },
+    {
+      "name": "aiMaterialProperty",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMaterialProperty",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 595
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct ASSIMP_API aiMaterial",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 665
+    },
+    {
+      "name": "aiMaterial",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMaterial",
+      "file": "third_party/Assimp/include/Assimp/material.h",
+      "line": 667
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/matrix3x3.h",
+      "line": 3
+    },
+    {
+      "name": "aiMatrix3x3t",
+      "kind": "class",
+      "exported": false,
+      "signature": "class aiMatrix3x3t",
+      "file": "third_party/Assimp/include/Assimp/matrix3x3.h",
+      "line": 65
+    },
+    {
+      "name": "aiMatrix3x3",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMatrix3x3",
+      "file": "third_party/Assimp/include/Assimp/matrix3x3.h",
+      "line": 174
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/matrix4x4.h",
+      "line": 3
+    },
+    {
+      "name": "aiMatrix4x4t",
+      "kind": "class",
+      "exported": false,
+      "signature": "class aiMatrix4x4t",
+      "file": "third_party/Assimp/include/Assimp/matrix4x4.h",
+      "line": 65
+    },
+    {
+      "name": "aiMatrix4x4",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMatrix4x4",
+      "file": "third_party/Assimp/include/Assimp/matrix4x4.h",
+      "line": 236
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 3
+    },
+    {
+      "name": "aiFace",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiFace",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 125
+    },
+    {
+      "name": "aiVertexWeight",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiVertexWeight",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 201
+    },
+    {
+      "name": "aiBone",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiBone",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 233
+    },
+    {
+      "name": "aiPrimitiveType",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiPrimitiveType",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 287
+    },
+    {
+      "name": "aiAnimMesh",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiAnimMesh",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 344
+    },
+    {
+      "name": "aiMesh",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMesh",
+      "file": "third_party/Assimp/include/Assimp/mesh.h",
+      "line": 467
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 3
+    },
+    {
+      "name": "aiMetadataEntry",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMetadataEntry",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 86
+    },
+    {
+      "name": "GetAiType",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiMetadataType GetAiType( bool ) { return AI_BOOL; }",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 105
+    },
+    {
+      "name": "GetAiType",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiMetadataType GetAiType( int ) { return AI_INT; }",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 106
+    },
+    {
+      "name": "GetAiType",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiMetadataType GetAiType( uint64_t ) { return AI_UINT64; }",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 107
+    },
+    {
+      "name": "GetAiType",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiMetadataType GetAiType( float ) { return AI_FLOAT; }",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 108
+    },
+    {
+      "name": "GetAiType",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiMetadataType GetAiType( aiString ) { return AI_AISTRING; }",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 109
+    },
+    {
+      "name": "GetAiType",
+      "kind": "function",
+      "exported": false,
+      "signature": "inline aiMetadataType GetAiType( aiVector3D ) { return AI_AIVECTOR3D; }",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 110
+    },
+    {
+      "name": "aiMetadata",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMetadata",
+      "file": "third_party/Assimp/include/Assimp/metadata.h",
+      "line": 125
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/NullLogger.hpp",
+      "line": 2
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API NullLogger",
+      "file": "third_party/Assimp/include/Assimp/NullLogger.hpp",
+      "line": 55
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/postprocess.h",
+      "line": 2
+    },
+    {
+      "name": "aiPostProcessSteps",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiPostProcessSteps",
+      "file": "third_party/Assimp/include/Assimp/postprocess.h",
+      "line": 65
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/ProgressHandler.hpp",
+      "line": 2
+    },
+    {
+      "name": "ASSIMP_API",
+      "kind": "class",
+      "exported": false,
+      "signature": "class ASSIMP_API ProgressHandler",
+      "file": "third_party/Assimp/include/Assimp/ProgressHandler.hpp",
+      "line": 54
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/quaternion.h",
+      "line": 2
+    },
+    {
+      "name": "aiQuaterniont",
+      "kind": "class",
+      "exported": false,
+      "signature": "class aiQuaterniont",
+      "file": "third_party/Assimp/include/Assimp/quaternion.h",
+      "line": 55
+    },
+    {
+      "name": "aiQuaternion",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiQuaternion",
+      "file": "third_party/Assimp/include/Assimp/quaternion.h",
+      "line": 119
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/scene.h",
+      "line": 3
+    },
+    {
+      "name": "aiNode",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiNode",
+      "file": "third_party/Assimp/include/Assimp/scene.h",
+      "line": 71
+    },
+    {
+      "name": "aiScene",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiScene",
+      "file": "third_party/Assimp/include/Assimp/scene.h",
+      "line": 277
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/texture.h",
+      "line": 3
+    },
+    {
+      "name": "aiTexel",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiTexel",
+      "file": "third_party/Assimp/include/Assimp/texture.h",
+      "line": 80
+    },
+    {
+      "name": "aiTexture",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiTexture",
+      "file": "third_party/Assimp/include/Assimp/texture.h",
+      "line": 120
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 3
+    },
+    {
+      "name": "aiPlane",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiPlane",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 123
+    },
+    {
+      "name": "aiRay",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiRay",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 141
+    },
+    {
+      "name": "aiColor3D",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiColor3D",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 159
+    },
+    {
+      "name": "aiString",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiString",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 251
+    },
+    {
+      "name": "aiOrigin",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiOrigin",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 402
+    },
+    {
+      "name": "aiDefaultLogStream",
+      "kind": "enum",
+      "exported": false,
+      "signature": "enum aiDefaultLogStream",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 425
+    },
+    {
+      "name": "aiMemoryInfo",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiMemoryInfo",
+      "file": "third_party/Assimp/include/Assimp/types.h",
+      "line": 458
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/vector2.h",
+      "line": 3
+    },
+    {
+      "name": "aiVector2t",
+      "kind": "class",
+      "exported": false,
+      "signature": "class aiVector2t",
+      "file": "third_party/Assimp/include/Assimp/vector2.h",
+      "line": 61
+    },
+    {
+      "name": "aiVector2D",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiVector2D",
+      "file": "third_party/Assimp/include/Assimp/vector2.h",
+      "line": 105
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/vector3.h",
+      "line": 3
+    },
+    {
+      "name": "aiVector3t",
+      "kind": "class",
+      "exported": false,
+      "signature": "class aiVector3t",
+      "file": "third_party/Assimp/include/Assimp/vector3.h",
+      "line": 63
+    },
+    {
+      "name": "aiVector3D",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct aiVector3D",
+      "file": "third_party/Assimp/include/Assimp/vector3.h",
+      "line": 134
+    },
+    {
+      "name": "Library",
+      "kind": "function",
+      "exported": false,
+      "signature": "Open Asset Import Library (assimp)",
+      "file": "third_party/Assimp/include/Assimp/version.h",
+      "line": 3
+    },
+    {
+      "name": "glm_vec4_add",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_add(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 10
+    },
+    {
+      "name": "glm_vec1_add",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_add(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 15
+    },
+    {
+      "name": "glm_vec4_sub",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_sub(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 20
+    },
+    {
+      "name": "glm_vec1_sub",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_sub(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 25
+    },
+    {
+      "name": "glm_vec4_mul",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_mul(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 30
+    },
+    {
+      "name": "glm_vec1_mul",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_mul(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 35
+    },
+    {
+      "name": "glm_vec4_div",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_div(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 40
+    },
+    {
+      "name": "glm_vec1_div",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_div(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 45
+    },
+    {
+      "name": "glm_vec4_div_lowp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_div_lowp(glm_f32vec4 a, glm_f32vec4 b)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 50
+    },
+    {
+      "name": "glm_vec4_swizzle_xyzw",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_swizzle_xyzw(glm_f32vec4 a)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 55
+    },
+    {
+      "name": "glm_vec1_fma",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_fma(glm_f32vec4 a, glm_f32vec4 b, glm_f32vec4 c)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 64
+    },
+    {
+      "name": "glm_vec4_fma",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_fma(glm_f32vec4 a, glm_f32vec4 b, glm_f32vec4 c)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 73
+    },
+    {
+      "name": "glm_vec4_abs",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_abs(glm_f32vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 82
+    },
+    {
+      "name": "glm_ivec4_abs",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_ivec4 glm_ivec4_abs(glm_ivec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 87
+    },
+    {
+      "name": "glm_vec4_sign",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_sign(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 99
+    },
+    {
+      "name": "glm_vec4_round",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_round(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 110
+    },
+    {
+      "name": "glm_vec4_floor",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_floor(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 124
+    },
+    {
+      "name": "glm_vec4_trunc",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_trunc(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 138
+    },
+    {
+      "name": "glm_vec4_roundEven",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_roundEven(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 145
+    },
+    {
+      "name": "glm_vec4_ceil",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_ceil(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 155
+    },
+    {
+      "name": "glm_vec4_fract",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_fract(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 168
+    },
+    {
+      "name": "glm_vec4_mod",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_mod(glm_vec4 x, glm_vec4 y)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 175
+    },
+    {
+      "name": "glm_vec4_clamp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_clamp(glm_vec4 v, glm_vec4 minVal, glm_vec4 maxVal)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 184
+    },
+    {
+      "name": "glm_vec4_mix",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_mix(glm_vec4 v1, glm_vec4 v2, glm_vec4 a)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 191
+    },
+    {
+      "name": "glm_vec4_step",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_step(glm_vec4 edge, glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 199
+    },
+    {
+      "name": "glm_vec4_smoothstep",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_smoothstep(glm_vec4 edge0, glm_vec4 edge1, glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 205
+    },
+    {
+      "name": "glm_vec4_nan",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_nan(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 219
+    },
+    {
+      "name": "glm_vec4_inf",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_inf(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/common.h",
+      "line": 233
+    },
+    {
+      "name": "glm_vec1_sqrt_lowp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_sqrt_lowp(glm_f32vec4 x)",
+      "file": "third_party/glm/include/glm/simd/exponential.h",
+      "line": 10
+    },
+    {
+      "name": "glm_vec4_sqrt_lowp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_sqrt_lowp(glm_f32vec4 x)",
+      "file": "third_party/glm/include/glm/simd/exponential.h",
+      "line": 15
+    },
+    {
+      "name": "glm_vec4_length",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_length(glm_vec4 x)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 13
+    },
+    {
+      "name": "glm_vec4_distance",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_distance(glm_vec4 p0, glm_vec4 p1)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 20
+    },
+    {
+      "name": "glm_vec4_dot",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_dot(glm_vec4 v1, glm_vec4 v2)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 27
+    },
+    {
+      "name": "glm_vec1_dot",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec1_dot(glm_vec4 v1, glm_vec4 v2)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 46
+    },
+    {
+      "name": "glm_vec4_cross",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_cross(glm_vec4 v1, glm_vec4 v2)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 65
+    },
+    {
+      "name": "glm_vec4_normalize",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_normalize(glm_vec4 v)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 77
+    },
+    {
+      "name": "glm_vec4_faceforward",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_faceforward(glm_vec4 N, glm_vec4 I, glm_vec4 Nref)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 85
+    },
+    {
+      "name": "glm_vec4_reflect",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_reflect(glm_vec4 I, glm_vec4 N)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 94
+    },
+    {
+      "name": "glm_vec4_refract",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER __m128 glm_vec4_refract(glm_vec4 I, glm_vec4 N, glm_vec4 eta)",
+      "file": "third_party/glm/include/glm/simd/geometric.h",
+      "line": 103
+    },
+    {
+      "name": "glm_i128_interleave",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_uvec4 glm_i128_interleave(glm_uvec4 x)",
+      "file": "third_party/glm/include/glm/simd/integer.h",
+      "line": 8
+    },
+    {
+      "name": "glm_i128_interleave2",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_uvec4 glm_i128_interleave2(glm_uvec4 x, glm_uvec4 y)",
+      "file": "third_party/glm/include/glm/simd/integer.h",
+      "line": 62
+    },
+    {
+      "name": "glm_mat4_matrixCompMult",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_matrixCompMult(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 10
+    },
+    {
+      "name": "glm_mat4_add",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_add(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 18
+    },
+    {
+      "name": "glm_mat4_sub",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_sub(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 26
+    },
+    {
+      "name": "glm_mat4_mul_vec4",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_mul_vec4(glm_vec4 const m[4], glm_vec4 v)",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 34
+    },
+    {
+      "name": "glm_vec4_mul_mat4",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER __m128 glm_vec4_mul_mat4(glm_vec4 v, glm_vec4 const m[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 53
+    },
+    {
+      "name": "glm_mat4_mul",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_mul(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 80
+    },
+    {
+      "name": "glm_mat4_transpose",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_transpose(glm_vec4 const in[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 156
+    },
+    {
+      "name": "glm_mat4_determinant_highp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_determinant_highp(glm_vec4 const in[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 169
+    },
+    {
+      "name": "glm_mat4_determinant_lowp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_determinant_lowp(glm_vec4 const m[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 383
+    },
+    {
+      "name": "glm_mat4_determinant",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_determinant(glm_vec4 const m[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 446
+    },
+    {
+      "name": "glm_mat4_inverse",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_inverse(glm_vec4 const in[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 509
+    },
+    {
+      "name": "glm_mat4_inverse_lowp",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_inverse_lowp(glm_vec4 const in[4], glm_vec4 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 730
+    },
+    {
+      "name": "glm_mat4_rotate",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_rotate(__m128 const in[4], float Angle, float const v[3], __m128 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 950
+    },
+    {
+      "name": "glm_mat4_outerProduct",
+      "kind": "function",
+      "exported": false,
+      "signature": "GLM_FUNC_QUALIFIER void glm_mat4_outerProduct(__m128 const& c, __m128 const& r, __m128 out[4])",
+      "file": "third_party/glm/include/glm/simd/matrix.h",
+      "line": 1020
+    },
+    {
+      "name": "SDL_MostSignificantBitIndex32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE int SDL_MostSignificantBitIndex32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_bits.h",
+      "line": 66
+    },
+    {
+      "name": "SDL_HasExactlyOneBitSet32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_HasExactlyOneBitSet32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_bits.h",
+      "line": 133
+    },
+    {
+      "name": "ANativeWindow",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct ANativeWindow;",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 448
+    },
+    {
+      "name": "egl_native_pixmap_t",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct egl_native_pixmap_t;",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 449
+    },
+    {
+      "name": "AHardwareBuffer",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct AHardwareBuffer;",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 1387
+    },
+    {
+      "name": "EGLClientPixmapHI",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct EGLClientPixmapHI",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 1897
+    },
+    {
+      "name": "wl_display",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct wl_display;",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 2320
+    },
+    {
+      "name": "wl_resource",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct wl_resource;",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 2321
+    },
+    {
+      "name": "wl_buffer",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct wl_buffer;",
+      "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+      "line": 2342
+    },
+    {
+      "name": "SDL_Swap16",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 247
+    },
+    {
+      "name": "SDL_Swap16",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 253
+    },
+    {
+      "name": "SDL_Swap16",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 259
+    },
+    {
+      "name": "SDL_Swap16",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 267
+    },
+    {
+      "name": "SDL_Swap16",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 279
+    },
+    {
+      "name": "SDL_Swap32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 294
+    },
+    {
+      "name": "SDL_Swap32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 300
+    },
+    {
+      "name": "SDL_Swap32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 306
+    },
+    {
+      "name": "SDL_Swap32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 316
+    },
+    {
+      "name": "SDL_Swap32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 328
+    },
+    {
+      "name": "SDL_Swap64",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 344
+    },
+    {
+      "name": "SDL_Swap64",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 359
+    },
+    {
+      "name": "SDL_Swap64",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 373
+    },
+    {
+      "name": "SDL_SwapFloat",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE float SDL_SwapFloat(float x)",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 408
+    },
+    {
+      "name": "SDL_Swap16",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x) { return x_but_byteswapped; }",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 447
+    },
+    {
+      "name": "SDL_Swap32",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x) { return x_but_byteswapped; }",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 468
+    },
+    {
+      "name": "SDL_Swap64",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x) { return x_but_byteswapped; }",
+      "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+      "line": 489
+    },
+    {
+      "name": "_cl_context",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct _cl_context;",
+      "file": "third_party/SDL3/include/SDL3/SDL_opengl_glext.h",
+      "line": 3259
+    },
+    {
+      "name": "_cl_event",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct _cl_event;",
+      "file": "third_party/SDL3/include/SDL3/SDL_opengl_glext.h",
+      "line": 3260
+    },
+    {
+      "name": "SDL_RectToFRect",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE void SDL_RectToFRect(const SDL_Rect *rect, SDL_FRect *frect)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 126
+    },
+    {
+      "name": "SDL_PointInRect",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 155
+    },
+    {
+      "name": "SDL_RectEmpty",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_RectEmpty(const SDL_Rect *r)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 179
+    },
+    {
+      "name": "SDL_RectsEqual",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_RectsEqual(const SDL_Rect *a, const SDL_Rect *b)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 203
+    },
+    {
+      "name": "SDL_PointInRectFloat",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_PointInRectFloat(const SDL_FPoint *p, const SDL_FRect *r)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 320
+    },
+    {
+      "name": "SDL_RectEmptyFloat",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_RectEmptyFloat(const SDL_FRect *r)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 344
+    },
+    {
+      "name": "SDL_RectsEqualEpsilon",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_RectsEqualEpsilon(const SDL_FRect *a, const SDL_FRect *b, float epsilon)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 374
+    },
+    {
+      "name": "SDL_RectsEqualFloat",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_RectsEqualFloat(const SDL_FRect *a, const SDL_FRect *b)",
+      "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+      "line": 409
+    },
+    {
+      "name": "SDL_Texture",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct SDL_Texture",
+      "file": "third_party/SDL3/include/SDL3/SDL_render.h",
+      "line": 133
+    },
+    {
+      "name": "SDL_size_mul_check_overflow",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_size_mul_check_overflow(size_t a, size_t b, size_t *ret)",
+      "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+      "line": 6046
+    },
+    {
+      "name": "SDL_size_mul_check_overflow_builtin",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_size_mul_check_overflow_builtin(size_t a, size_t b, size_t *ret)",
+      "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+      "line": 6060
+    },
+    {
+      "name": "SDL_size_add_check_overflow",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_size_add_check_overflow(size_t a, size_t b, size_t *ret)",
+      "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+      "line": 6085
+    },
+    {
+      "name": "SDL_size_add_check_overflow_builtin",
+      "kind": "function",
+      "exported": false,
+      "signature": "SDL_FORCE_INLINE bool SDL_size_add_check_overflow_builtin(size_t a, size_t b, size_t *ret)",
+      "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+      "line": 6098
+    },
+    {
+      "name": "SDL_Surface",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct SDL_Surface",
+      "file": "third_party/SDL3/include/SDL3/SDL_surface.h",
+      "line": 132
+    },
+    {
+      "name": "VkAllocationCallbacks",
+      "kind": "class",
+      "exported": false,
+      "signature": "struct VkAllocationCallbacks;",
+      "file": "third_party/SDL3/include/SDL3/SDL_vulkan.h",
+      "line": 70
+    }
+  ],
+  "files": {
+    "Editor.cpp": {
+      "mtimeMs": 1773018891752.4585,
+      "size": 1892,
+      "symbols": [
+        {
+          "name": "MyGame",
+          "kind": "class",
+          "exported": false,
+          "signature": "class MyGame : public LightningEngine::GameInstance",
+          "file": "Editor.cpp",
+          "line": 15
+        },
+        {
+          "name": "main",
+          "kind": "function",
+          "exported": false,
+          "signature": "int main(int argc, char* argv[])",
+          "file": "Editor.cpp",
+          "line": 81
+        }
+      ]
+    },
+    "examples/third_person_shooter.h": {
+      "mtimeMs": 1760278754503.9907,
+      "size": 2086,
+      "symbols": [
+        {
+          "name": "Player",
+          "kind": "class",
+          "exported": false,
+          "signature": "class Player",
+          "file": "examples/third_person_shooter.h",
+          "line": 14
+        },
+        {
+          "name": "Level1",
+          "kind": "class",
+          "exported": false,
+          "signature": "class Level1 : public Level {",
+          "file": "examples/third_person_shooter.h",
+          "line": 23
+        },
+        {
+          "name": "SpaceIvaders",
+          "kind": "class",
+          "exported": false,
+          "signature": "class SpaceIvaders : public LightningEngine::Window {",
+          "file": "examples/third_person_shooter.h",
+          "line": 68
+        }
+      ]
+    },
+    "package.js": {
+      "mtimeMs": 1773019567609.1782,
+      "size": 46,
+      "symbols": []
+    },
+    "src/core/Engine.cpp": {
+      "mtimeMs": 1760271890665.8127,
+      "size": 1833,
+      "symbols": []
+    },
+    "src/core/Window.cpp": {
+      "mtimeMs": 1760279617543.7278,
+      "size": 1448,
+      "symbols": []
+    },
+    "src/graphics/Renderer.cpp": {
+      "mtimeMs": 1760272642941.8936,
+      "size": 1007,
+      "symbols": []
+    },
+    "src/include/Engine.h": {
+      "mtimeMs": 1760061010489.1323,
+      "size": 819,
+      "symbols": []
+    },
+    "src/include/GameInstance.h": {
+      "mtimeMs": 1760279115724.295,
+      "size": 543,
+      "symbols": [
+        {
+          "name": "GameInstance",
+          "kind": "class",
+          "exported": false,
+          "signature": "class GameInstance",
+          "file": "src/include/GameInstance.h",
+          "line": 9
+        }
+      ]
+    },
+    "src/include/InputManager.h": {
+      "mtimeMs": 1760060156523.1892,
+      "size": 620,
+      "symbols": []
+    },
+    "src/include/Level.h": {
+      "mtimeMs": 1760277790774.9355,
+      "size": 557,
+      "symbols": []
+    },
+    "src/include/Renderer.h": {
+      "mtimeMs": 1760137784473.727,
+      "size": 474,
+      "symbols": []
+    },
+    "src/include/Types.h": {
+      "mtimeMs": 1760276087571.0027,
+      "size": 24419,
+      "symbols": []
+    },
+    "src/include/Window.h": {
+      "mtimeMs": 1760279617556.729,
+      "size": 1162,
+      "symbols": []
+    },
+    "third_party/Assimp/include/Assimp/ai_assert.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 236,
+      "symbols": []
+    },
+    "third_party/Assimp/include/Assimp/anim.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 14336,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 3
+        },
+        {
+          "name": "aiVectorKey",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiVectorKey",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 58
+        },
+        {
+          "name": "aiQuatKey",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiQuatKey",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 101
+        },
+        {
+          "name": "aiMeshKey",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMeshKey",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 141
+        },
+        {
+          "name": "aiAnimBehaviour",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiAnimBehaviour",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 188
+        },
+        {
+          "name": "aiNodeAnim",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiNodeAnim",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 230
+        },
+        {
+          "name": "aiMeshAnim",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMeshAnim",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 308
+        },
+        {
+          "name": "aiAnimation",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiAnimation",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 340
+        },
+        {
+          "name": "Interpolator",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct Interpolator",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 415
+        },
+        {
+          "name": "Interpolator",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct Interpolator\t<aiQuaternion>",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 431
+        },
+        {
+          "name": "Interpolator",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct Interpolator\t<unsigned int>",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 440
+        },
+        {
+          "name": "Interpolator",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct Interpolator\t <aiVectorKey>",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 449
+        },
+        {
+          "name": "Interpolator",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct Interpolator <aiQuatKey>",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 459
+        },
+        {
+          "name": "Interpolator",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct Interpolator <aiMeshKey>",
+          "file": "third_party/Assimp/include/Assimp/anim.h",
+          "line": 469
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/camera.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 7428,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/camera.h",
+          "line": 3
+        },
+        {
+          "name": "aiCamera",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiCamera",
+          "file": "third_party/Assimp/include/Assimp/camera.h",
+          "line": 98
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/cexport.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 12478,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/cexport.h",
+          "line": 3
+        },
+        {
+          "name": "aiScene",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiScene;  // aiScene.h",
+          "file": "third_party/Assimp/include/Assimp/cexport.h",
+          "line": 56
+        },
+        {
+          "name": "aiFileIO",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFileIO; // aiFileIO.h",
+          "file": "third_party/Assimp/include/Assimp/cexport.h",
+          "line": 57
+        },
+        {
+          "name": "aiExportFormatDesc",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiExportFormatDesc",
+          "file": "third_party/Assimp/include/Assimp/cexport.h",
+          "line": 64
+        },
+        {
+          "name": "aiExportDataBlob",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiExportDataBlob",
+          "file": "third_party/Assimp/include/Assimp/cexport.h",
+          "line": 194
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/cfileio.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 4569,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/cfileio.h",
+          "line": 3
+        },
+        {
+          "name": "aiFileIO",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFileIO;",
+          "file": "third_party/Assimp/include/Assimp/cfileio.h",
+          "line": 52
+        },
+        {
+          "name": "aiFile",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFile;",
+          "file": "third_party/Assimp/include/Assimp/cfileio.h",
+          "line": 53
+        },
+        {
+          "name": "aiFileIO",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFileIO",
+          "file": "third_party/Assimp/include/Assimp/cfileio.h",
+          "line": 76
+        },
+        {
+          "name": "aiFile",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFile",
+          "file": "third_party/Assimp/include/Assimp/cfileio.h",
+          "line": 100
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/cimport.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 22037,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/cimport.h",
+          "line": 3
+        },
+        {
+          "name": "aiScene",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiScene;  // aiScene.h",
+          "file": "third_party/Assimp/include/Assimp/cimport.h",
+          "line": 53
+        },
+        {
+          "name": "aiFileIO",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFileIO; // aiFileIO.h",
+          "file": "third_party/Assimp/include/Assimp/cimport.h",
+          "line": 54
+        },
+        {
+          "name": "aiLogStream",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiLogStream",
+          "file": "third_party/Assimp/include/Assimp/cimport.h",
+          "line": 64
+        },
+        {
+          "name": "aiPropertyStore",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiPropertyStore { char sentinel; };",
+          "file": "third_party/Assimp/include/Assimp/cimport.h",
+          "line": 85
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/color4.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 3607,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/color4.h",
+          "line": 3
+        },
+        {
+          "name": "aiColor4t",
+          "kind": "class",
+          "exported": false,
+          "signature": "class aiColor4t",
+          "file": "third_party/Assimp/include/Assimp/color4.h",
+          "line": 56
+        },
+        {
+          "name": "aiColor4D",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiColor4D",
+          "file": "third_party/Assimp/include/Assimp/color4.h",
+          "line": 96
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/Compiler/poppack1.h": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 792,
+      "symbols": []
+    },
+    "third_party/Assimp/include/Assimp/Compiler/pstdint.h": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 24823,
+      "symbols": []
+    },
+    "third_party/Assimp/include/Assimp/Compiler/pushpack1.h": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 1213,
+      "symbols": []
+    },
+    "third_party/Assimp/include/Assimp/config.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 37170,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/config.h",
+          "line": 3
+        },
+        {
+          "name": "aiComponent",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiComponent",
+          "file": "third_party/Assimp/include/Assimp/config.h",
+          "line": 383
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/DefaultLogger.hpp": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 7582,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+          "line": 2
+        },
+        {
+          "name": "IOStream",
+          "kind": "class",
+          "exported": false,
+          "signature": "class IOStream;",
+          "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+          "line": 53
+        },
+        {
+          "name": "LogStreamInfo",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct LogStreamInfo;",
+          "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+          "line": 54
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API DefaultLogger :",
+          "file": "third_party/Assimp/include/Assimp/DefaultLogger.hpp",
+          "line": 72
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/defs.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 9881,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/defs.h",
+          "line": 3
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/Exporter.hpp": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 14261,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+          "line": 3
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API Exporter",
+          "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+          "line": 75
+        },
+        {
+          "name": "ExportToBlob",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline const aiExportDataBlob* Exporter :: ExportToBlob(  const aiScene* pScene, const std::string& pFormatId,unsigned int pPreprocessing )",
+          "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+          "line": 301
+        },
+        {
+          "name": "Export",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiReturn Exporter :: Export( const aiScene* pScene, const std::string& pFormatId, const std::string& pPath, unsigned int pPreprocessing )",
+          "file": "third_party/Assimp/include/Assimp/Exporter.hpp",
+          "line": 307
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/Importer.hpp": {
+      "mtimeMs": 1760054929403.0393,
+      "size": 29389,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+          "line": 3
+        },
+        {
+          "name": "aiScene",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiScene;",
+          "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+          "line": 84
+        },
+        {
+          "name": "aiImporterDesc",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiImporterDesc;",
+          "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+          "line": 87
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API Importer",
+          "file": "third_party/Assimp/include/Assimp/Importer.hpp",
+          "line": 116
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/importerdesc.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 5519,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/importerdesc.h",
+          "line": 3
+        },
+        {
+          "name": "aiImporterFlags",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiImporterFlags",
+          "file": "third_party/Assimp/include/Assimp/importerdesc.h",
+          "line": 51
+        },
+        {
+          "name": "aiImporterDesc",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiImporterDesc",
+          "file": "third_party/Assimp/include/Assimp/importerdesc.h",
+          "line": 87
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/IOStream.hpp": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 4871,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/IOStream.hpp",
+          "line": 3
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API IOStream",
+          "file": "third_party/Assimp/include/Assimp/IOStream.hpp",
+          "line": 64
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/IOSystem.hpp": {
+      "mtimeMs": 1760054929396.9912,
+      "size": 8143,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/IOSystem.hpp",
+          "line": 3
+        },
+        {
+          "name": "IOStream",
+          "kind": "class",
+          "exported": false,
+          "signature": "class IOStream;",
+          "file": "third_party/Assimp/include/Assimp/IOSystem.hpp",
+          "line": 57
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API IOSystem",
+          "file": "third_party/Assimp/include/Assimp/IOSystem.hpp",
+          "line": 67
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/light.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 7898,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/light.h",
+          "line": 3
+        },
+        {
+          "name": "aiLightSourceType",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiLightSourceType",
+          "file": "third_party/Assimp/include/Assimp/light.h",
+          "line": 58
+        },
+        {
+          "name": "aiLight",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiLight",
+          "file": "third_party/Assimp/include/Assimp/light.h",
+          "line": 100
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/Logger.hpp": {
+      "mtimeMs": 1760054929403.0393,
+      "size": 9932,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/Logger.hpp",
+          "line": 2
+        },
+        {
+          "name": "LogStream",
+          "kind": "class",
+          "exported": false,
+          "signature": "class LogStream;",
+          "file": "third_party/Assimp/include/Assimp/Logger.hpp",
+          "line": 49
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API Logger",
+          "file": "third_party/Assimp/include/Assimp/Logger.hpp",
+          "line": 59
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/LogStream.hpp": {
+      "mtimeMs": 1760054929403.0393,
+      "size": 3882,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/LogStream.hpp",
+          "line": 2
+        },
+        {
+          "name": "IOSystem",
+          "kind": "class",
+          "exported": false,
+          "signature": "class IOSystem;",
+          "file": "third_party/Assimp/include/Assimp/LogStream.hpp",
+          "line": 48
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API LogStream",
+          "file": "third_party/Assimp/include/Assimp/LogStream.hpp",
+          "line": 56
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/material.h": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 52947,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 3
+        },
+        {
+          "name": "aiTextureOp",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiTextureOp",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 77
+        },
+        {
+          "name": "aiTextureMapMode",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiTextureMapMode",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 113
+        },
+        {
+          "name": "aiTextureMapping",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiTextureMapping",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 153
+        },
+        {
+          "name": "aiTextureType",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiTextureType",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 204
+        },
+        {
+          "name": "aiShadingMode",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiShadingMode",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 323
+        },
+        {
+          "name": "aiTextureFlags",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiTextureFlags",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 399
+        },
+        {
+          "name": "aiBlendMode",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiBlendMode",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 450
+        },
+        {
+          "name": "aiUVTransform",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiUVTransform",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 495
+        },
+        {
+          "name": "aiPropertyTypeInfo",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiPropertyTypeInfo",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 536
+        },
+        {
+          "name": "aiMaterialProperty",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMaterialProperty",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 595
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct ASSIMP_API aiMaterial",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 665
+        },
+        {
+          "name": "aiMaterial",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMaterial",
+          "file": "third_party/Assimp/include/Assimp/material.h",
+          "line": 667
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/matrix3x3.h": {
+      "mtimeMs": 1760054929412.8347,
+      "size": 6359,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/matrix3x3.h",
+          "line": 3
+        },
+        {
+          "name": "aiMatrix3x3t",
+          "kind": "class",
+          "exported": false,
+          "signature": "class aiMatrix3x3t",
+          "file": "third_party/Assimp/include/Assimp/matrix3x3.h",
+          "line": 65
+        },
+        {
+          "name": "aiMatrix3x3",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMatrix3x3",
+          "file": "third_party/Assimp/include/Assimp/matrix3x3.h",
+          "line": 174
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/matrix4x4.h": {
+      "mtimeMs": 1760054929412.8347,
+      "size": 9313,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/matrix4x4.h",
+          "line": 3
+        },
+        {
+          "name": "aiMatrix4x4t",
+          "kind": "class",
+          "exported": false,
+          "signature": "class aiMatrix4x4t",
+          "file": "third_party/Assimp/include/Assimp/matrix4x4.h",
+          "line": 65
+        },
+        {
+          "name": "aiMatrix4x4",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMatrix4x4",
+          "file": "third_party/Assimp/include/Assimp/matrix4x4.h",
+          "line": 236
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/mesh.h": {
+      "mtimeMs": 1760054929415.0166,
+      "size": 24507,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 3
+        },
+        {
+          "name": "aiFace",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiFace",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 125
+        },
+        {
+          "name": "aiVertexWeight",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiVertexWeight",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 201
+        },
+        {
+          "name": "aiBone",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiBone",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 233
+        },
+        {
+          "name": "aiPrimitiveType",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiPrimitiveType",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 287
+        },
+        {
+          "name": "aiAnimMesh",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiAnimMesh",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 344
+        },
+        {
+          "name": "aiMesh",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMesh",
+          "file": "third_party/Assimp/include/Assimp/mesh.h",
+          "line": 467
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/metadata.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 6679,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 3
+        },
+        {
+          "name": "aiMetadataEntry",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMetadataEntry",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 86
+        },
+        {
+          "name": "GetAiType",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiMetadataType GetAiType( bool ) { return AI_BOOL; }",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 105
+        },
+        {
+          "name": "GetAiType",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiMetadataType GetAiType( int ) { return AI_INT; }",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 106
+        },
+        {
+          "name": "GetAiType",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiMetadataType GetAiType( uint64_t ) { return AI_UINT64; }",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 107
+        },
+        {
+          "name": "GetAiType",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiMetadataType GetAiType( float ) { return AI_FLOAT; }",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 108
+        },
+        {
+          "name": "GetAiType",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiMetadataType GetAiType( aiString ) { return AI_AISTRING; }",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 109
+        },
+        {
+          "name": "GetAiType",
+          "kind": "function",
+          "exported": false,
+          "signature": "inline aiMetadataType GetAiType( aiVector3D ) { return AI_AIVECTOR3D; }",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 110
+        },
+        {
+          "name": "aiMetadata",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMetadata",
+          "file": "third_party/Assimp/include/Assimp/metadata.h",
+          "line": 125
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/NullLogger.hpp": {
+      "mtimeMs": 1760054929403.0393,
+      "size": 3295,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/NullLogger.hpp",
+          "line": 2
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API NullLogger",
+          "file": "third_party/Assimp/include/Assimp/NullLogger.hpp",
+          "line": 55
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/postprocess.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 29834,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/postprocess.h",
+          "line": 2
+        },
+        {
+          "name": "aiPostProcessSteps",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiPostProcessSteps",
+          "file": "third_party/Assimp/include/Assimp/postprocess.h",
+          "line": 65
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/ProgressHandler.hpp": {
+      "mtimeMs": 1760054929404.7612,
+      "size": 3716,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/ProgressHandler.hpp",
+          "line": 2
+        },
+        {
+          "name": "ASSIMP_API",
+          "kind": "class",
+          "exported": false,
+          "signature": "class ASSIMP_API ProgressHandler",
+          "file": "third_party/Assimp/include/Assimp/ProgressHandler.hpp",
+          "line": 54
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/quaternion.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 4239,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/quaternion.h",
+          "line": 2
+        },
+        {
+          "name": "aiQuaterniont",
+          "kind": "class",
+          "exported": false,
+          "signature": "class aiQuaterniont",
+          "file": "third_party/Assimp/include/Assimp/quaternion.h",
+          "line": 55
+        },
+        {
+          "name": "aiQuaternion",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiQuaternion",
+          "file": "third_party/Assimp/include/Assimp/quaternion.h",
+          "line": 119
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/scene.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 13739,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/scene.h",
+          "line": 3
+        },
+        {
+          "name": "aiNode",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiNode",
+          "file": "third_party/Assimp/include/Assimp/scene.h",
+          "line": 71
+        },
+        {
+          "name": "aiScene",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiScene",
+          "file": "third_party/Assimp/include/Assimp/scene.h",
+          "line": 277
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/texture.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 6455,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/texture.h",
+          "line": 3
+        },
+        {
+          "name": "aiTexel",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiTexel",
+          "file": "third_party/Assimp/include/Assimp/texture.h",
+          "line": 80
+        },
+        {
+          "name": "aiTexture",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiTexture",
+          "file": "third_party/Assimp/include/Assimp/texture.h",
+          "line": 120
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/types.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 15214,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 3
+        },
+        {
+          "name": "aiPlane",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiPlane",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 123
+        },
+        {
+          "name": "aiRay",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiRay",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 141
+        },
+        {
+          "name": "aiColor3D",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiColor3D",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 159
+        },
+        {
+          "name": "aiString",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiString",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 251
+        },
+        {
+          "name": "aiOrigin",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiOrigin",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 402
+        },
+        {
+          "name": "aiDefaultLogStream",
+          "kind": "enum",
+          "exported": false,
+          "signature": "enum aiDefaultLogStream",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 425
+        },
+        {
+          "name": "aiMemoryInfo",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiMemoryInfo",
+          "file": "third_party/Assimp/include/Assimp/types.h",
+          "line": 458
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/vector2.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 3501,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/vector2.h",
+          "line": 3
+        },
+        {
+          "name": "aiVector2t",
+          "kind": "class",
+          "exported": false,
+          "signature": "class aiVector2t",
+          "file": "third_party/Assimp/include/Assimp/vector2.h",
+          "line": 61
+        },
+        {
+          "name": "aiVector2D",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiVector2D",
+          "file": "third_party/Assimp/include/Assimp/vector2.h",
+          "line": 105
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/vector3.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 4419,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/vector3.h",
+          "line": 3
+        },
+        {
+          "name": "aiVector3t",
+          "kind": "class",
+          "exported": false,
+          "signature": "class aiVector3t",
+          "file": "third_party/Assimp/include/Assimp/vector3.h",
+          "line": 63
+        },
+        {
+          "name": "aiVector3D",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct aiVector3D",
+          "file": "third_party/Assimp/include/Assimp/vector3.h",
+          "line": 134
+        }
+      ]
+    },
+    "third_party/Assimp/include/Assimp/version.h": {
+      "mtimeMs": 1760054929415.5366,
+      "size": 4154,
+      "symbols": [
+        {
+          "name": "Library",
+          "kind": "function",
+          "exported": false,
+          "signature": "Open Asset Import Library (assimp)",
+          "file": "third_party/Assimp/include/Assimp/version.h",
+          "line": 3
+        }
+      ]
+    },
+    "third_party/glm/include/glm/common.hpp": {
+      "mtimeMs": 1760054929565.2134,
+      "size": 28157,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/compute_common.hpp": {
+      "mtimeMs": 1760054929572.7803,
+      "size": 1242,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/compute_vector_relational.hpp": {
+      "mtimeMs": 1760054929572.7803,
+      "size": 630,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/glm.cpp": {
+      "mtimeMs": 1760054929582.2961,
+      "size": 8728,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/qualifier.hpp": {
+      "mtimeMs": 1760054929582.8303,
+      "size": 6126,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/setup.hpp": {
+      "mtimeMs": 1760054929582.8303,
+      "size": 40588,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_float.hpp": {
+      "mtimeMs": 1760054929582.8303,
+      "size": 1642,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_half.hpp": {
+      "mtimeMs": 1760054929582.8303,
+      "size": 270,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat2x2.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 6331,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat2x3.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 5455,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat2x4.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 5516,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat3x2.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 5548,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat3x3.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 6515,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat3x4.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 5700,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat4x2.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 5676,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat4x3.hpp": {
+      "mtimeMs": 1760054929584.611,
+      "size": 5982,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_mat4x4.hpp": {
+      "mtimeMs": 1760054929592.702,
+      "size": 7023,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_quat.hpp": {
+      "mtimeMs": 1760054929595.2322,
+      "size": 6146,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_vec1.hpp": {
+      "mtimeMs": 1760054929596.1653,
+      "size": 11561,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_vec2.hpp": {
+      "mtimeMs": 1760054929596.1653,
+      "size": 15997,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_vec3.hpp": {
+      "mtimeMs": 1760054929596.1653,
+      "size": 17983,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/type_vec4.hpp": {
+      "mtimeMs": 1760054929596.1653,
+      "size": 23324,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/_features.hpp": {
+      "mtimeMs": 1760054929565.2134,
+      "size": 11770,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/_fixes.hpp": {
+      "mtimeMs": 1760054929572.2585,
+      "size": 407,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/_noise.hpp": {
+      "mtimeMs": 1760054929572.2585,
+      "size": 2360,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/_swizzle.hpp": {
+      "mtimeMs": 1760054929572.7803,
+      "size": 49213,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/_swizzle_func.hpp": {
+      "mtimeMs": 1760054929572.7803,
+      "size": 35019,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/detail/_vectorize.hpp": {
+      "mtimeMs": 1760054929572.7803,
+      "size": 5508,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/exponential.hpp": {
+      "mtimeMs": 1760054929602.201,
+      "size": 5725,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_clip_space.hpp": {
+      "mtimeMs": 1760054929603.223,
+      "size": 30247,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_common.hpp": {
+      "mtimeMs": 1760054929603.223,
+      "size": 1031,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double2x2.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 739,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double2x2_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 3019,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double2x3.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 469,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double2x3_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 1621,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double2x4.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 469,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double2x4_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 1621,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double3x2.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 469,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double3x2_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 1621,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double3x3.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 739,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double3x3_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 3019,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double3x4.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 469,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double3x4_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 1621,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double4x2.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 469,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double4x2_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 1621,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double4x3.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 469,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double4x3_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 1621,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double4x4.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 739,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_double4x4_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 3019,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float2x2.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 734,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float2x2_precision.hpp": {
+      "mtimeMs": 1760054929604.8704,
+      "size": 3004,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float2x3.hpp": {
+      "mtimeMs": 1760054929611.92,
+      "size": 466,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float2x3_precision.hpp": {
+      "mtimeMs": 1760054929611.92,
+      "size": 1613,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float2x4.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 466,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float2x4_precision.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 1613,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float3x2.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 460,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float3x2_precision.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 1613,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float3x3.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 736,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float3x3_precision.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 3004,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float3x4.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 467,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float3x4_precision.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 1613,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float4x2.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 467,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float4x2_precision.hpp": {
+      "mtimeMs": 1760054929612.9453,
+      "size": 1613,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float4x3.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 467,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float4x3_precision.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 1613,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float4x4.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 733,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_float4x4_precision.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 3004,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int2x2.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 839,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int2x2_sized.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 1755,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int2x3.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 727,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int2x3_sized.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 1228,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int2x4.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 727,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int2x4_sized.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 1228,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int3x2.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 727,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int3x2_sized.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 1228,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int3x3.hpp": {
+      "mtimeMs": 1760054929616.9517,
+      "size": 839,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int3x3_sized.hpp": {
+      "mtimeMs": 1760054929621.9775,
+      "size": 1755,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int3x4.hpp": {
+      "mtimeMs": 1760054929622.4946,
+      "size": 727,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int3x4_sized.hpp": {
+      "mtimeMs": 1760054929622.4946,
+      "size": 1228,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int4x2.hpp": {
+      "mtimeMs": 1760054929623.0227,
+      "size": 727,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int4x2_sized.hpp": {
+      "mtimeMs": 1760054929623.0227,
+      "size": 1228,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int4x3.hpp": {
+      "mtimeMs": 1760054929623.0227,
+      "size": 727,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int4x3_sized.hpp": {
+      "mtimeMs": 1760054929623.0227,
+      "size": 1228,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int4x4.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 839,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_int4x4_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1755,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_projection.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 8205,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_relational.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 6842,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_transform.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 6170,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint2x2.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 854,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint2x2_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1795,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint2x3.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 737,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint2x3_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1252,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint2x4.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 737,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint2x4_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1253,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint3x2.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 737,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint3x2_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1244,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint3x3.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 854,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint3x3_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1795,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint3x4.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 736,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint3x4_sized.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 1252,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint4x2.hpp": {
+      "mtimeMs": 1760054929624.7434,
+      "size": 738,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint4x2_sized.hpp": {
+      "mtimeMs": 1760054929632.295,
+      "size": 1252,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint4x3.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 738,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint4x3_sized.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 1252,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint4x4.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 854,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/matrix_uint4x4_sized.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 1795,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_common.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 4975,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_double.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 1024,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_double_precision.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 1360,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_exponential.hpp": {
+      "mtimeMs": 1760054929632.815,
+      "size": 1804,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_float.hpp": {
+      "mtimeMs": 1760054929637.9053,
+      "size": 1015,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_float_precision.hpp": {
+      "mtimeMs": 1760054929638.4219,
+      "size": 1189,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_geometric.hpp": {
+      "mtimeMs": 1760054929638.4219,
+      "size": 1967,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_relational.hpp": {
+      "mtimeMs": 1760054929638.4219,
+      "size": 2016,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_transform.hpp": {
+      "mtimeMs": 1760054929638.4219,
+      "size": 1378,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/quaternion_trigonometric.hpp": {
+      "mtimeMs": 1760054929638.4219,
+      "size": 1876,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_common.hpp": {
+      "mtimeMs": 1760054929641.9434,
+      "size": 5194,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_constants.hpp": {
+      "mtimeMs": 1760054929641.9434,
+      "size": 1077,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_integer.hpp": {
+      "mtimeMs": 1760054929642.9639,
+      "size": 2775,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_int_sized.hpp": {
+      "mtimeMs": 1760054929642.9639,
+      "size": 1399,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_packing.hpp": {
+      "mtimeMs": 1760054929642.9639,
+      "size": 708,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_relational.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 2329,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_uint_sized.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 1436,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/scalar_ulp.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 2124,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool1.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 679,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool1_precision.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 910,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool2.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 410,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool2_precision.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 1371,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool3.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 410,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool3_precision.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 1371,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool4.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 410,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_bool4_precision.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 1371,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_common.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 9547,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double1.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 813,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double1_precision.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 1191,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double2.hpp": {
+      "mtimeMs": 1760054929645.1191,
+      "size": 446,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double2_precision.hpp": {
+      "mtimeMs": 1760054929652.18,
+      "size": 1431,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double3.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 446,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double3_precision.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 1590,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double4.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 446,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_double4_precision.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 1622,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float1.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 804,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float1_precision.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 1186,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float2.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 442,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float2_precision.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 1425,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float3.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 443,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float3_precision.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 1425,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float4.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 443,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_float4_precision.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 1425,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int1.hpp": {
+      "mtimeMs": 1760054929652.7046,
+      "size": 725,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int1_sized.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 1261,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int2.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 423,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int2_sized.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 1284,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int3.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 423,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int3_sized.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 1284,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int4.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 423,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_int4_sized.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 1284,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_integer.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 5659,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_packing.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 702,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_relational.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 4636,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint1.hpp": {
+      "mtimeMs": 1760054929657.2117,
+      "size": 743,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint1_sized.hpp": {
+      "mtimeMs": 1760054929662.2344,
+      "size": 1289,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint2.hpp": {
+      "mtimeMs": 1760054929662.2344,
+      "size": 435,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint2_sized.hpp": {
+      "mtimeMs": 1760054929662.7551,
+      "size": 1308,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint3.hpp": {
+      "mtimeMs": 1760054929662.7551,
+      "size": 435,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint3_sized.hpp": {
+      "mtimeMs": 1760054929662.7551,
+      "size": 1308,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint4.hpp": {
+      "mtimeMs": 1760054929662.7551,
+      "size": 435,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_uint4_sized.hpp": {
+      "mtimeMs": 1760054929662.7551,
+      "size": 1308,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext/vector_ulp.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 3957,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/ext.hpp": {
+      "mtimeMs": 1760054929602.201,
+      "size": 8728,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/fwd.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 46775,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/geometric.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 5467,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/glm.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 4635,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/bitfield.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 10144,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/color_space.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 2020,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/constants.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 4179,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/epsilon.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 1828,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/integer.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 2096,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/matrix_access.hpp": {
+      "mtimeMs": 1760054929664.8616,
+      "size": 1468,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/matrix_integer.hpp": {
+      "mtimeMs": 1760054929671.91,
+      "size": 13046,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/matrix_inverse.hpp": {
+      "mtimeMs": 1760054929671.91,
+      "size": 1517,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/matrix_transform.hpp": {
+      "mtimeMs": 1760054929672.928,
+      "size": 1226,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/noise.hpp": {
+      "mtimeMs": 1760054929672.928,
+      "size": 1553,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/packing.hpp": {
+      "mtimeMs": 1760054929672.928,
+      "size": 36716,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/quaternion.hpp": {
+      "mtimeMs": 1760054929672.928,
+      "size": 5638,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/random.hpp": {
+      "mtimeMs": 1760054929676.9353,
+      "size": 2689,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/reciprocal.hpp": {
+      "mtimeMs": 1760054929676.9353,
+      "size": 3550,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/round.hpp": {
+      "mtimeMs": 1760054929676.9353,
+      "size": 5438,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/type_aligned.hpp": {
+      "mtimeMs": 1760054929676.9353,
+      "size": 69298,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/type_precision.hpp": {
+      "mtimeMs": 1760054929676.9353,
+      "size": 66315,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/type_ptr.hpp": {
+      "mtimeMs": 1760054929681.9653,
+      "size": 7056,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/ulp.hpp": {
+      "mtimeMs": 1760054929681.9653,
+      "size": 5194,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtc/vec1.hpp": {
+      "mtimeMs": 1760054929682.989,
+      "size": 838,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/associated_min_max.hpp": {
+      "mtimeMs": 1760054929682.989,
+      "size": 7836,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/bit.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 3136,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/closest_point.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 1376,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/color_encoding.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 1730,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/color_space.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 2045,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/color_space_YCoCg.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 1926,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/common.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 3192,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/compatibility.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 15122,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/component_wise.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 2420,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/dual_quaternion.hpp": {
+      "mtimeMs": 1760054929685.037,
+      "size": 9737,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/easing.hpp": {
+      "mtimeMs": 1760054929692.6184,
+      "size": 7092,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/euler_angles.hpp": {
+      "mtimeMs": 1760054929692.6184,
+      "size": 11012,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/extend.hpp": {
+      "mtimeMs": 1760054929692.6184,
+      "size": 1111,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/extended_min_max.hpp": {
+      "mtimeMs": 1760054929692.6184,
+      "size": 3711,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/exterior_product.hpp": {
+      "mtimeMs": 1760054929692.6184,
+      "size": 1381,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/fast_exponential.hpp": {
+      "mtimeMs": 1760054929692.6184,
+      "size": 3213,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/fast_square_root.hpp": {
+      "mtimeMs": 1760054929697.1238,
+      "size": 3025,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/fast_trigonometry.hpp": {
+      "mtimeMs": 1760054929697.1238,
+      "size": 2474,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/functions.hpp": {
+      "mtimeMs": 1760054929697.1238,
+      "size": 1342,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/gradient_paint.hpp": {
+      "mtimeMs": 1760054929697.1238,
+      "size": 1514,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/handed_coordinate_space.hpp": {
+      "mtimeMs": 1760054929697.1238,
+      "size": 1564,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/hash.hpp": {
+      "mtimeMs": 1760054929702.146,
+      "size": 3615,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/integer.hpp": {
+      "mtimeMs": 1760054929703.166,
+      "size": 2242,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/intersect.hpp": {
+      "mtimeMs": 1760054929703.166,
+      "size": 3442,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/io.hpp": {
+      "mtimeMs": 1760054929703.166,
+      "size": 7363,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/log_base.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 1218,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_cross_product.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 1372,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_decompose.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 1443,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_factorisation.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 2956,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_interpolation.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 2058,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_major_storage.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 3881,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_operation.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 3155,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_query.hpp": {
+      "mtimeMs": 1760054929705.1475,
+      "size": 2821,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/matrix_transform_2d.hpp": {
+      "mtimeMs": 1760054929712.7256,
+      "size": 2609,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/mixed_product.hpp": {
+      "mtimeMs": 1760054929712.7256,
+      "size": 1101,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/norm.hpp": {
+      "mtimeMs": 1760054929712.7256,
+      "size": 2783,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/normal.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1091,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/normalize_dot.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1579,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/number_precision.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 2383,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/optimum_pow.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1361,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/orthonormalize.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1371,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/perpendicular.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1148,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/polar_coordinates.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1381,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/projection.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 1135,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/quaternion.hpp": {
+      "mtimeMs": 1760054929715.5122,
+      "size": 4751,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/range.hpp": {
+      "mtimeMs": 1760054929722.559,
+      "size": 2336,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/raw_data.hpp": {
+      "mtimeMs": 1760054929723.0916,
+      "size": 1294,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/rotate_normalized_axis.hpp": {
+      "mtimeMs": 1760054929723.0916,
+      "size": 2304,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/rotate_vector.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 3713,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/scalar_multiplication.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 2328,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/scalar_relational.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 925,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/spline.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 1645,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/std_based_type.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 2081,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/string_cast.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 1435,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/texture.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 1336,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/transform.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 1745,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/transform2.hpp": {
+      "mtimeMs": 1760054929724.9019,
+      "size": 3526,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/type_aligned.hpp": {
+      "mtimeMs": 1760054929731.9424,
+      "size": 34272,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/type_trait.hpp": {
+      "mtimeMs": 1760054929732.968,
+      "size": 2221,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/vector_angle.hpp": {
+      "mtimeMs": 1760054929732.968,
+      "size": 1850,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/vector_query.hpp": {
+      "mtimeMs": 1760054929732.968,
+      "size": 2268,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/vec_swizzle.hpp": {
+      "mtimeMs": 1760054929732.968,
+      "size": 79038,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/gtx/wrap.hpp": {
+      "mtimeMs": 1760054929732.968,
+      "size": 900,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/integer.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 10688,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat2x2.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 233,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat2x3.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 233,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat2x4.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 233,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat3x2.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 233,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat3x3.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 231,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat3x4.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 231,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat4x2.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 233,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat4x3.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 231,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/mat4x4.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 233,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/matrix.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 5899,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/packing.hpp": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 11070,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/simd/common.h": {
+      "mtimeMs": 1760054929736.9834,
+      "size": 7242,
+      "symbols": [
+        {
+          "name": "glm_vec4_add",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_add(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 10
+        },
+        {
+          "name": "glm_vec1_add",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_add(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 15
+        },
+        {
+          "name": "glm_vec4_sub",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_sub(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 20
+        },
+        {
+          "name": "glm_vec1_sub",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_sub(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 25
+        },
+        {
+          "name": "glm_vec4_mul",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_mul(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 30
+        },
+        {
+          "name": "glm_vec1_mul",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_mul(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 35
+        },
+        {
+          "name": "glm_vec4_div",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_div(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 40
+        },
+        {
+          "name": "glm_vec1_div",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_div(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 45
+        },
+        {
+          "name": "glm_vec4_div_lowp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_div_lowp(glm_f32vec4 a, glm_f32vec4 b)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 50
+        },
+        {
+          "name": "glm_vec4_swizzle_xyzw",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_swizzle_xyzw(glm_f32vec4 a)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 55
+        },
+        {
+          "name": "glm_vec1_fma",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_fma(glm_f32vec4 a, glm_f32vec4 b, glm_f32vec4 c)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 64
+        },
+        {
+          "name": "glm_vec4_fma",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_fma(glm_f32vec4 a, glm_f32vec4 b, glm_f32vec4 c)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 73
+        },
+        {
+          "name": "glm_vec4_abs",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_abs(glm_f32vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 82
+        },
+        {
+          "name": "glm_ivec4_abs",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_ivec4 glm_ivec4_abs(glm_ivec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 87
+        },
+        {
+          "name": "glm_vec4_sign",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_sign(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 99
+        },
+        {
+          "name": "glm_vec4_round",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_round(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 110
+        },
+        {
+          "name": "glm_vec4_floor",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_floor(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 124
+        },
+        {
+          "name": "glm_vec4_trunc",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_trunc(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 138
+        },
+        {
+          "name": "glm_vec4_roundEven",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_roundEven(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 145
+        },
+        {
+          "name": "glm_vec4_ceil",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_ceil(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 155
+        },
+        {
+          "name": "glm_vec4_fract",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_fract(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 168
+        },
+        {
+          "name": "glm_vec4_mod",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_mod(glm_vec4 x, glm_vec4 y)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 175
+        },
+        {
+          "name": "glm_vec4_clamp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_clamp(glm_vec4 v, glm_vec4 minVal, glm_vec4 maxVal)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 184
+        },
+        {
+          "name": "glm_vec4_mix",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_mix(glm_vec4 v1, glm_vec4 v2, glm_vec4 a)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 191
+        },
+        {
+          "name": "glm_vec4_step",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_step(glm_vec4 edge, glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 199
+        },
+        {
+          "name": "glm_vec4_smoothstep",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_smoothstep(glm_vec4 edge0, glm_vec4 edge1, glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 205
+        },
+        {
+          "name": "glm_vec4_nan",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_nan(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 219
+        },
+        {
+          "name": "glm_vec4_inf",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_inf(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/common.h",
+          "line": 233
+        }
+      ]
+    },
+    "third_party/glm/include/glm/simd/exponential.h": {
+      "mtimeMs": 1760054929742.013,
+      "size": 397,
+      "symbols": [
+        {
+          "name": "glm_vec1_sqrt_lowp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec1_sqrt_lowp(glm_f32vec4 x)",
+          "file": "third_party/glm/include/glm/simd/exponential.h",
+          "line": 10
+        },
+        {
+          "name": "glm_vec4_sqrt_lowp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_f32vec4 glm_vec4_sqrt_lowp(glm_f32vec4 x)",
+          "file": "third_party/glm/include/glm/simd/exponential.h",
+          "line": 15
+        }
+      ]
+    },
+    "third_party/glm/include/glm/simd/geometric.h": {
+      "mtimeMs": 1760054929742.013,
+      "size": 4046,
+      "symbols": [
+        {
+          "name": "glm_vec4_length",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_length(glm_vec4 x)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 13
+        },
+        {
+          "name": "glm_vec4_distance",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_distance(glm_vec4 p0, glm_vec4 p1)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 20
+        },
+        {
+          "name": "glm_vec4_dot",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_dot(glm_vec4 v1, glm_vec4 v2)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 27
+        },
+        {
+          "name": "glm_vec1_dot",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec1_dot(glm_vec4 v1, glm_vec4 v2)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 46
+        },
+        {
+          "name": "glm_vec4_cross",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_cross(glm_vec4 v1, glm_vec4 v2)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 65
+        },
+        {
+          "name": "glm_vec4_normalize",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_normalize(glm_vec4 v)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 77
+        },
+        {
+          "name": "glm_vec4_faceforward",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_faceforward(glm_vec4 N, glm_vec4 I, glm_vec4 Nref)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 85
+        },
+        {
+          "name": "glm_vec4_reflect",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_vec4_reflect(glm_vec4 I, glm_vec4 N)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 94
+        },
+        {
+          "name": "glm_vec4_refract",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER __m128 glm_vec4_refract(glm_vec4 I, glm_vec4 N, glm_vec4 eta)",
+          "file": "third_party/glm/include/glm/simd/geometric.h",
+          "line": 103
+        }
+      ]
+    },
+    "third_party/glm/include/glm/simd/integer.h": {
+      "mtimeMs": 1760054929742.013,
+      "size": 3803,
+      "symbols": [
+        {
+          "name": "glm_i128_interleave",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_uvec4 glm_i128_interleave(glm_uvec4 x)",
+          "file": "third_party/glm/include/glm/simd/integer.h",
+          "line": 8
+        },
+        {
+          "name": "glm_i128_interleave2",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_uvec4 glm_i128_interleave2(glm_uvec4 x, glm_uvec4 y)",
+          "file": "third_party/glm/include/glm/simd/integer.h",
+          "line": 62
+        }
+      ]
+    },
+    "third_party/glm/include/glm/simd/matrix.h": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 40979,
+      "symbols": [
+        {
+          "name": "glm_mat4_matrixCompMult",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_matrixCompMult(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 10
+        },
+        {
+          "name": "glm_mat4_add",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_add(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 18
+        },
+        {
+          "name": "glm_mat4_sub",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_sub(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 26
+        },
+        {
+          "name": "glm_mat4_mul_vec4",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_mul_vec4(glm_vec4 const m[4], glm_vec4 v)",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 34
+        },
+        {
+          "name": "glm_vec4_mul_mat4",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER __m128 glm_vec4_mul_mat4(glm_vec4 v, glm_vec4 const m[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 53
+        },
+        {
+          "name": "glm_mat4_mul",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_mul(glm_vec4 const in1[4], glm_vec4 const in2[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 80
+        },
+        {
+          "name": "glm_mat4_transpose",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_transpose(glm_vec4 const in[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 156
+        },
+        {
+          "name": "glm_mat4_determinant_highp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_determinant_highp(glm_vec4 const in[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 169
+        },
+        {
+          "name": "glm_mat4_determinant_lowp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_determinant_lowp(glm_vec4 const m[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 383
+        },
+        {
+          "name": "glm_mat4_determinant",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER glm_vec4 glm_mat4_determinant(glm_vec4 const m[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 446
+        },
+        {
+          "name": "glm_mat4_inverse",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_inverse(glm_vec4 const in[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 509
+        },
+        {
+          "name": "glm_mat4_inverse_lowp",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_inverse_lowp(glm_vec4 const in[4], glm_vec4 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 730
+        },
+        {
+          "name": "glm_mat4_rotate",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_rotate(__m128 const in[4], float Angle, float const v[3], __m128 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 950
+        },
+        {
+          "name": "glm_mat4_outerProduct",
+          "kind": "function",
+          "exported": false,
+          "signature": "GLM_FUNC_QUALIFIER void glm_mat4_outerProduct(__m128 const& c, __m128 const& r, __m128 out[4])",
+          "file": "third_party/glm/include/glm/simd/matrix.h",
+          "line": 1020
+        }
+      ]
+    },
+    "third_party/glm/include/glm/simd/neon.h": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 5043,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/simd/packing.h": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 137,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/simd/platform.h": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 13487,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/simd/trigonometric.h": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 145,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/simd/vector_relational.h": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 147,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/trigonometric.hpp": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 10885,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/vec2.hpp": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 451,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/vec3.hpp": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 451,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/vec4.hpp": {
+      "mtimeMs": 1760054929743.0417,
+      "size": 453,
+      "symbols": []
+    },
+    "third_party/glm/include/glm/vector_relational.hpp": {
+      "mtimeMs": 1760054929747.0542,
+      "size": 6464,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL.h": {
+      "mtimeMs": 1759413152000,
+      "size": 2953,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_assert.h": {
+      "mtimeMs": 1754680874000,
+      "size": 26867,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_asyncio.h": {
+      "mtimeMs": 1737475944000,
+      "size": 23310,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_atomic.h": {
+      "mtimeMs": 1738101676000,
+      "size": 24804,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_audio.h": {
+      "mtimeMs": 1752572652000,
+      "size": 89825,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_begin_code.h": {
+      "mtimeMs": 1737475944000,
+      "size": 15897,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_bits.h": {
+      "mtimeMs": 1737475944000,
+      "size": 4395,
+      "symbols": [
+        {
+          "name": "SDL_MostSignificantBitIndex32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE int SDL_MostSignificantBitIndex32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_bits.h",
+          "line": 66
+        },
+        {
+          "name": "SDL_HasExactlyOneBitSet32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_HasExactlyOneBitSet32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_bits.h",
+          "line": 133
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_blendmode.h": {
+      "mtimeMs": 1737475944000,
+      "size": 9342,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_camera.h": {
+      "mtimeMs": 1754585744000,
+      "size": 20586,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_clipboard.h": {
+      "mtimeMs": 1753714774000,
+      "size": 12536,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_close_code.h": {
+      "mtimeMs": 1735728352000,
+      "size": 1567,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_copying.h": {
+      "mtimeMs": 1735728352000,
+      "size": 984,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_cpuinfo.h": {
+      "mtimeMs": 1737475944000,
+      "size": 10514,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_dialog.h": {
+      "mtimeMs": 1740857178000,
+      "size": 14404,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_egl.h": {
+      "mtimeMs": 1735728352000,
+      "size": 108941,
+      "symbols": [
+        {
+          "name": "ANativeWindow",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct ANativeWindow;",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 448
+        },
+        {
+          "name": "egl_native_pixmap_t",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct egl_native_pixmap_t;",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 449
+        },
+        {
+          "name": "AHardwareBuffer",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct AHardwareBuffer;",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 1387
+        },
+        {
+          "name": "EGLClientPixmapHI",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct EGLClientPixmapHI",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 1897
+        },
+        {
+          "name": "wl_display",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct wl_display;",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 2320
+        },
+        {
+          "name": "wl_resource",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct wl_resource;",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 2321
+        },
+        {
+          "name": "wl_buffer",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct wl_buffer;",
+          "file": "third_party/SDL3/include/SDL3/SDL_egl.h",
+          "line": 2342
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_endian.h": {
+      "mtimeMs": 1757977828000,
+      "size": 20150,
+      "symbols": [
+        {
+          "name": "SDL_Swap16",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 247
+        },
+        {
+          "name": "SDL_Swap16",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 253
+        },
+        {
+          "name": "SDL_Swap16",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 259
+        },
+        {
+          "name": "SDL_Swap16",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 267
+        },
+        {
+          "name": "SDL_Swap16",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 279
+        },
+        {
+          "name": "SDL_Swap32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 294
+        },
+        {
+          "name": "SDL_Swap32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 300
+        },
+        {
+          "name": "SDL_Swap32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 306
+        },
+        {
+          "name": "SDL_Swap32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 316
+        },
+        {
+          "name": "SDL_Swap32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 328
+        },
+        {
+          "name": "SDL_Swap64",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 344
+        },
+        {
+          "name": "SDL_Swap64",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 359
+        },
+        {
+          "name": "SDL_Swap64",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 373
+        },
+        {
+          "name": "SDL_SwapFloat",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE float SDL_SwapFloat(float x)",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 408
+        },
+        {
+          "name": "SDL_Swap16",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint16 SDL_Swap16(Uint16 x) { return x_but_byteswapped; }",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 447
+        },
+        {
+          "name": "SDL_Swap32",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint32 SDL_Swap32(Uint32 x) { return x_but_byteswapped; }",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 468
+        },
+        {
+          "name": "SDL_Swap64",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE Uint64 SDL_Swap64(Uint64 x) { return x_but_byteswapped; }",
+          "file": "third_party/SDL3/include/SDL3/SDL_endian.h",
+          "line": 489
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_error.h": {
+      "mtimeMs": 1737475944000,
+      "size": 7095,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_events.h": {
+      "mtimeMs": 1746150714000,
+      "size": 68252,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_filesystem.h": {
+      "mtimeMs": 1737475944000,
+      "size": 21406,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_gamepad.h": {
+      "mtimeMs": 1737704822000,
+      "size": 54005,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_gpu.h": {
+      "mtimeMs": 1755882478000,
+      "size": 161632,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_guid.h": {
+      "mtimeMs": 1738849460000,
+      "size": 3430,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_haptic.h": {
+      "mtimeMs": 1737475944000,
+      "size": 44559,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_hidapi.h": {
+      "mtimeMs": 1737475944000,
+      "size": 21323,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_hints.h": {
+      "mtimeMs": 1757850762000,
+      "size": 151724,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_init.h": {
+      "mtimeMs": 1748458642000,
+      "size": 20514,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_intrin.h": {
+      "mtimeMs": 1737465560000,
+      "size": 13630,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_iostream.h": {
+      "mtimeMs": 1737475944000,
+      "size": 51175,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_joystick.h": {
+      "mtimeMs": 1737475944000,
+      "size": 44926,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_keyboard.h": {
+      "mtimeMs": 1737475944000,
+      "size": 21532,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_keycode.h": {
+      "mtimeMs": 1737475944000,
+      "size": 26573,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_loadso.h": {
+      "mtimeMs": 1737475944000,
+      "size": 5182,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_locale.h": {
+      "mtimeMs": 1737475944000,
+      "size": 4470,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_log.h": {
+      "mtimeMs": 1739435978000,
+      "size": 16776,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_main.h": {
+      "mtimeMs": 1740512396000,
+      "size": 26405,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_main_impl.h": {
+      "mtimeMs": 1735728352000,
+      "size": 5846,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_messagebox.h": {
+      "mtimeMs": 1737475944000,
+      "size": 8026,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_metal.h": {
+      "mtimeMs": 1737475944000,
+      "size": 3126,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_misc.h": {
+      "mtimeMs": 1737475944000,
+      "size": 2843,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_mouse.h": {
+      "mtimeMs": 1738613006000,
+      "size": 26367,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_mutex.h": {
+      "mtimeMs": 1737475944000,
+      "size": 35205,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_oldnames.h": {
+      "mtimeMs": 1735849088000,
+      "size": 79502,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengl.h": {
+      "mtimeMs": 1735728352000,
+      "size": 126683,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengles.h": {
+      "mtimeMs": 1735728352000,
+      "size": 1244,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengles2.h": {
+      "mtimeMs": 1735728352000,
+      "size": 1615,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengles2_gl2.h": {
+      "mtimeMs": 1669511718000,
+      "size": 42938,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengles2_gl2ext.h": {
+      "mtimeMs": 1669511718000,
+      "size": 241221,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengles2_gl2platform.h": {
+      "mtimeMs": 1669511718000,
+      "size": 646,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengles2_khrplatform.h": {
+      "mtimeMs": 1669511718000,
+      "size": 11131,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_opengl_glext.h": {
+      "mtimeMs": 1724963632000,
+      "size": 864070,
+      "symbols": [
+        {
+          "name": "_cl_context",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct _cl_context;",
+          "file": "third_party/SDL3/include/SDL3/SDL_opengl_glext.h",
+          "line": 3259
+        },
+        {
+          "name": "_cl_event",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct _cl_event;",
+          "file": "third_party/SDL3/include/SDL3/SDL_opengl_glext.h",
+          "line": 3260
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_pen.h": {
+      "mtimeMs": 1737465560000,
+      "size": 4735,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_pixels.h": {
+      "mtimeMs": 1748527434000,
+      "size": 59673,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_platform.h": {
+      "mtimeMs": 1737475944000,
+      "size": 1893,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_platform_defines.h": {
+      "mtimeMs": 1738688260000,
+      "size": 11746,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_power.h": {
+      "mtimeMs": 1743421998000,
+      "size": 4170,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_process.h": {
+      "mtimeMs": 1738613006000,
+      "size": 17699,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_properties.h": {
+      "mtimeMs": 1737475944000,
+      "size": 19052,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_rect.h": {
+      "mtimeMs": 1738622796000,
+      "size": 18211,
+      "symbols": [
+        {
+          "name": "SDL_RectToFRect",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE void SDL_RectToFRect(const SDL_Rect *rect, SDL_FRect *frect)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 126
+        },
+        {
+          "name": "SDL_PointInRect",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 155
+        },
+        {
+          "name": "SDL_RectEmpty",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_RectEmpty(const SDL_Rect *r)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 179
+        },
+        {
+          "name": "SDL_RectsEqual",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_RectsEqual(const SDL_Rect *a, const SDL_Rect *b)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 203
+        },
+        {
+          "name": "SDL_PointInRectFloat",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_PointInRectFloat(const SDL_FPoint *p, const SDL_FRect *r)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 320
+        },
+        {
+          "name": "SDL_RectEmptyFloat",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_RectEmptyFloat(const SDL_FRect *r)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 344
+        },
+        {
+          "name": "SDL_RectsEqualEpsilon",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_RectsEqualEpsilon(const SDL_FRect *a, const SDL_FRect *b, float epsilon)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 374
+        },
+        {
+          "name": "SDL_RectsEqualFloat",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_RectsEqualFloat(const SDL_FRect *a, const SDL_FRect *b)",
+          "file": "third_party/SDL3/include/SDL3/SDL_rect.h",
+          "line": 409
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_render.h": {
+      "mtimeMs": 1754585744000,
+      "size": 111376,
+      "symbols": [
+        {
+          "name": "SDL_Texture",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct SDL_Texture",
+          "file": "third_party/SDL3/include/SDL3/SDL_render.h",
+          "line": 133
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_revision.h": {
+      "mtimeMs": 1759413152000,
+      "size": 2035,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_scancode.h": {
+      "mtimeMs": 1753657124000,
+      "size": 17246,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_sensor.h": {
+      "mtimeMs": 1756463484000,
+      "size": 10498,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_stdinc.h": {
+      "mtimeMs": 1754585744000,
+      "size": 204233,
+      "symbols": [
+        {
+          "name": "SDL_size_mul_check_overflow",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_size_mul_check_overflow(size_t a, size_t b, size_t *ret)",
+          "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+          "line": 6046
+        },
+        {
+          "name": "SDL_size_mul_check_overflow_builtin",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_size_mul_check_overflow_builtin(size_t a, size_t b, size_t *ret)",
+          "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+          "line": 6060
+        },
+        {
+          "name": "SDL_size_add_check_overflow",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_size_add_check_overflow(size_t a, size_t b, size_t *ret)",
+          "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+          "line": 6085
+        },
+        {
+          "name": "SDL_size_add_check_overflow_builtin",
+          "kind": "function",
+          "exported": false,
+          "signature": "SDL_FORCE_INLINE bool SDL_size_add_check_overflow_builtin(size_t a, size_t b, size_t *ret)",
+          "file": "third_party/SDL3/include/SDL3/SDL_stdinc.h",
+          "line": 6098
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_storage.h": {
+      "mtimeMs": 1740513492000,
+      "size": 25757,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_surface.h": {
+      "mtimeMs": 1748520568000,
+      "size": 62073,
+      "symbols": [
+        {
+          "name": "SDL_Surface",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct SDL_Surface",
+          "file": "third_party/SDL3/include/SDL3/SDL_surface.h",
+          "line": 132
+        }
+      ]
+    },
+    "third_party/SDL3/include/SDL3/SDL_system.h": {
+      "mtimeMs": 1737475944000,
+      "size": 29327,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test.h": {
+      "mtimeMs": 1735728352000,
+      "size": 1954,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_assert.h": {
+      "mtimeMs": 1735728352000,
+      "size": 3196,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_common.h": {
+      "mtimeMs": 1738613006000,
+      "size": 8718,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_compare.h": {
+      "mtimeMs": 1737465560000,
+      "size": 2644,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_crc32.h": {
+      "mtimeMs": 1735728352000,
+      "size": 3614,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_font.h": {
+      "mtimeMs": 1737465560000,
+      "size": 5505,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_fuzzer.h": {
+      "mtimeMs": 1735728352000,
+      "size": 13205,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_harness.h": {
+      "mtimeMs": 1735728352000,
+      "size": 5374,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_log.h": {
+      "mtimeMs": 1735728352000,
+      "size": 2293,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_md5.h": {
+      "mtimeMs": 1735728352000,
+      "size": 4633,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_test_memory.h": {
+      "mtimeMs": 1735728352000,
+      "size": 1942,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_thread.h": {
+      "mtimeMs": 1738613006000,
+      "size": 22802,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_time.h": {
+      "mtimeMs": 1737475944000,
+      "size": 8125,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_timer.h": {
+      "mtimeMs": 1737475944000,
+      "size": 14557,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_touch.h": {
+      "mtimeMs": 1737475944000,
+      "size": 6353,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_tray.h": {
+      "mtimeMs": 1738781140000,
+      "size": 17471,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_version.h": {
+      "mtimeMs": 1759413152000,
+      "size": 5273,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_video.h": {
+      "mtimeMs": 1754585744000,
+      "size": 134220,
+      "symbols": []
+    },
+    "third_party/SDL3/include/SDL3/SDL_vulkan.h": {
+      "mtimeMs": 1749731552000,
+      "size": 11897,
+      "symbols": [
+        {
+          "name": "VkAllocationCallbacks",
+          "kind": "class",
+          "exported": false,
+          "signature": "struct VkAllocationCallbacks;",
+          "file": "third_party/SDL3/include/SDL3/SDL_vulkan.h",
+          "line": 70
+        }
+      ]
+    }
+  }
+}

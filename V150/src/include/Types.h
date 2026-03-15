@@ -141,22 +141,31 @@ namespace Lightning
 		float x = 0.0f;
 		float y = 0.0f;
 
-		V2()
-		{
-			this->x = 0.0f;
-			this->y = 0.0f;
-		}
-		V2(float new_x, float new_y)
-		{
-			this->x = new_x;
-			this->y = new_y;
-		}
-		void operator=(const V2& V)
-		{
-			this->x = V.x;
-			this->y = V.y;
-		}
+		V2() : x(0.f), y(0.f) {}
+		V2(float scalar) : x(scalar), y(scalar) {}
+		V2(float new_x, float new_y) : x(new_x), y(new_y) {}
 
+		void  operator= (const V2& v) { x = v.x; y = v.y; }
+		bool  operator==(const V2& v) const { return x == v.x && y == v.y; }
+		bool  operator!=(const V2& v) const { return !(*this == v); }
+
+		V2 operator+(const V2& v) const { return { x + v.x, y + v.y }; }
+		V2 operator-(const V2& v) const { return { x - v.x, y - v.y }; }
+		V2 operator*(const V2& v) const { return { x * v.x, y * v.y }; }
+		V2 operator/(const V2& v) const { return { x / v.x, y / v.y }; }
+
+		V2& operator+=(const V2& v) { x += v.x; y += v.y; return *this; }
+		V2& operator-=(const V2& v) { x -= v.x; y -= v.y; return *this; }
+		V2& operator*=(const V2& v) { x *= v.x; y *= v.y; return *this; }
+		V2& operator/=(const V2& v) { x /= v.x; y /= v.y; return *this; }
+
+		// Scalar ops
+		V2 operator*(float s) const { return { x * s, y * s }; }
+		V2 operator/(float s) const { return { x / s, y / s }; }
+		V2& operator*=(float s) { x *= s; y *= s; return *this; }
+		V2& operator/=(float s) { x /= s; y /= s; return *this; }
+
+		V2 operator-() const { return { -x, -y }; }
 	};
 	struct V3
 	{
@@ -601,9 +610,10 @@ namespace Lightning
 		V3 Tangent;			// Tangents Vertex 
 		V3 Bitangent;		// Bitangens Vertex
 	};
-	struct Texture
+	// Legacy asset descriptor (id + path). Use LightningEngine::Texture for GPU textures.
+	struct TextureAsset
 	{
-		uint	 Id;
+		uint   Id   = 0;
 		string type;
 		string path;
 	};

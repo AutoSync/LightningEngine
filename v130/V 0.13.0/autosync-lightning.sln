@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lightning Engine", "autosync-lightning.vcxproj", "{CCB86885-3F8B-41BB-B49B-670A522C2E90}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lightning-api", "..\lightning-api\lightning-api.vcxproj", "{F7DBA53C-4415-4D66-9D8C-F0C142AD1FAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCB86885-3F8B-41BB-B49B-670A522C2E90}.Debug|x64.ActiveCfg = Debug|x64
+		{CCB86885-3F8B-41BB-B49B-670A522C2E90}.Debug|x64.Build.0 = Debug|x64
+		{CCB86885-3F8B-41BB-B49B-670A522C2E90}.Release|x64.ActiveCfg = Release|x64
+		{CCB86885-3F8B-41BB-B49B-670A522C2E90}.Release|x64.Build.0 = Release|x64
+		{F7DBA53C-4415-4D66-9D8C-F0C142AD1FAB}.Debug|x64.ActiveCfg = Debug|x64
+		{F7DBA53C-4415-4D66-9D8C-F0C142AD1FAB}.Debug|x64.Build.0 = Debug|x64
+		{F7DBA53C-4415-4D66-9D8C-F0C142AD1FAB}.Release|x64.ActiveCfg = Release|x64
+		{F7DBA53C-4415-4D66-9D8C-F0C142AD1FAB}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9CCC0E4-687E-4631-889C-89A1D124A2F6}
+	EndGlobalSection
+EndGlobal

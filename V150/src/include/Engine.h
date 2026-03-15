@@ -1,37 +1,19 @@
-/* 2018-2025 (C) AutoSync Lightning Engine by Erick Andrade
-* All rights reserved
-* This file is part of Lightning Engine
-* 
-*/
+// Engine — Version and future subsystem registry.
+// The game loop lives in Window::Run(). This class is reserved for
+// higher-level subsystem management (Audio, Physics, Networking, etc.)
+// as those systems are implemented.
+//
+// To start a game:
+//   MyGame game;
+//   game.Run("Title", 1280, 720);
 
 #pragma once
-#include <SDL3/SDL.h>
-#include <string>
-#include <memory>
-#include "GameInstance.h"
 
-namespace LightningEngine 
-{
-	class Engine
-	{
-	private:
-		bool isRunning;
-		SDL_Window* window;
-		std::unique_ptr<GameInstance> gameNode;
-		Uint64 previewsTime;
-		float deltaTime;
+namespace LightningEngine {
 
-		bool Initialize(const std::string& title, int width, int height);
-		void Shutdown();
-		void Update();
-		void HandleEvents();
-		void Render();
+	class Engine {
 	public:
-		Engine();
-		~Engine();
-
-		void Run(std::unique_ptr<GameInstance> gameInstance, const std::string& title = "Lightning Engine", int width = 1280, int height = 720);
-		float getDeltaTime() const { return deltaTime; }
-
+		static const char* Version() { return "0.15.0-dev"; }
 	};
+
 }

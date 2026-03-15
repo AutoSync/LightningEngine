@@ -1,0 +1,80 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Debug x64 (MSBuild)",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "\"D:\\Arquivos\\HDDR\\Microsoft\\VisualStudio\\VS26\\MSBuild\\Current\\Bin\\MSBuild.exe\" LightningEngine.sln /p:Configuration=Debug /p:Platform=x64 /m /nologo"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build Release x64 (MSBuild)",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "\"D:\\Arquivos\\HDDR\\Microsoft\\VisualStudio\\VS26\\MSBuild\\Current\\Bin\\MSBuild.exe\" LightningEngine.sln /p:Configuration=Release /p:Platform=x64 /m /nologo"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build Debug (Makefile)",
+            "type": "shell",
+            "command": "make",
+            "args": ["debug"],
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build Release (Makefile)",
+            "type": "shell",
+            "command": "make",
+            "args": ["release"],
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Clean (Makefile)",
+            "type": "shell",
+            "command": "make",
+            "args": ["clean"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

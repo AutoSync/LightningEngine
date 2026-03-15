@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="App">
+      <UniqueIdentifier>{1c8de4d1-3603-4a4e-86f0-9febc36f2f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{9a308dbf-133a-411a-a616-809c3832b074}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Atomic_Objects">
+      <UniqueIdentifier>{9bfa3c54-7e5b-4b50-b41c-d3cd4a194751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Nuclide_Objects">
+      <UniqueIdentifier>{5ce44e69-9c2c-45b4-8be1-c88802e6fdd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Elements">
+      <UniqueIdentifier>{c0ac3bd4-148c-4059-b631-3f394280d52a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineContents">
+      <UniqueIdentifier>{b35c6453-d567-4346-bb48-b6d45e48962d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineContents\Shader">
+      <UniqueIdentifier>{e5499f8b-df21-4607-9080-ba99ee0a7072}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Atom_shader.cpp">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Atom_mesh.cpp">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="Element_CameraController.cpp">
+      <Filter>Engine\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Element_static_model.cpp">
+      <Filter>Engine\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Atom_camera.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Atom_texture.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Atom_shader.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Atom_Light.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Atom_mesh.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Atom_model.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Atom_print.h">
+      <Filter>Engine\Atomic_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Nuclide_opengl.h">
+      <Filter>Engine\Nuclide_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Nuclide_Standard.h">
+      <Filter>Engine\Nuclide_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Nuclide_atomic_objects.h">
+      <Filter>Engine\Nuclide_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Nuclide_glmath.h">
+      <Filter>Engine\Nuclide_Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Element_CameraController.h">
+      <Filter>Engine\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Element_static_model.h">
+      <Filter>Engine\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Element_Start.h">
+      <Filter>Engine\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Element_Objects.h">
+      <Filter>Engine\Elements</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EngineContents\Shaders\MaterialSample.frag">
+      <Filter>EngineContents\Shader</Filter>
+    </None>
+    <None Include="EngineContents\Shaders\MaterialSample.vert">
+      <Filter>EngineContents\Shader</Filter>
+    </None>
+    <None Include="EngineContents\Shaders\ObjectOutline.frag">
+      <Filter>EngineContents\Shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>

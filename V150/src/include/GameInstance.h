@@ -1,27 +1,21 @@
-/*
+// GameInstance — Abstract base class for user games.
+// Inherits the full engine lifecycle from Window.
+// Users extend this class and override Initialize/Shutdown/Update/Render.
+//
+// CLASS HIERARCHY:
+// WINDOW -> [ GAMEINSTANCE ] -> LEVEL -> NODES -> COMPONENTS
 
-*/
 #pragma once
-#include <SDL3/SDL.h>
+#include "Window.h"
 
-namespace LightningEngine{
+namespace LightningEngine {
 
-class GameInstance 
-	{
+	class GameInstance : public Window {
 	public:
-		GameInstance() { init(); };
-		const char* title;
-		int width, height;
 		virtual ~GameInstance() = default;
-		virtual void Initialize() = 0;
-		virtual void Shutdown() = 0;
-		virtual void Update(float deltaTime) = 0;
-		virtual void Render() = 0;
-		SDL_Renderer* getSDLRenderer() const { return renderer; }
-	private:
-		void init();
-		const char* rendererName;
-		SDL_Renderer* renderer;
-		SDL_Window* window;
+
+		// Initialize, Shutdown, Update(float), Render — inherited from Window.
+		// All four must be implemented by the subclass.
 	};
+
 }
