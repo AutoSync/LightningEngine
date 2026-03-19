@@ -78,7 +78,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_HAS_STD_BYTE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -92,7 +92,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_HAS_STD_BYTE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -104,7 +104,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_HAS_STD_BYTE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -127,7 +127,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_HAS_STD_BYTE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -144,6 +144,15 @@
     <ClCompile Include="src\core\Window.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
     <ClCompile Include="src\core\Texture.cpp" />
+    <ClCompile Include="src\core\TitanFont.cpp" />
+    <ClCompile Include="src\core\Framebuffer.cpp" />
+    <ClCompile Include="src\core\Spark.cpp" />
+    <ClCompile Include="src\core\Mesh.cpp" />
+    <ClCompile Include="src\core\ProjectManager.cpp" />
+    <ClCompile Include="src\core\nucleo\NucleoLexer.cpp" />
+    <ClCompile Include="src\core\nucleo\NucleoParser.cpp" />
+    <ClCompile Include="src\core\nucleo\NucleoCompiler.cpp" />
+    <ClCompile Include="src\core\nucleo\NucleoVM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="interfaces\Engine.h" />
@@ -156,7 +165,9 @@
     <ClInclude Include="src\include\Level.h" />
     <ClInclude Include="src\include\Renderer.h" />
     <ClInclude Include="src\include\Component.h" />
+    <ClInclude Include="src\include\components\Animation.h" />
     <ClInclude Include="src\include\components\BoxRenderer.h" />
+    <ClInclude Include="src\include\components\Camera.h" />
     <ClInclude Include="src\include\components\SpriteRenderer.h" />
     <ClInclude Include="src\include\components\RigidBody2D.h" />
     <ClInclude Include="src\include\GameObject.h" />
@@ -166,6 +177,46 @@
     <ClInclude Include="src\include\Texture.h" />
     <ClInclude Include="src\include\Types.h" />
     <ClInclude Include="src\include\Window.h" />
+    <ClInclude Include="src\include\gui\TitanStyle.h" />
+    <ClInclude Include="src\include\gui\TitanFont.h" />
+    <ClInclude Include="src\include\gui\Widget.h" />
+    <ClInclude Include="src\include\gui\TitanUI.h" />
+    <ClInclude Include="src\include\gui\widgets\Panel.h" />
+    <ClInclude Include="src\include\gui\widgets\Label.h" />
+    <ClInclude Include="src\include\gui\widgets\Button.h" />
+    <ClInclude Include="src\include\gui\widgets\Checkbox.h" />
+    <ClInclude Include="src\include\gui\widgets\Slider.h" />
+    <ClInclude Include="src\include\gui\widgets\TextField.h" />
+    <ClInclude Include="src\editor\EditorApp.h" />
+    <ClInclude Include="src\include\Spark.h" />
+    <ClInclude Include="src\include\Nucleo.h" />
+    <ClInclude Include="src\include\ProjectConfig.h" />
+    <ClInclude Include="src\include\ProjectManager.h" />
+    <ClInclude Include="src\include\Prefab.h" />
+    <ClInclude Include="src\include\components\MeshRenderer.h" />
+    <ClInclude Include="src\include\nucleo\NucleoToken.h" />
+    <ClInclude Include="src\include\nucleo\NucleoLexer.h" />
+    <ClInclude Include="src\include\nucleo\NucleoAST.h" />
+    <ClInclude Include="src\include\nucleo\NucleoParser.h" />
+    <ClInclude Include="src\include\nucleo\NucleoValue.h" />
+    <ClInclude Include="src\include\nucleo\NucleoBytecode.h" />
+    <ClInclude Include="src\include\nucleo\NucleoCompiler.h" />
+    <ClInclude Include="src\include\nucleo\NucleoVM.h" />
+    <ClInclude Include="src\include\nucleo\NucleoAPI.h" />
+    <ClInclude Include="src\include\nucleo\NucleoScript.h" />
+    <ClInclude Include="src\include\NativeDialog.h" />
+    <ClInclude Include="src\include\Logger.h" />
+    <ClInclude Include="src\include\UndoStack.h" />
+    <ClInclude Include="src\include\FrustumCuller.h" />
+    <ClInclude Include="src\include\EventBus.h" />
+    <ClInclude Include="src\include\InputBinding.h" />
+    <ClInclude Include="src\include\Tilemap.h" />
+    <ClInclude Include="src\include\ParallaxLayer.h" />
+    <ClInclude Include="src\include\Hurricane.h" />
+    <ClInclude Include="src\include\Equinox.h" />
+    <ClInclude Include="src\include\GamePreviewWindow.h" />
+    <ClInclude Include="src\include\Framebuffer.h" />
+    <ClInclude Include="src\include\Node2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

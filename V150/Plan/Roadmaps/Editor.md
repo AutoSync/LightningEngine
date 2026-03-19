@@ -35,3 +35,72 @@ O Editor é a interface gráfica principal para desenvolvimento de jogos com a L
   - Enums devem ser convertidos em dropdowns, permitindo a seleção de seus valores. por exemplo, uma variável do tipo Enum pode ser convertida em um dropdown que permita a seleção de seu valor a partir de uma lista de opções pré-definidas.
   - Arrays devem ser convertidos em listas editáveis, permitindo a adição, remoção e edição de seus elementos. por exemplo, uma variável do tipo Array pode ser convertida em uma lista editável que permita a adição, remoção e edição de seus elementos de forma fácil e eficiente.
   - Classes e Componentes devem ser convertidos em elementos visuais que possam ser editados e configurados pelo usuário, permitindo a edição de suas propriedades e a adição de componentes a GameObjects. por exemplo, uma classe definida em um script do projeto pode ser convertida em um elemento visual na aba de GameObjects que permita a edição de suas propriedades e a adição de componentes a GameObjects.
+
+## Aba de Cena
+
+### Menu
+
+- File
+  - New Project (Ctrl + N)
+  - New Scene (Ctrl + Shift + N)
+  - Open Project (Ctrl + O)
+  - Open Scene (Ctrl + Shift + O)
+  - Save Files (Ctrl + S)
+  - Save All (Ctrl + Shift + S)
+  - Close Project
+  - Exit
+- Edit
+  - Select All (Ctrl + A)
+  - Undo (Ctrl + Z)
+  - Redo (Ctrl + Shift + Z)
+  - Cut (Ctrl + X)
+  - Copy (Ctrl + C)
+  - Paste (Ctrl + V)
+  - Duplicate (Ctrl + W)
+  - Delete (Del)
+  --------------
+  - Move Forward (Mouse Left Click + W)
+  - Move Backward (Mouse Left Click + S)
+  - Move Left (Mouse Left Click + A)
+  - Move Right (Mouse Left Click + D)
+  - Move Up (Mouse Left Click + E)
+  - Move Down (Mouse Left Click + Q)
+- Tools
+  - Open Atlas
+  - Sprite Tool
+  - Open Equinox
+  - Open Hurricane
+  - Open Level Script
+  - Profiler
+- Window
+  - Project
+  - Content Browser
+  - Assets
+  - Hierarchy View
+  - Properties
+  - Console
+- Help
+  - Documentation
+  - About
+
+### Barra de Ferramentas
+
+- Botao de Salvar
+- Botao de Play/Pause
+- Botao de Compilação
+- Botao de Configurações de Cena
+- Botao de Ferramentas (Atlas, Sprite Tool, Equinox, Hurricane, Level Script, Profiler)
+
+### Hierarquia de Objetos
+
+- Container de objetos da cena, exibindo a hierarquia de objetos e permitindo a seleção e edição de objetos. deve ser atualizado em tempo real conforme as mudanças são feitas na cena.
+
+### Content Browser
+
+- Container de assets disponíveis para a cena, exibindo os assets disponíveis e permitindo a adição de objetos e configuração de propriedades. deve ser atualizado em tempo real conforme as mudanças são feitas na cena.
+
+### Aba Random Ignite
+
+- Aba responsavel por exibir e processar codigo visual em grafos e nos, containers de variaveis, funcoes, classes, etc. deve ser atualizado em tempo real conforme as mudanças são feitas nos scripts do projeto.
+
+- Os Tipos sao de codigo script. Componentes de Cena, Componentes de Logica, Prefabs, Shaders, Materials, Particulas, Inteligencia Artificial, Arvore de Decisão, etc. devem ser convertidos em elementos visuais que possam ser editados e configurados pelo usuário, permitindo a edição de suas propriedades e a adição de componentes a GameObjects. por exemplo, uma classe definida em um script do projeto pode ser convertida em um elemento visual na aba de Random Ignite que permita a edição de suas propriedades e a adição de componentes a GameObjects.

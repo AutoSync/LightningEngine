@@ -1,0 +1,14 @@
+// spark_default.spark — Pass-through post-process shader (identity / tinted blit).
+// Compile with: SparkCompiler::Compile("src/shaders/spark_default.spark", "assets/shaders/spark_default");
+
+@vertex
+void main() {
+    gl_Position = vec4(inPos, 0.0, 1.0);
+    fragUV = inUV;
+}
+
+@fragment
+void main() {
+    vec4 col = texture(spark_Texture, fragUV);
+    outColor = col * spark_Tint;
+}

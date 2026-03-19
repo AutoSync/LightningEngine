@@ -3,7 +3,7 @@
 
 namespace LightningEngine {
 
-	Texture Texture::FromPixels(SDL_GPUDevice* device, const void* rgba8, int w, int h)
+	Texture Texture::FromPixels(SDL_GPUDevice* device, const void* rgba8, int w, int h, bool nearestFilter)
 	{
 		Texture tex;
 		tex.device = device;
@@ -28,8 +28,8 @@ namespace LightningEngine {
 
 		// --- Sampler ---
 		SDL_GPUSamplerCreateInfo sampInfo = {};
-		sampInfo.min_filter     = SDL_GPU_FILTER_LINEAR;
-		sampInfo.mag_filter     = SDL_GPU_FILTER_LINEAR;
+		sampInfo.min_filter     = nearestFilter ? SDL_GPU_FILTER_NEAREST : SDL_GPU_FILTER_LINEAR;
+		sampInfo.mag_filter     = nearestFilter ? SDL_GPU_FILTER_NEAREST : SDL_GPU_FILTER_LINEAR;
 		sampInfo.mipmap_mode    = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST;
 		sampInfo.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
 		sampInfo.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;

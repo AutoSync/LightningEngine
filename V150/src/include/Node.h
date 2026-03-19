@@ -12,6 +12,8 @@
 #include <typeindex>
 #include <unordered_map>
 #include <algorithm>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Types.h"
 #include "Component.h"
 
@@ -138,17 +140,61 @@ namespace LightningEngine
 		Node*                        GetParent()   const { return parent;   }
 		const std::vector<Node*>&    GetChildren() const { return children; }
 
-		// World position = sum of all ancestor local positions (no rotation cascade yet).
+		// -----------------------------------------------------------------------
+		// Transform matrices (GLM, world-space cascade)
+		// -----------------------------------------------------------------------
+
+		// Local TRS matrix: translate → rotateY → rotateX → rotateZ → scale.
+		glm::mat4 LocalMatrix() const
+		{
+			glm::mat4 m = glm::mat4(1.f);
+			m = glm::translate(m, glm::vec3(transform.Position.x,
+			                               transform.Position.y,
+			                               transform.Position.z));
+			m = glm::rotate(m, glm::radians(transform.Rotation.y), glm::vec3(0,1,0));
+			m = glm::rotate(m, glm::radians(transform.Rotation.x), glm::vec3(1,0,0));
+			m = glm::rotate(m, glm::radians(transform.Rotation.z), glm::vec3(0,0,1));
+			m = glm::scale(m, glm::vec3(transform.Scale.x,
+			                            transform.Scale.y,
+			                            transform.Scale.z));
+			return m;
+		}
+
+		// World matrix: cascades through the entire parent chain.
+		glm::mat4 WorldMatrix() const
+		{
+			if (parent)
+				return parent->WorldMatrix() * LocalMatrix();
+			return LocalMatrix();
+		}
+
+		// 2D world position — derived from the full WorldMatrix (rotation-aware).
 		Lightning::V2 WorldPosition() const
 		{
-			Lightning::V2 pos = { transform.Position.x, transform.Position.y };
-			if (parent)
-			{
-				Lightning::V2 p = parent->WorldPosition();
-				pos.x += p.x;
-				pos.y += p.y;
-			}
-			return pos;
+			glm::mat4 wm = WorldMatrix();
+			return { wm[3][0], wm[3][1] };
+		}
+
+		// 3D world position.
+		Lightning::V3 WorldPosition3D() const
+		{
+			glm::mat4 wm = WorldMatrix();
+			return { wm[3][0], wm[3][1], wm[3][2] };
+		}
+
+		// -----------------------------------------------------------------------
+		// Cloning
+		// -----------------------------------------------------------------------
+
+		// Deep-copy this node (transform, tag, active state).
+		// Override in subclasses to also copy components/children.
+		virtual std::unique_ptr<Node> Clone() const
+		{
+			auto c = std::make_unique<Node>(name);
+			c->tag       = tag;
+			c->transform = transform;
+			c->active    = active;
+			return c;
 		}
 
 		// -----------------------------------------------------------------------

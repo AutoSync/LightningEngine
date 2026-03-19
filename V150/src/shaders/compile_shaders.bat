@@ -29,4 +29,30 @@ echo Compiling rect2d_tex.frag ...
 glslc rect2d_tex.frag -o %OUT%\rect2d_tex_frag.spv
 if %errorlevel% neq 0 ( echo FAILED & exit /b 1 )
 
+echo Compiling blur.frag ...
+glslc blur.frag -o %OUT%\blur_frag.spv
+if %errorlevel% neq 0 ( echo FAILED & exit /b 1 )
+
+echo Compiling mesh3d.vert ...
+glslc mesh3d.vert -o %OUT%\mesh3d_vert.spv
+if %errorlevel% neq 0 ( echo FAILED & exit /b 1 )
+
+echo Compiling mesh3d.frag ...
+glslc mesh3d.frag -o %OUT%\mesh3d_frag.spv
+if %errorlevel% neq 0 ( echo FAILED & exit /b 1 )
+
 echo Done. Shaders written to %OUT%
+
+:: ── Spark shaders ──────────────────────────────────────────────────────────
+:: .spark files are compiled at runtime via SparkCompiler::Compile().
+:: You can also pre-compile them here using the pattern below:
+::
+::   SparkCompiler::Compile("src/shaders/my.spark", "assets/shaders/my");
+::
+:: Or manually using glslc (after running SparkCompiler::GenerateGLSL to get .glsl):
+::   glslc my_vert.glsl -o assets/shaders/my_vert.spv
+::   glslc my_frag.glsl -o assets/shaders/my_frag.spv
+::
+:: Included .spark examples:
+::   spark_default.spark — pass-through tinted blit
+::   spark_wave.spark    — sine-wave distortion (requires @inject Time)

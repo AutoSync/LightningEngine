@@ -20,7 +20,7 @@ namespace LightningEngine {
 		Texture() = default;
 
 		// Upload RGBA8 pixel data directly — used internally by LoadTexture.
-		static Texture FromPixels(SDL_GPUDevice* device, const void* rgba8, int w, int h);
+		static Texture FromPixels(SDL_GPUDevice* device, const void* rgba8, int w, int h, bool nearestFilter = false);
 
 		void Release();
 
@@ -31,6 +31,19 @@ namespace LightningEngine {
 		// Internal — for Renderer use only.
 		SDL_GPUTexture* GetGPUTexture() const { return gpuTex;  }
 		SDL_GPUSampler* GetSampler()    const { return sampler; }
+
+		// Creates a non-owning view of an existing GPU texture (used by Framebuffer).
+		// Release() on this view is a no-op — the owner manages lifetime.
+		static Texture ViewOf(SDL_GPUTexture* tex, SDL_GPUSampler* samp, int w, int h)
+		{
+			Texture t;
+			// device=nullptr → Release() skips GPU calls (no double-free)
+			t.gpuTex  = tex;
+			t.sampler = samp;
+			t.width   = w;
+			t.height  = h;
+			return t;
+		}
 	};
 
 }

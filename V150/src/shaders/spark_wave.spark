@@ -1,0 +1,20 @@
+// spark_wave.spark — Horizontal wave distortion effect.
+// Compile with: SparkCompiler::Compile("src/shaders/spark_wave.spark", "assets/shaders/spark_wave");
+// At runtime: shader.SetTime(t); shader.SetTint(1,1,1,1);
+
+@inject Time
+
+@vertex
+void main() {
+    gl_Position = vec4(inPos, 0.0, 1.0);
+    fragUV = inUV;
+}
+
+@fragment
+void main() {
+    // Horizontal sine-wave UV distortion driven by spark_Time.x (seconds)
+    vec2 uv = fragUV;
+    uv.x += sin(uv.y * 20.0 + spark_Time.x * 3.0) * 0.005;
+    vec4 col = texture(spark_Texture, uv);
+    outColor = col * spark_Tint;
+}
