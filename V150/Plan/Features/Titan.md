@@ -1,18 +1,50 @@
-# Especificação do Titan — Sistema de GUI da Lightning Engine
+# Titan — GUI
 
-## Visão Geral
+Baseado no roadmap v0.15.0, com status unificado por contexto.
 
-- Titan ataca duas frentes principais: GUI pra C++ (runtime) pra construir interfaces para a Lightning Engine, e um editor visual de UI (Editor de UI) pra criar e editar essas interfaces de forma visual.
-- O foco inicial é a parte de runtime, com o editor visual planejado para uma fase posterior. O sistema de runtime deve ser flexível o suficiente para suportar a criação de interfaces complexas, enquanto o editor visual deve facilitar a construção dessas interfaces sem necessidade de código.
+## Concluído
 
-## Etapas para Expandir o Titan
+- Sistema de GUI
+- Menus, janelas, abas
+- Widgets base
+	- Border, Backdrop, Button, Image, Label, TextField, Text
+	- Checkbox, ProgressBar, Dropdown, List, Slider, Window, TabStrip, ContextMenu
+	- Viewport2D (Canvas/Panel, ScrollView, Layouts)
+- Eventos (`EventBus`)
+- Framebuffer para UI (Create/Resize/Release, Begin/End RenderToTexture)
+- Blur (`Renderer::BlurTexture` + `blur.frag`)
+- Tooltips, Modais, Toasts
+- Widgets avançados
+	- TreeView, NumericUpDown, Splitter, Toolbar, MenuBar, ColorPicker
+	- Table/GridView, FileDialog, StatusBar
+- Atalhos customizáveis (`TitanUI::AddShortcut`)
+- Redimensionamento/movimentação de janelas internas
+- DockSpace (docking de painéis)
+- Chart widget (Line/Bar)
+- Clipboard e edição de texto avançada no `TextField`
+- Eventos customizados e bindings (`EventBus` + `InputBinding`)
 
-- [ ] Draw2D, Line, Rect, Circle
-- [x] Text
-- [x] Imagens (Sprite)
-- [x] Containers (StackPanel, Grid)
-- [x] Interação básica (cliques, hover)
+## Pendente
 
-## Documentar a Criação de GUI em C++
+- Responsive layout
+- Scriptable UI
+	- Link com Script Engine
+	- Realtime GUI no editor
+- GUI Editor
+	- Drag and drop de widgets
+	- Configuração de propriedades
+	- Visualização em tempo real
+- DatePicker
+- Drag and drop entre widgets e arquivos do sistema
+- Suporte a múltiplas janelas
+- Undo/redo para interações de UI
+- Widgets customizados via scripts
+- Preview em tempo real de alterações de UI no editor
+- Sistema de estilos (CSS-like)
+	- Glassmorphism
+	- Presets de tema (Dark, Light, Glassmorphism, Custom)
+	- Estilo por widget
 
-- Criar um Guia de uso do Titan para c++ em `Plan/Docs/TitanGuide.md` com exemplos de código e melhores práticas para criar interfaces usando o Titan.
+## Observações
+
+- O Titan atende o editor e runtime da engine; editor visual dedicado segue como etapa futura.

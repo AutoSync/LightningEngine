@@ -7,6 +7,7 @@
 #include "Widget.h"
 #include "TitanFont.h"
 #include "TitanStyle.h"
+#include "TitanTheme.h"
 #include "widgets/Panel.h"
 #include "widgets/Label.h"
 #include "widgets/Button.h"
@@ -85,6 +86,41 @@ public:
     }
 
     void Release() { font.Release(); roots.clear(); }
+
+    // ── Theme ─────────────────────────────────────────────────────────────
+    /// Load a JSON theme file. Updates gStyle, rebuilds font if changed,
+    /// populates the icon cache. Safe to call at any time (hot-reload too).
+    bool LoadTheme(LightningEngine::Renderer& r, const char* jsonPath) {
+        return Theme::Load(r, font, jsonPath);
+    }
+
+    /// Reload the last loaded theme (call in your update loop to hot-reload).
+    bool ReloadTheme(LightningEngine::Renderer& r) {
+        return Theme::Reload(r, font);
+    }
+
+    /// True if the theme JSON file changed on disk since last load.
+    bool ThemeNeedsReload() const { return Theme::NeedsReload(); }
+
+    /// Get a named icon texture (or nullptr if not loaded).
+    const LightningEngine::Texture* ThemeIcon(const std::string& name) const {
+        return Theme::Icon(name);
+    }
+
+    /// Get the default tint configured for this icon in theme JSON.
+    Color ThemeIconTint(const std::string& name) const {
+        return Theme::IconTint(name);
+    }
+
+    /// Runtime tint override for an icon (useful for white source icons).
+    bool SetThemeIconTint(const std::string& name, Color c) {
+        return Theme::SetIconTint(name, c);
+    }
+
+    /// Registers a callback capable of rasterizing SVG into RGBA pixels.
+    void SetThemeSVGRasterizer(Theme::SVGRasterizerFn fn) {
+        Theme::SetSVGRasterizer(std::move(fn));
+    }
 
     template<typename T, typename... Args>
     T* AddRoot(Args&&... args)

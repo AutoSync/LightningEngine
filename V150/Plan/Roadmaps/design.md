@@ -138,7 +138,7 @@ Botões mínimos:
 - .hurricane, .particle -> contexto Hurricane
 - .prefab -> contexto Prefab
 - .obj, .fbx, .gltf, .glb -> contexto Malha Estática
-- .anim, .skel -> contexto Malha Animada
+- .anim, .skel -> contexto Malha estatica (Malha animada se houver rigging/skin)
 - .ini, .json, .toml, .yaml, .yml -> contexto Configurações
 
 ---

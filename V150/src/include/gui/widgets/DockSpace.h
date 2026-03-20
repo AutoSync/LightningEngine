@@ -126,6 +126,13 @@ struct DockNode {
         return ptr;
     }
 
+    bool HasValidActivePanel() const
+    {
+        return activeIdx >= 0
+            && activeIdx < static_cast<int>(panels.size())
+            && panels[activeIdx].widget != nullptr;
+    }
+
     // Remove a panel from this LEAF (caller takes ownership).
     std::unique_ptr<Widget> Undock(Widget* target)
     {
@@ -247,6 +254,7 @@ struct DockNode {
 class DockSpace : public Widget {
 public:
     std::unique_ptr<DockNode> root;
+    DockNode* trayNode = nullptr;
 
     // Drop zone IDs
     enum DropZone { DZ_None=0, DZ_Left=1, DZ_Right=2, DZ_Top=3, DZ_Bottom=4, DZ_Tab=5 };
@@ -277,6 +285,8 @@ public:
     }
 
     DockNode* Root() { return root.get(); }
+
+    void SetTrayNode(DockNode* node) { trayNode = node; }
 
     // ── Drag API ─────────────────────────────────────────────────────────────
 
@@ -655,14 +665,17 @@ private:
 
         // ── ⋮ drag handle ─────────────────────────────────────────────────────
         if (mx < n->x + DockNode::kDragHandleW) {
-            if (lclick && n->activeIdx < (int)n->panels.size() && n->panels[n->activeIdx].widget) {
-                std::string title  = n->panels[n->activeIdx].title;
-                Widget*     w      = n->panels[n->activeIdx].widget.get();
-                float       offX   = mx - w->x, offY = my - w->y;
-                auto        owned  = n->Undock(w);
+            if (lclick && n->HasValidActivePanel()) {
+                std::string title = n->panels[n->activeIdx].title;
+                Widget* sourceWidget = n->panels[n->activeIdx].widget.get();
+                float offX = mx - sourceWidget->x;
+                float offY = my - sourceWidget->y;
+                auto owned = n->Undock(sourceWidget);
                 if (owned) {
-                    AdoptToTitanUI(std::move(owned), ui);
-                    BeginDrag(w, title.c_str(), mx, my, offX, offY);
+                    Widget* floatingWidget = AdoptToTitanUI(std::move(owned), title.c_str(), ui);
+                    if (floatingWidget) {
+                        BeginDrag(floatingWidget, title.c_str(), mx, my, offX, offY);
+                    }
                     if (n->panels.empty()) n->CollapseIfEmpty();
                     return true;
                 }
@@ -676,7 +689,22 @@ private:
         // — minimize
         if (mx >= btnX && mx < btnX + DockNode::kBtnW) {
             n->hoverMinBtn = true;
-            if (lclick) { n->minimized = !n->minimized; n->applyPanelGeometry(); }
+            if (lclick) {
+                if (trayNode && trayNode != n && n->HasValidActivePanel()) {
+                    std::string title = n->panels[n->activeIdx].title;
+                    Widget* sourceWidget = n->panels[n->activeIdx].widget.get();
+                    auto owned = n->Undock(sourceWidget);
+                    if (owned) {
+                        trayNode->Dock(std::move(owned), title.c_str());
+                        trayNode->activeIdx = static_cast<int>(trayNode->panels.size()) - 1;
+                        trayNode->applyPanelGeometry();
+                        if (n->panels.empty()) n->CollapseIfEmpty();
+                    }
+                } else {
+                    n->minimized = !n->minimized;
+                    n->applyPanelGeometry();
+                }
+            }
             return true;
         }
         btnX += DockNode::kBtnW + 2.f;
@@ -684,7 +712,7 @@ private:
         // ● close active panel
         if (mx >= btnX && mx < btnX + DockNode::kBtnW) {
             n->hoverCloseBtn = true;
-            if (lclick && n->activeIdx < (int)n->panels.size()) {
+            if (lclick && n->HasValidActivePanel()) {
                 auto owned = n->Undock(n->panels[n->activeIdx].widget.get());
                 owned.reset();  // destroy panel
                 if (n->panels.empty()) n->CollapseIfEmpty();
@@ -796,13 +824,16 @@ private:
 
     std::vector<std::pair<std::string, std::unique_ptr<Widget>>> floating;
 
-    void AdoptToTitanUI(std::unique_ptr<Widget> w, TitanUI* /*ui*/)
+    Widget* AdoptToTitanUI(std::unique_ptr<Widget> w, const char* title, TitanUI* /*ui*/)
     {
         // Store in floating list — DockSpace renders these
         if (w) {
             w->zOrder = 9999;
-            floating.push_back({ dragTitle, std::move(w) });
+            Widget* ptr = w.get();
+            floating.push_back({ title ? title : "", std::move(w) });
+            return ptr;
         }
+        return nullptr;
     }
 
     std::unique_ptr<Widget> ReleaseFromTitanUI(Widget* target, TitanUI* /*ui*/)

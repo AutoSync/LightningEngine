@@ -20,6 +20,7 @@
 #include <cctype>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <filesystem>
 #include "../include/GameInstance.h"
 #include "../include/Texture.h"
@@ -31,6 +32,8 @@
 #include "../include/GamePreviewWindow.h"
 #include "../include/gui/TitanUI.h"
 #include "../include/gui/TitanStyle.h"
+#include "tabs/EditorTabSystem.h"
+#include "tabs/EditorDocumentContent.h"
 
 namespace fs = std::filesystem;
 using namespace Titan;
@@ -62,14 +65,14 @@ private:
     std::string    currentScenePath;         // relative to project root
 
     // ── Layout constants ──────────────────────────────────────────────────
-    static constexpr float kTitleH    = 38.f;
-    static constexpr float kMenuH     = 22.f;
-    static constexpr float kToolH     = 26.f;
-    static constexpr float kFootH     = 22.f;
-    static constexpr float kLeftW     = 210.f;
-    static constexpr float kHierW     = 220.f;
+    static constexpr float kTitleH    = 46.f;
+    static constexpr float kMenuH     = 26.f;
+    static constexpr float kToolH     = 30.f;
+    static constexpr float kFootH     = 24.f;
+    static constexpr float kLeftW     = 230.f;
+    static constexpr float kHierW     = 230.f;
     static constexpr float kCamH      = 118.f;
-    static constexpr float kScriptH   = 210.f;
+    static constexpr float kScriptH   = 180.f;
     static constexpr float kConsoleW  = 420.f;
     static constexpr float kTopH      = kTitleH + kMenuH + kToolH;
     static constexpr float kLogoW     = 44.f;
@@ -104,6 +107,7 @@ private:
     MenuBar*     pMenuBar        = nullptr;
     Toolbar*     pToolbar        = nullptr;
     DockSpace*   pDockSpace      = nullptr;
+    DockNode*    pBottomTrayNode = nullptr;
     Panel*       pCamWidget      = nullptr;
     Panel*       pContentBrow    = nullptr;
     Panel*       pHierarchy      = nullptr;
@@ -115,12 +119,18 @@ private:
     Panel*       pScriptPanel    = nullptr;
     RichText*    pScriptEdit     = nullptr;
     DockSpace*   pScriptDock     = nullptr;
+    Panel*       pDocumentFilesPanel = nullptr;
+    Panel*       pDocumentOutlinePanel = nullptr;
+    Panel*       pDocumentEditorPanel = nullptr;
     RichText*    pScriptDockEdit = nullptr;
     Panel*       pConsolePanel   = nullptr;
     ScrollView*  pConsoleSV      = nullptr;
     bool         consoleVisible  = true;
     int          newProjTemplate = 0;   // 0=Empty 1=2D 2=3D
     ContextMenu* hierMenu        = nullptr;
+    ContextMenu* cbMenu          = nullptr;
+
+    std::string  cbCurrentDir;
 
     Texture logoTex;
     Texture splashTex;
@@ -132,7 +142,6 @@ private:
     float  curFps   = 0.f;
 
     bool                isPlaying    = false;
-    bool                isScriptOpen = true;
     GamePreviewWindow   gamePreview;
 
     // Drag & Drop from Content Browser
@@ -150,172 +159,207 @@ private:
     float     vpAX            = 0.f;  // viewport screen offset (updated each render)
     float     vpAY            = 0.f;
 
-    struct EditorTab {
-        std::string name;
-        Uint8 R, G, B;
-        bool  closable;
-        bool  active   = false;
-        bool  isScript = false;
-    };
-    std::vector<EditorTab> tabs = {
-        { "Cena", 255, 255, 255, false, true, false },
-    };
-    int activeTab = 0;
+    LightningEditor::EditorTabManager tabManager;
 
-    static const char* kSampleScript;
-
-    std::string sceneTabLabel(const std::string& sceneRelPath) const
+    std::string resolveProjectFilePath(const std::string& rawPath) const
     {
-        if (sceneRelPath.empty()) return "Cena";
-        std::string label = fs::path(sceneRelPath).filename().string();
-        return label.empty() ? "Cena" : label;
+        if (rawPath.empty()) return {};
+
+        fs::path input(rawPath);
+        if (input.is_absolute()) return input.string();
+        if (!pm.isOpen) return rawPath;
+
+        const fs::path root(pm.project.rootPath);
+        const fs::path candidates[] = {
+            root / input,
+            fs::path(pm.ScriptsDir()) / input,
+            fs::path(pm.AssetsDir()) / input,
+            fs::path(pm.ScenesDir()) / input,
+        };
+
+        for (const auto& candidate : candidates) {
+            if (fs::exists(candidate)) return candidate.string();
+        }
+
+        return (root / input).string();
+    }
+
+    fs::path contentRootDir() const
+    {
+        return pm.isOpen ? fs::path(pm.project.rootPath) : fs::path();
+    }
+
+    bool ensureCBDirValid()
+    {
+        if (!pm.isOpen) return false;
+        fs::path root = contentRootDir();
+        if (root.empty()) return false;
+
+        std::error_code ec;
+        if (cbCurrentDir.empty()) cbCurrentDir = root.string();
+
+        fs::path cur(cbCurrentDir);
+        if (!fs::exists(cur, ec) || !fs::is_directory(cur, ec)) {
+            cbCurrentDir = root.string();
+            return true;
+        }
+
+        fs::path rel = fs::relative(cur, root, ec);
+        if (ec || rel.empty() || rel.string().rfind("..", 0) == 0) {
+            cbCurrentDir = root.string();
+            return true;
+        }
+        return true;
+    }
+
+    fs::path makeUniquePath(const fs::path& dir, const std::string& stem, const std::string& ext) const
+    {
+        fs::path candidate = dir / (stem + ext);
+        if (!fs::exists(candidate)) return candidate;
+        for (int i = 1; i < 1000; ++i) {
+            candidate = dir / (stem + "_" + std::to_string(i) + ext);
+            if (!fs::exists(candidate)) return candidate;
+        }
+        return dir / (stem + "_x" + ext);
+    }
+
+    void openContentDirectory(const fs::path& dir)
+    {
+        if (!pm.isOpen) return;
+        std::error_code ec;
+        if (!fs::exists(dir, ec) || !fs::is_directory(dir, ec)) return;
+
+        fs::path root = contentRootDir();
+        fs::path rel  = fs::relative(dir, root, ec);
+        if (ec || rel.string().rfind("..", 0) == 0) return;
+
+        cbCurrentDir = dir.string();
+        refreshContentBrowser();
+    }
+
+    void goContentParent()
+    {
+        if (!pm.isOpen || !ensureCBDirValid()) return;
+        fs::path root = contentRootDir();
+        fs::path cur(cbCurrentDir);
+        if (cur == root) return;
+
+        fs::path parent = cur.parent_path();
+        if (parent.empty()) parent = root;
+        openContentDirectory(parent);
+    }
+
+    void importFileToCurrentDir()
+    {
+        if (!pm.isOpen || !ensureCBDirValid()) return;
+        std::string picked = NativeDialog::PickFileSDL(
+            renderer.GetWindow(),
+            "Import Asset",
+            cbCurrentDir.c_str());
+        if (picked.empty()) return;
+
+        std::error_code ec;
+        fs::path src(picked);
+        if (!fs::exists(src, ec) || !fs::is_regular_file(src, ec)) {
+            Logger::LogWarning("[Editor] Import failed: invalid file");
+            return;
+        }
+
+        fs::path dstDir(cbCurrentDir);
+        fs::path dst = makeUniquePath(dstDir, src.stem().string(), src.extension().string());
+        fs::copy_file(src, dst, fs::copy_options::none, ec);
+        if (ec) {
+            Logger::LogWarning("[Editor] Import failed: " + ec.message());
+            return;
+        }
+
+        Logger::LogInfo("[Editor] Imported: " + dst.filename().string());
+        refreshContentBrowser();
+        openAssetContextTab(dst.string());
+    }
+
+    void createFolderInCurrentDir()
+    {
+        if (!pm.isOpen || !ensureCBDirValid()) return;
+        std::error_code ec;
+        fs::path dir(cbCurrentDir);
+        fs::path target = makeUniquePath(dir, "NewFolder", "");
+        fs::create_directories(target, ec);
+        if (ec) {
+            Logger::LogWarning("[Editor] Failed to create folder: " + ec.message());
+            return;
+        }
+        Logger::LogInfo("[Editor] Folder created: " + target.filename().string());
+        refreshContentBrowser();
+    }
+
+    void createAssetInCurrentDir(const std::string& stem,
+                                 const std::string& ext,
+                                 const std::string& initial = "")
+    {
+        if (!pm.isOpen || !ensureCBDirValid()) return;
+        fs::path dir(cbCurrentDir);
+        fs::path target = makeUniquePath(dir, stem, ext);
+
+        std::ofstream out(target.string(), std::ios::binary | std::ios::trunc);
+        if (!out) {
+            Logger::LogWarning("[Editor] Failed to create file: " + target.filename().string());
+            return;
+        }
+        if (!initial.empty()) out << initial;
+        out.close();
+
+        Logger::LogInfo("[Editor] Created: " + target.filename().string());
+        refreshContentBrowser();
+        openAssetContextTab(target.string());
+    }
+
+    void syncTabStripFromManager()
+    {
+        if (!pTabStrip) return;
+
+        pTabStrip->tabs.clear();
+        pTabStrip->contents.clear();
+        pTabStrip->tabWidths.clear();
+        pTabStrip->hoverTab = -1;
+        pTabStrip->hoverClose = -1;
+        pTabStrip->scrollFirst = 0;
+
+        for (const auto& tab : tabManager.Tabs()) {
+            pTabStrip->AddTab(tab.label.c_str(), tab.accent.r, tab.accent.g, tab.accent.b, tab.closable);
+        }
+
+        pTabStrip->activeTab = tabManager.ActiveIndex();
     }
 
     void resetTabsToSceneOnly()
     {
-        std::string label = sceneTabLabel(currentScenePath);
-        tabs.clear();
-        tabs.push_back({ label, 255, 255, 255, false, true, false });
-        activeTab = 0;
-
-        if (pTabStrip) {
-            pTabStrip->tabs.clear();
-            pTabStrip->contents.clear();
-            pTabStrip->tabWidths.clear();
-            pTabStrip->hoverTab = -1;
-            pTabStrip->hoverClose = -1;
-            pTabStrip->scrollFirst = 0;
-            pTabStrip->AddTab(label.c_str(), 255, 255, 255, false);
-            pTabStrip->SetActive(0);
-        }
-
+        tabManager.ResetToSceneOnly(currentScenePath);
+        syncTabStripFromManager();
         switchLayout(false);
+        refreshDocumentWorkspace();
     }
 
     void syncPrimarySceneTabLabel()
     {
-        std::string label = sceneTabLabel(currentScenePath);
-        if (tabs.empty()) {
-            tabs.push_back({ label, 255, 255, 255, false, true, false });
-            activeTab = 0;
-        } else {
-            tabs[0].name = label;
-            tabs[0].R = 255; tabs[0].G = 255; tabs[0].B = 255;
-            tabs[0].closable = false;
-            tabs[0].isScript = false;
-        }
-
-        if (pTabStrip) {
-            if (pTabStrip->tabs.empty()) {
-                pTabStrip->AddTab(label.c_str(), 255, 255, 255, false);
-            } else {
-                pTabStrip->tabs[0].label = label;
-                pTabStrip->tabs[0].accentR = 255;
-                pTabStrip->tabs[0].accentG = 255;
-                pTabStrip->tabs[0].accentB = 255;
-                pTabStrip->tabs[0].closable = false;
-            }
-        }
-    }
-
-    int findTabIndexByName(const std::string& tabName) const
-    {
-        for (int i = 0; i < (int)tabs.size(); i++)
-            if (tabs[i].name == tabName) return i;
-        return -1;
+        tabManager.SyncPrimarySceneTab(currentScenePath);
+        syncTabStripFromManager();
     }
 
     void activateTabIndex(int idx)
     {
-        if (idx < 0 || idx >= (int)tabs.size()) return;
-        activeTab = idx;
-        for (int i = 0; i < (int)tabs.size(); i++) tabs[i].active = (i == activeTab);
-        if (pTabStrip) pTabStrip->SetActive(activeTab);
-        switchLayout(tabs[activeTab].isScript);
+        tabManager.Activate(idx);
+        if (pTabStrip) pTabStrip->activeTab = tabManager.ActiveIndex();
+        switchLayout(tabManager.HasActiveDocument());
+        refreshDocumentWorkspace();
     }
 
-    int ensureContextTab(const std::string& label, Uint8 r, Uint8 g, Uint8 b, bool isScript = false)
+    void openAssetContextTab(const std::string& absPath)
     {
-        int existing = findTabIndexByName(label);
-        if (existing >= 0) return existing;
-
-        tabs.push_back({ label, r, g, b, true, false, isScript });
-        int idx = (int)tabs.size() - 1;
-        if (pTabStrip) {
-            pTabStrip->AddTab(label.c_str(), r, g, b, true);
-        }
-        return idx;
-    }
-
-    void openAssetContextTab(const std::string& absPath, const std::string& ext)
-    {
-        std::string lower = ext;
-        std::transform(lower.begin(), lower.end(), lower.begin(),
-            [](unsigned char c){ return (char)std::tolower(c); });
-
-        std::string fileLabel = fs::path(absPath).filename().string();
-
-        if (lower == ".lescene") {
-            activateTabIndex(0);
-            return;
-        }
-
-        if (lower == ".spark" || lower == ".cs") {
-            int idx = ensureContextTab(fileLabel, 255, 138, 28, true);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".png" || lower == ".bmp" || lower == ".jpg" || lower == ".jpeg" || lower == ".tga") {
-            int idx = ensureContextTab(fileLabel, 210, 65, 65, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".vert" || lower == ".frag" || lower == ".spv") {
-            int idx = ensureContextTab(fileLabel, 72, 190, 90, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".mat" || lower == ".material") {
-            int idx = ensureContextTab(fileLabel, 60, 150, 80, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".hurricane" || lower == ".particle") {
-            int idx = ensureContextTab(fileLabel, 145, 80, 210, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".prefab") {
-            int idx = ensureContextTab(fileLabel, 220, 190, 70, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".obj" || lower == ".fbx" || lower == ".gltf" || lower == ".glb") {
-            int idx = ensureContextTab(fileLabel, 110, 180, 245, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".anim" || lower == ".skel") {
-            int idx = ensureContextTab(fileLabel, 220, 120, 185, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        if (lower == ".ini" || lower == ".json" || lower == ".toml" || lower == ".yaml" || lower == ".yml") {
-            int idx = ensureContextTab(fileLabel, 140, 140, 150, false);
-            activateTabIndex(idx);
-            return;
-        }
-
-        int idx = ensureContextTab(fileLabel, 185, 185, 195, false);
-        activateTabIndex(idx);
+        tabManager.OpenAsset(absPath);
+        syncTabStripFromManager();
+        switchLayout(tabManager.HasActiveDocument());
+        refreshDocumentWorkspace();
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -327,8 +371,8 @@ public:
     {
         renderer.SetClearColor(20, 20, 26);
         ui.Init(renderer, "assets/fonts/Roboto-Regular.ttf", 13);
-        logoTex   = renderer.LoadTexture("Plan/Design/logo.png");
-        splashTex = renderer.LoadTexture("Plan/Design/splash.png");
+        logoTex   = renderer.LoadTexture("assets/icons/logo.png");
+        splashTex = renderer.LoadTexture("assets/splash/splashscreen.png");
         gridTex   = buildGridTexture();
 
         kW = (float)GetWidth();
@@ -366,21 +410,12 @@ public:
                 computeLayout();
                 if (state == State::Editor) {
                     if (pDockSpace) {
-                        pDockSpace->Resize(0.f, kTopH, kW, kMainH);
+                        pDockSpace->Resize(0.f, kTopH, kW, kMainH + kScriptH);
                         if (pScriptDock)
                             pScriptDock->Resize(0.f, kTopH, kW, kMainH + kScriptH);
                         if (pTabStrip)    pTabStrip->w    = kW - kLogoW - kProjNameW;
                         if (pMenuBar)     pMenuBar->w     = kW;
                         if (pToolbar)     pToolbar->w     = kW;
-                        if (pScriptPanel) {
-                            pScriptPanel->y = kTopH + kMainH;
-                            pScriptPanel->w = kW - kConsoleW;
-                            if (pScriptEdit) pScriptEdit->w = (kW - kConsoleW) - gStyle.padding * 2.f;
-                        }
-                        if (pConsolePanel) {
-                            pConsolePanel->x = kW - kConsoleW;
-                            pConsolePanel->y = kTopH + kMainH;
-                        }
                     } else {
                         rebuildEditorUI();
                     }
@@ -405,8 +440,10 @@ public:
             if (inputManager.IsMousePressed(3)) {
                 float mx = inputManager.GetMouseX();
                 float my = inputManager.GetMouseY();
+                bool overCB = pContentBrow && pContentBrow->Contains(mx, my, 0.f, 0.f);
                 bool overHier = pHierarchy && pHierarchy->Contains(mx, my, 0.f, 0.f);
-                if (overHier && hierMenu) hierMenu->Open(mx, my);
+                if (overCB && cbMenu) cbMenu->Open(mx, my);
+                else if (overHier && hierMenu) hierMenu->Open(mx, my);
             }
 
             // Play: tick real scene (scripts run here)
@@ -781,22 +818,19 @@ private:
         buildMenuBar();
         buildToolbar();
         buildDockSpace();
-        buildScriptPanel();
-        buildConsolePanel();
         buildScriptDock();
         buildFooter();
         buildContextMenus();
-        switchLayout(activeTab < (int)tabs.size() && tabs[activeTab].isScript);
+        switchLayout(tabManager.HasActiveDocument());
+        refreshDocumentWorkspace();
     }
 
     void rebuildEditorUI()
     {
-        bool  wasScript = isScriptOpen;
-        int   selTabIdx = activeTab;
+        int   selTabIdx = tabManager.ActiveIndex();
         ui.ClearRoots();
         clearEditorPtrs();
-        isScriptOpen = wasScript;
-        activeTab    = selTabIdx;
+        tabManager.Activate(selTabIdx);
         buildEditorUI();
         rebuildHierarchyTree();
         refreshContentBrowser();
@@ -808,13 +842,15 @@ private:
         tfNewName = nullptr; tfNewPath = nullptr; tfOpenPath = nullptr;
         lblNewStatus = nullptr; lblOpenStatus = nullptr;
         pTabStrip = nullptr; pMenuBar = nullptr; pToolbar = nullptr;
-        pDockSpace = nullptr; pCamWidget = nullptr; pContentBrow = nullptr;
+        pDockSpace = nullptr; pBottomTrayNode = nullptr; pCamWidget = nullptr; pContentBrow = nullptr;
         pHierarchy = nullptr; pInspector = nullptr; inspLastW = 0.f;
         pViewport = nullptr; pHierTree = nullptr; pCBScroll = nullptr;
         pScriptPanel = nullptr; pScriptEdit = nullptr;
-        pScriptDock = nullptr; pScriptDockEdit = nullptr;
+        pScriptDock = nullptr; pDocumentFilesPanel = nullptr;
+        pDocumentOutlinePanel = nullptr; pDocumentEditorPanel = nullptr;
+        pScriptDockEdit = nullptr;
         pConsolePanel = nullptr; pConsoleSV = nullptr;
-        hierMenu = nullptr; lblFps = nullptr;
+        hierMenu = nullptr; cbMenu = nullptr; lblFps = nullptr;
     }
 
     // ── Title bar ─────────────────────────────────────────────────────────
@@ -831,36 +867,24 @@ private:
         pTabStrip->zOrder  = 50;
         pTabStrip->tabPadX = 9.f;
 
-        for (const auto& tab : tabs)
-            pTabStrip->AddTab(tab.name.c_str(), tab.R, tab.G, tab.B, tab.closable);
-        pTabStrip->SetActive(activeTab);
+        syncTabStripFromManager();
 
-        pTabStrip->onTabChanged = [this](int i) {
-            for (int j = 0; j < (int)tabs.size(); j++) tabs[j].active = (j == i);
-            activeTab = i;
-            switchLayout(i < (int)tabs.size() && tabs[i].isScript);
-        };
+        pTabStrip->onTabChanged = [this](int i) { activateTabIndex(i); };
         pTabStrip->onClose = [this](int i) { closeTab(i); };
     }
 
-    void switchLayout(bool toScript)
+    void switchLayout(bool toDocument)
     {
-        if (pDockSpace)   pDockSpace->visible   = !toScript;
-        if (pScriptPanel) pScriptPanel->visible = !toScript && isScriptOpen;
-        if (pScriptDock)  pScriptDock->visible  =  toScript;
+        if (pDockSpace)   pDockSpace->visible   = !toDocument;
+        if (pScriptDock)  pScriptDock->visible  =  toDocument;
     }
 
     void closeTab(int idx)
     {
-        if (idx < 0 || idx >= (int)tabs.size() || !tabs[idx].closable) return;
-        tabs.erase(tabs.begin() + idx);
-        if (pTabStrip) {
-            pTabStrip->RemoveTab(idx);
-            activeTab = pTabStrip->activeTab;
-        } else {
-            if (activeTab >= (int)tabs.size()) activeTab = (int)tabs.size() - 1;
-        }
-        for (int i = 0; i < (int)tabs.size(); i++) tabs[i].active = (i == activeTab);
+        tabManager.Close(idx);
+        syncTabStripFromManager();
+        switchLayout(tabManager.HasActiveDocument());
+        refreshDocumentWorkspace();
     }
 
     // ── Menu bar ──────────────────────────────────────────────────────────
@@ -876,8 +900,8 @@ private:
         pMenuBar->AddItem("FILE", "Open Project", [this]{ closeAndGoSplash(); openOpenProjectModal(); });
         pMenuBar->AddItem("FILE", "Open Scene",   [this]{ openSceneDialog(); });
         pMenuBar->AddSeparator("FILE");
-        pMenuBar->AddItem("FILE", "Save Files",   [this]{ saveScene(); });
-        pMenuBar->AddItem("FILE", "Save All",     [this]{ saveScene(); pm.Save(); });
+        pMenuBar->AddItem("FILE", "Save Files",   [this]{ saveScene(); saveDirtyDocuments(); });
+        pMenuBar->AddItem("FILE", "Save All",     [this]{ saveScene(); saveDirtyDocuments(); pm.Save(); });
         pMenuBar->AddSeparator("FILE");
         pMenuBar->AddItem("FILE", "Close Project",[this]{ closeAndGoSplash(); });
         pMenuBar->AddItem("FILE", "Exit",         [this]{ Quit(); });
@@ -910,7 +934,6 @@ private:
         pMenuBar->AddItem("TOOLS", "Open Hurricane",    []{});
         pMenuBar->AddItem("TOOLS", "Open Level Script", []{});
         pMenuBar->AddSeparator("TOOLS");
-        pMenuBar->AddItem("TOOLS", "Toggle Script",     [this]{ toggleScript(); });
         pMenuBar->AddItem("TOOLS", "Profiler",          []{});
 
         // WINDOW
@@ -934,7 +957,7 @@ private:
         float ty = kTitleH + kMenuH;
         pToolbar = ui.AddRoot<Toolbar>(0.f, ty, kW, kToolH);
         pToolbar->zOrder = 50;
-        pToolbar->AddButton("Salvar", [this](bool){ saveScene(); }, false);
+        pToolbar->AddButton("Salvar", [this](bool){ saveScene(); saveDirtyDocuments(); }, false);
         pToolbar->AddButton("Play/Pause", [this](bool act){
             isPlaying = act;
             // On stop: restore scene to last saved state
@@ -963,36 +986,42 @@ private:
     // ── DockSpace ─────────────────────────────────────────────────────────
     void buildDockSpace()
     {
-        pDockSpace = ui.AddRoot<DockSpace>(0.f, kTopH, kW, kMainH);
+        const float workspaceH = kMainH + kScriptH;
+        pDockSpace = ui.AddRoot<DockSpace>(0.f, kTopH, kW, workspaceH);
         DockNode* root = pDockSpace->Root();
 
+        float topFrac = kMainH / workspaceH;
+        auto [topNode, bottomNode] = root->Split(false, topFrac);
+        pBottomTrayNode = bottomNode;
+        pDockSpace->SetTrayNode(bottomNode);
+
         float leftFrac  = kLeftW / kW;
-        auto [left, centerRight] = root->Split(true, leftFrac);
+        auto [left, centerRight] = topNode->Split(true, leftFrac);
 
         float rightFrac = kHierW / (kW - kLeftW);
         auto [center, right] = centerRight->Split(true, 1.f - rightFrac);
 
-        float camFrac  = kCamH / kMainH;
-        auto [camNode, browseNode] = left->Split(false, camFrac);
-
-        float hierFrac = kHierSplitH / kMainH;
-        auto [hierNode, inspNode]  = right->Split(false, hierFrac);
-
-        camNode->Dock(buildCameraWidget(),      "Camera");
-        browseNode->Dock(buildContentBrowser(), "Content Browser");
+        left->Dock(buildHierarchy(),            "Hierarchy View");
         center->Dock(buildViewportWidget(),     "Viewport");
-        hierNode->Dock(buildHierarchy(),        "Hierarchy View");
-        inspNode->Dock(buildInspector(),        "Inspector");
+        right->Dock(buildInspector(),           "Properties");
+        bottomNode->Dock(buildContentBrowser(), "Content Browser");
+        bottomNode->Dock(buildConsolePanel(),   "Console");
+        bottomNode->activeIdx = 0;
+        bottomNode->applyPanelGeometry();
 
-        browseNode->SetLayout(pContentBrow, [this](float w, float h) {
-            float pad = gStyle.padding;
-            if (pCBScroll) { pCBScroll->w = w - pad * 2.f; pCBScroll->h = h - pCBScroll->y - pad; }
-        });
-        hierNode->SetLayout(pHierarchy, [this](float w, float h) {
+        left->SetLayout(pHierarchy, [this](float w, float h) {
             float pad = gStyle.padding;
             if (pHierTree) { pHierTree->w = w - pad * 2.f; pHierTree->h = h - pHierTree->y - pad; }
         });
-        inspNode->SetLayout(pInspector, [this](float w, float /*h*/) {
+        bottomNode->SetLayout(pContentBrow, [this](float w, float h) {
+            float pad = gStyle.padding;
+            if (pCBScroll) { pCBScroll->w = w - pad * 2.f; pCBScroll->h = h - pCBScroll->y - pad; }
+        });
+        bottomNode->SetLayout(pConsolePanel, [this](float w, float h) {
+            float pad = gStyle.padding;
+            if (pConsoleSV) { pConsoleSV->w = w - pad * 2.f; pConsoleSV->h = h - pConsoleSV->y - pad; }
+        });
+        right->SetLayout(pInspector, [this](float w, float /*h*/) {
             if (std::abs(w - inspLastW) > 0.5f) { inspLastW = w; refreshInspector(); }
         });
         if (pInspector && pInspector->w > 0.f) {
@@ -1042,85 +1071,120 @@ private:
     // Lists files from pm.AssetsDir(). Refreshed after project open/close.
     std::unique_ptr<Widget> buildContentBrowser()
     {
-        float cbH = kMainH - kCamH - DockNode::kHandleW;
-        auto panel = std::make_unique<Panel>(0.f, 0.f, kLeftW, cbH, "");
+        auto panel = std::make_unique<Panel>(0.f, 0.f, kW, kScriptH, "");
         pContentBrow = panel.get();
-
-        float pad = gStyle.padding, lh = gStyle.lineH, ty = pad;
-
-        pContentBrow->Add<Label>(pad, ty, pm.isOpen ? pm.AssetsDir().c_str() : "No Project")
-                    ->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
-        ty += lh;
-
-        pContentBrow->Add<Button>(pad, ty, kLeftW - pad * 2.f, lh + 2.f, "Search...")->onClick = []{};
-        ty += lh + 8.f;
-
-        float svH = cbH - ty - pad;
-        pCBScroll = pContentBrow->Add<ScrollView>(pad, ty, kLeftW - pad * 2.f, svH);
-        pCBScroll->autoContent = true;
-
+        refreshContentBrowser();
         return panel;
     }
 
     void refreshContentBrowser()
     {
-        if (!pCBScroll) return;
-        pCBScroll->Clear();
+        if (!pContentBrow) return;
+        pContentBrow->Clear();
+
+        const float pad = gStyle.padding;
+        const float lh  = gStyle.lineH;
+        const float panelW = (pContentBrow->w > 0.f) ? pContentBrow->w : kW;
+        const float panelH = (pContentBrow->h > 0.f) ? pContentBrow->h : kScriptH;
+        float ty = pad;
+
+        pContentBrow->Add<Label>(pad, ty, "Content Browser")
+            ->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
+
+        float btnW = 70.f;
+        auto* btnUp = pContentBrow->Add<Button>(panelW - pad - btnW, ty - 1.f, btnW, lh + 2.f, "Subir");
+        btnUp->onClick = [this] { goContentParent(); };
+        ty += lh + 4.f;
+
+        auto* btnRefresh = pContentBrow->Add<Button>(pad, ty, 80.f, lh + 2.f, "Atualizar");
+        btnRefresh->onClick = [this] { refreshContentBrowser(); };
+        auto* btnImport = pContentBrow->Add<Button>(pad + 84.f, ty, 80.f, lh + 2.f, "Importar");
+        btnImport->onClick = [this] { importFileToCurrentDir(); };
+        auto* btnFolder = pContentBrow->Add<Button>(pad + 168.f, ty, 96.f, lh + 2.f, "Nova Pasta");
+        btnFolder->onClick = [this] { createFolderInCurrentDir(); };
+        ty += lh + 6.f;
 
         if (!pm.isOpen) {
-            auto* e = pCBScroll->Add<Label>(0.f, 0.f, "(no project)");
-            e->h = gStyle.lineH;
+            auto* e = pContentBrow->Add<Label>(pad, ty, "(no project)");
+            e->h = lh;
             e->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+            pCBScroll = nullptr;
             return;
         }
 
-        // Each file entry is a Button so it can be clicked/dragged
-        auto addEntry = [&](const std::string& name, const std::string& ext,
-                            const std::string& absPath) {
-            float lh = gStyle.lineH;
-            auto* btn = pCBScroll->Add<Button>(0.f, 0.f, kLeftW - gStyle.padding * 2.f, lh, name.c_str());
-            btn->h = lh;
-            // Color text by extension
-            if (ext == ".spark" || ext == ".cs")
-                btn->SetColor(255, 138, 28);
-            else if (ext == ".png" || ext == ".bmp" || ext == ".jpg")
-                btn->SetColor(65, 130, 205);
-            else if (ext == ".lescene")
-                btn->SetColor(75, 195, 75);
-            else
-                btn->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+        ensureCBDirValid();
+        fs::path root = contentRootDir();
+        fs::path cur(cbCurrentDir);
+        std::error_code ec;
+        std::string crumb = "Root";
+        fs::path rel = fs::relative(cur, root, ec);
+        if (!ec && !rel.empty() && rel.string() != ".") {
+            for (const auto& part : rel) crumb += " > " + part.string();
+        }
 
-            // Click = begin drag
-            btn->onClick = [this, absPath, ext]{
-                cbDragFile = absPath;
+        auto* pathLbl = pContentBrow->Add<Label>(pad, ty, crumb.c_str());
+        pathLbl->h = lh;
+        pathLbl->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+        ty += lh + 4.f;
+
+        float svH = panelH - ty - pad;
+        pCBScroll = pContentBrow->Add<ScrollView>(pad, ty, panelW - pad * 2.f, svH);
+        pCBScroll->autoContent = true;
+
+        std::vector<fs::directory_entry> dirs;
+        std::vector<fs::directory_entry> files;
+        try {
+            for (auto& entry : fs::directory_iterator(cur)) {
+                if (entry.is_directory()) dirs.push_back(entry);
+                else if (entry.is_regular_file()) files.push_back(entry);
+            }
+        } catch (...) {
+            Logger::LogWarning("[Editor] Content Browser: failed to list folder");
+        }
+
+        auto byName = [](const fs::directory_entry& a, const fs::directory_entry& b) {
+            return LightningEditor::ToLowerCopy(a.path().filename().string()) <
+                   LightningEditor::ToLowerCopy(b.path().filename().string());
+        };
+        std::sort(dirs.begin(), dirs.end(), byName);
+        std::sort(files.begin(), files.end(), byName);
+
+        auto addDir = [this](const fs::path& absDir) {
+            float rowH = gStyle.lineH;
+            float contentW = (pCBScroll->w > 0.f) ? pCBScroll->w : (kW - gStyle.padding * 2.f);
+            std::string label = "[DIR] " + absDir.filename().string();
+            auto* btn = pCBScroll->Add<Button>(0.f, 0.f, contentW, rowH, label.c_str());
+            btn->h = rowH;
+            btn->SetColor(125, 170, 255);
+            btn->onClick = [this, absDir] { openContentDirectory(absDir); };
+        };
+
+        auto addFile = [this](const fs::path& absFile) {
+            float rowH = gStyle.lineH;
+            float contentW = (pCBScroll->w > 0.f) ? pCBScroll->w : (kW - gStyle.padding * 2.f);
+            std::string ext = absFile.extension().string();
+            auto* btn = pCBScroll->Add<Button>(0.f, 0.f, contentW, rowH, absFile.filename().string().c_str());
+            btn->h = rowH;
+
+            std::string lowerExt = LightningEditor::ToLowerCopy(ext);
+            if (lowerExt == ".lescene") {
+                btn->SetColor(75, 195, 75);
+            } else {
+                auto tab = LightningEditor::BuildAssetTab(absFile.string());
+                btn->SetColor(tab.accent.r, tab.accent.g, tab.accent.b);
+            }
+
+            btn->onClick = [this, absFile, ext] {
+                cbDragFile = absFile.string();
                 cbDragExt  = ext;
                 cbDragging = true;
-                openAssetContextTab(absPath, ext);
+                openAssetContextTab(absFile.string());
             };
         };
 
-        try {
-            for (auto& entry : fs::recursive_directory_iterator(pm.AssetsDir())) {
-                if (!entry.is_regular_file()) continue;
-                addEntry(entry.path().filename().string(),
-                         entry.path().extension().string(),
-                         entry.path().string());
-            }
-            // Also list scripts
-            if (fs::exists(pm.ScriptsDir())) {
-                for (auto& entry : fs::directory_iterator(pm.ScriptsDir())) {
-                    if (entry.path().extension() == ".spark")
-                        addEntry(entry.path().filename().string(), ".spark",
-                                 entry.path().string());
-                }
-            }
-            // Scenes
-            for (auto& entry : fs::directory_iterator(pm.ScenesDir())) {
-                if (entry.path().extension() == ".lescene")
-                    addEntry(entry.path().filename().string(), ".lescene",
-                             entry.path().string());
-            }
-        } catch (...) {}
+        for (const auto& d : dirs) addDir(d.path());
+        for (const auto& f : files) addFile(f.path());
+
     }
 
     // ── Hierarchy ─────────────────────────────────────────────────────────
@@ -1423,12 +1487,12 @@ private:
                 ui.font.DrawText(r, msg, ax + vw - mw - 8.f, ay + 6.f);
             }
 
-            // Project name top-left of viewport
-            if (pm.isOpen) {
-                std::string pname = pm.project.name + "  /  " + currentScenePath;
-                r.SetDrawColor(100, 100, 120);
-                ui.font.DrawText(r, pname.c_str(), ax + 6.f, ay + 4.f);
-            }
+            std::string sceneWatermark = fs::path(currentScenePath).stem().string();
+            if (sceneWatermark.empty()) sceneWatermark = "Scene2D";
+            float wmW = ui.font.MeasureW(sceneWatermark.c_str());
+            r.SetDrawColor(255, 255, 255, 110);
+            ui.font.DrawText(r, sceneWatermark.c_str(), ax + vw - wmW - 18.f,
+                             ay + vh - ui.font.GlyphH() - 18.f);
 
             r.EndScreenSpace();
         };
@@ -1452,6 +1516,44 @@ private:
             }
         });
         ui.BringToFront(hierMenu);
+
+        cbMenu = ui.AddRoot<ContextMenu>();
+        cbMenu->AddItem("Importar arquivo aqui", [this]{ importFileToCurrentDir(); });
+        cbMenu->AddItem("Nova pasta", [this]{ createFolderInCurrentDir(); });
+        cbMenu->AddSeparator();
+        cbMenu->AddItem("Novo Script (.spark)", [this]{
+            createAssetInCurrentDir("NewScript", ".spark",
+                "class NewScript {\n"
+                "    void OnStart() {}\n"
+                "    void Update(float dt) {}\n"
+                "}\n");
+        });
+        cbMenu->AddItem("Novo Shader Vert (.vert)", [this]{
+            createAssetInCurrentDir("new_shader", ".vert",
+                "#version 450\n\n"
+                "layout(location = 0) in vec3 inPos;\n"
+                "void main() { gl_Position = vec4(inPos, 1.0); }\n");
+        });
+        cbMenu->AddItem("Novo Shader Frag (.frag)", [this]{
+            createAssetInCurrentDir("new_shader", ".frag",
+                "#version 450\n\n"
+                "layout(location = 0) out vec4 outColor;\n"
+                "void main() { outColor = vec4(1.0); }\n");
+        });
+        cbMenu->AddItem("Novo Prefab (.lprefab)", [this]{
+            createAssetInCurrentDir("NewPrefab", ".lprefab",
+                "PREFAB \"NewPrefab\"\n"
+                "NODE Node \"Root\"\n"
+                "  TRANSFORM 0 0 0  0 0 0  1 1 1\n"
+                "  TAG \"\"\n"
+                "  ACTIVE 1\n"
+                "END\n");
+        });
+        cbMenu->AddItem("Novo Level (.lescene)", [this]{
+            createAssetInCurrentDir("NewScene", ".lescene",
+                "# Lightning Engine Scene 1.0\n");
+        });
+        ui.BringToFront(cbMenu);
     }
 
     // ── Content Browser drag & drop ───────────────────────────────────────
@@ -1612,59 +1714,68 @@ private:
         float sy  = kTopH + kMainH;
         float spW = kW - kConsoleW;
         pScriptPanel = ui.AddRoot<Panel>(0.f, sy, spW, kScriptH, "Script Editor");
-        pScriptPanel->visible = isScriptOpen;
+        pScriptPanel->visible = false;
 
         float pad = gStyle.padding;
         float ty  = gStyle.titleH + 2.f;
 
-        std::string scriptLabel = (selectedNode && selectedNode->GetComponent<NucleoScriptComponent>())
-            ? selectedNode->GetComponent<NucleoScriptComponent>()->scriptPath
-            : "MyScript.spark";
+        std::string scriptPath;
+        if (selectedNode) {
+            if (auto* script = selectedNode->GetComponent<NucleoScriptComponent>()) {
+                scriptPath = resolveProjectFilePath(script->scriptPath);
+            }
+        }
+
+        std::string scriptLabel = scriptPath.empty()
+            ? "Nenhum script associado"
+            : fs::path(scriptPath).filename().string();
 
         pScriptPanel->Add<Label>(pad, ty, scriptLabel.c_str())
                     ->SetColor(gStyle.textAccent.r, gStyle.textAccent.g, gStyle.textAccent.b);
 
         float rh = kScriptH - ty - gStyle.lineH - pad;
         pScriptEdit = pScriptPanel->Add<RichText>(pad, ty + gStyle.lineH, spW - pad * 2.f, rh);
-        pScriptEdit->syntax = RichText::SyntaxMode::CSharp;
-        pScriptEdit->SetText(kSampleScript);
+        pScriptEdit->syntax = RichText::SyntaxMode::None;
+        pScriptEdit->SetText("");
+
+        if (!scriptPath.empty()) {
+            auto scriptTab = LightningEditor::BuildAssetTab(scriptPath);
+            auto content = LightningEditor::BuildDocumentContent(scriptTab);
+            pScriptEdit->syntax = content.syntax;
+            pScriptEdit->SetText(content.bodyText);
+        }
     }
 
-    void toggleScript()
+    // ── Console panel (dock tab in the bottom tray) ───────────────────────
+    std::unique_ptr<Widget> buildConsolePanel()
     {
-        isScriptOpen = !isScriptOpen;
-        if (pScriptPanel) pScriptPanel->visible = isScriptOpen;
-    }
-
-    // ── Console panel (bottom-right strip) ────────────────────────────────
-    void buildConsolePanel()
-    {
-        float sy = kTopH + kMainH;
-        float cx = kW - kConsoleW;
-        pConsolePanel = ui.AddRoot<Panel>(cx, sy, kConsoleW, kScriptH, "Console");
-        pConsolePanel->visible = consoleVisible;
+        auto panel = std::make_unique<Panel>(0.f, 0.f, kW, kScriptH, "");
+        pConsolePanel = panel.get();
 
         float pad = gStyle.padding;
         float lh  = gStyle.lineH;
         float ty  = gStyle.titleH + 2.f;
 
         // Clear button
-        auto* btnClear = pConsolePanel->Add<Button>(kConsoleW - pad - 48.f, 4.f, 48.f, lh, "Clear");
+        auto* btnClear = pConsolePanel->Add<Button>(kW - pad - 48.f, 4.f, 48.f, lh, "Clear");
         btnClear->onClick = [this]{ Logger::Clear(); };
 
         // ScrollView for log entries
         float svH = kScriptH - ty - pad;
-        pConsoleSV = pConsolePanel->Add<ScrollView>(pad, ty, kConsoleW - pad * 2.f, svH);
+        pConsoleSV = pConsolePanel->Add<ScrollView>(pad, ty, kW - pad * 2.f, svH);
         pConsoleSV->autoContent = true;
 
         refreshConsole();
         Logger::ClearDirty();
+        return panel;
     }
 
     void toggleConsole()
     {
-        consoleVisible = !consoleVisible;
-        if (pConsolePanel) pConsolePanel->visible = consoleVisible;
+        if (!pBottomTrayNode || pBottomTrayNode->panels.empty()) return;
+        if ((int)pBottomTrayNode->panels.size() == 1) return;
+        pBottomTrayNode->activeIdx = (pBottomTrayNode->activeIdx == 1) ? 0 : 1;
+        pBottomTrayNode->applyPanelGeometry();
     }
 
     void refreshConsole()
@@ -1689,10 +1800,10 @@ private:
             pConsoleSV->scrollOffset = 999999.f;
     }
 
-    // ── Script DockSpace (tab "Random" full layout) ────────────────────────
+    // ── Document DockSpace (full workspace for file-sensitive tabs) ─────────
     void buildScriptDock()
     {
-        static constexpr float kScriptLeftW = 200.f;
+        static constexpr float kScriptLeftW = 220.f;
         float fullH = kMainH + kScriptH;
 
         pScriptDock = ui.AddRoot<DockSpace>(0.f, kTopH, kW, fullH);
@@ -1703,89 +1814,152 @@ private:
         auto [leftNode, editorNode] = root->Split(true, leftFrac);
         auto [filesNode, membersNode] = leftNode->Split(false, 0.5f);
 
-        filesNode->Dock(buildScriptFilesPanel(),   "Script Files");
-        membersNode->Dock(buildScriptMembersPanel(), "Script Members");
-        editorNode->Dock(buildScriptEditorPanel(kW - kScriptLeftW, fullH), "MyScript.spark");
+        filesNode->Dock(buildScriptFilesPanel(), "Open Documents");
+        membersNode->Dock(buildScriptMembersPanel(), "Document Outline");
+        editorNode->Dock(buildScriptEditorPanel(kW - kScriptLeftW, fullH), "Document Workspace");
     }
 
     std::unique_ptr<Widget> buildScriptFilesPanel()
     {
         auto panel = std::make_unique<Panel>(0.f, 0.f, 200.f, 200.f, "");
-        float pad = gStyle.padding, lh = gStyle.lineH, ty = pad;
-
-        panel->Add<Label>(pad, ty, "Script Files")
-             ->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
-        ty += lh + 4.f;
-
-        panel->Add<Button>(pad, ty, 200.f - pad * 2.f, lh + 2.f, "Search...")->onClick = []{};
-        ty += lh + 8.f;
-
-        // List .spark files from scripts dir if project is open
-        if (pm.isOpen) {
-            try {
-                for (auto& entry : fs::directory_iterator(pm.ScriptsDir())) {
-                    if (entry.path().extension() == ".spark") {
-                        std::string fn = entry.path().filename().string();
-                        auto* lbl = panel->Add<Label>(pad + 8.f, ty, fn.c_str());
-                        lbl->h = lh;
-                        lbl->SetColor(255, 138, 28);
-                        ty += lh + 1.f;
-                    }
-                }
-            } catch (...) {}
-        } else {
-            const char* files[] = { "MyScript.spark", "PlayerInput.spark", "EnemyAI.spark" };
-            for (const char* f : files) {
-                auto* lbl = panel->Add<Label>(pad + 8.f, ty, f);
-                lbl->h = lh;
-                lbl->SetColor(gStyle.textAccent.r, gStyle.textAccent.g, gStyle.textAccent.b);
-                ty += lh + 1.f;
-            }
-        }
+        pDocumentFilesPanel = panel.get();
         return panel;
     }
 
     std::unique_ptr<Widget> buildScriptMembersPanel()
     {
         auto panel = std::make_unique<Panel>(0.f, 0.f, 200.f, 200.f, "");
-        float pad = gStyle.padding, lh = gStyle.lineH, ty = pad;
-
-        panel->Add<Label>(pad, ty, "Script Members")
-             ->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
-        ty += lh + 4.f;
-
-        struct Member { const char* name; Uint8 r, g, b; };
-        const Member members[] = {
-            { "speed : float",    100, 160, 230 },
-            { "health : int",     100, 160, 230 },
-            { "OnStart()",        180, 220, 130 },
-            { "Update(dt)",       180, 220, 130 },
-            { "OnDestroy()",      180, 220, 130 },
-        };
-        for (const auto& m : members) {
-            auto* lbl = panel->Add<Label>(pad + 8.f, ty, m.name);
-            lbl->h = lh;
-            lbl->SetColor(m.r, m.g, m.b);
-            ty += lh + 1.f;
-        }
+        pDocumentOutlinePanel = panel.get();
         return panel;
     }
 
     std::unique_ptr<Widget> buildScriptEditorPanel(float editorW, float editorH)
     {
         auto panel = std::make_unique<Panel>(0.f, 0.f, editorW, editorH, "");
-        float pad = gStyle.padding;
-        float ty  = gStyle.titleH + 2.f;
-
-        panel->Add<Label>(pad, ty, "MyScript.spark")
-             ->SetColor(gStyle.textAccent.r, gStyle.textAccent.g, gStyle.textAccent.b);
-        ty += gStyle.lineH;
-
-        float rh = editorH - ty - pad;
-        pScriptDockEdit = panel->Add<RichText>(pad, ty, editorW - pad * 2.f, rh);
-        pScriptDockEdit->syntax = RichText::SyntaxMode::CSharp;
-        pScriptDockEdit->SetText(kSampleScript);
+        pDocumentEditorPanel = panel.get();
         return panel;
+    }
+
+    void refreshDocumentWorkspace()
+    {
+        if (!pDocumentFilesPanel || !pDocumentOutlinePanel || !pDocumentEditorPanel) return;
+
+        const float pad = gStyle.padding;
+        const float lh = gStyle.lineH;
+        pScriptDockEdit = nullptr;
+
+        pDocumentFilesPanel->Clear();
+        pDocumentOutlinePanel->Clear();
+        pDocumentEditorPanel->Clear();
+
+        float filesW = (pDocumentFilesPanel->w > 0.f) ? pDocumentFilesPanel->w : 200.f;
+        float editorW = (pDocumentEditorPanel->w > 0.f) ? pDocumentEditorPanel->w : (kW - 220.f);
+        float editorH = (pDocumentEditorPanel->h > 0.f) ? pDocumentEditorPanel->h : (kMainH + kScriptH);
+
+        float ty = pad;
+        pDocumentFilesPanel->Add<Label>(pad, ty, "Abas abertas")
+            ->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
+        ty += lh + 6.f;
+
+        int openDocs = 0;
+        const auto& tabs = tabManager.Tabs();
+        for (int i = 0; i < (int)tabs.size(); ++i) {
+            const auto& tab = tabs[i];
+            if (!tab.IsDocumentWorkspace()) continue;
+            ++openDocs;
+            auto* btn = pDocumentFilesPanel->Add<Button>(pad, ty, filesW - pad * 2.f, lh + 2.f, tab.label.c_str());
+            btn->SetColor(tab.accent.r, tab.accent.g, tab.accent.b);
+            btn->onClick = [this, i] { activateTabIndex(i); };
+            ty += lh + 4.f;
+        }
+
+        if (openDocs == 0) {
+            auto* empty = pDocumentFilesPanel->Add<Label>(pad, ty, "Nenhum documento aberto.");
+            empty->h = lh;
+            empty->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+        }
+
+        const auto* active = tabManager.ActiveTab();
+        if (!active || !active->IsDocumentWorkspace()) {
+            auto* idle = pDocumentOutlinePanel->Add<Label>(pad, pad, "Abra um asset para gerar o workspace contextual.");
+            idle->h = lh;
+            idle->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+            auto* idleEditor = pDocumentEditorPanel->Add<Label>(pad, pad, "O conteudo do documento aparece aqui.");
+            idleEditor->h = lh;
+            idleEditor->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+            return;
+        }
+
+        LightningEditor::EditorDocumentContent content = LightningEditor::BuildDocumentContent(*active);
+
+        float infoY = pad;
+        pDocumentOutlinePanel->Add<Label>(pad, infoY, content.kindLabel.c_str())
+            ->SetColor(active->accent.r, active->accent.g, active->accent.b);
+        infoY += lh + 4.f;
+
+        auto* pathLbl = pDocumentOutlinePanel->Add<Label>(pad, infoY, content.editorTitle.c_str());
+        pathLbl->h = lh;
+        pathLbl->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
+        infoY += lh + 2.f;
+
+        auto* statusLbl = pDocumentOutlinePanel->Add<Label>(pad, infoY, content.statusLabel.c_str());
+        statusLbl->h = lh * 2.f;
+        statusLbl->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+        infoY += lh + 8.f;
+
+        auto* outlineTitle = pDocumentOutlinePanel->Add<Label>(pad, infoY, "Estrutura derivada");
+        outlineTitle->h = lh;
+        outlineTitle->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
+        infoY += lh + 4.f;
+
+        if (content.outline.empty()) {
+            auto* empty = pDocumentOutlinePanel->Add<Label>(pad, infoY, "Sem estrutura derivada disponivel.");
+            empty->h = lh;
+            empty->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+        } else {
+            for (const auto& item : content.outline) {
+                auto* lbl = pDocumentOutlinePanel->Add<Label>(pad, infoY, item.label.c_str());
+                lbl->h = lh;
+                lbl->SetColor(item.r, item.g, item.b);
+                infoY += lh + 2.f;
+            }
+        }
+
+        float editorY = pad;
+        pDocumentEditorPanel->Add<Label>(pad, editorY, content.editorTitle.c_str())
+            ->SetColor(active->accent.r, active->accent.g, active->accent.b);
+        editorY += lh;
+
+        auto* fileLbl = pDocumentEditorPanel->Add<Label>(pad, editorY, content.pathLabel.c_str());
+        fileLbl->h = lh;
+        fileLbl->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
+        editorY += lh + 4.f;
+
+        if (content.textual) {
+            float rh = editorH - editorY - pad;
+            pScriptDockEdit = pDocumentEditorPanel->Add<RichText>(pad, editorY, editorW - pad * 2.f, rh);
+            pScriptDockEdit->syntax = content.syntax;
+            pScriptDockEdit->SetText(content.bodyText);
+            pScriptDockEdit->onChanged = [this](const std::vector<std::string>& lines) {
+                tabManager.MarkDirty(lines);
+                // Reflect dirty indicator on tab strip immediately
+                int idx = tabManager.ActiveIndex();
+                if (pTabStrip && idx >= 0 && idx < (int)pTabStrip->tabs.size()) {
+                    const auto* tab = tabManager.ActiveTab();
+                    if (tab) pTabStrip->tabs[idx].label = tab->DisplayLabel();
+                }
+            };
+            return;
+        }
+
+        auto* info1 = pDocumentEditorPanel->Add<Label>(pad, editorY, "Este tipo de arquivo usa fluxo de importacao ou editor dedicado.");
+        info1->h = lh;
+        info1->SetColor(gStyle.textBright.r, gStyle.textBright.g, gStyle.textBright.b);
+        editorY += lh + 4.f;
+
+        auto* info2 = pDocumentEditorPanel->Add<Label>(pad, editorY, "A aba organiza o contexto pelo arquivo aberto, sem conteudo de exemplo embutido.");
+        info2->h = lh;
+        info2->SetColor(gStyle.textDim.r, gStyle.textDim.g, gStyle.textDim.b);
     }
 
     // ── Footer ────────────────────────────────────────────────────────────
@@ -1917,6 +2091,13 @@ private:
         pm.Save();
     }
 
+    void saveDirtyDocuments()
+    {
+        if (tabManager.SaveAllDirty() == 0) return;
+        // Refresh tab strip labels to remove dirty indicators
+        syncTabStripFromManager();
+    }
+
     void openSceneDialog()
     {
         if (!pm.isOpen) return;
@@ -2016,7 +2197,7 @@ private:
         renderer.FillRect(0.f, kTitleH + kMenuH - 1.f, kW, 1.f);
         renderer.FillRect(0.f, kTopH - 1.f,             kW, 1.f);
 
-        if (pScriptPanel && pScriptPanel->visible) {
+        if (pDockSpace && pDockSpace->visible) {
             renderer.SetDrawColor(48, 48, 62);
             renderer.FillRect(0.f, kTopH + kMainH, kW, 1.f);
         }
@@ -2030,34 +2211,3 @@ private:
         renderer.EndScreenSpace();
     }
 };
-
-// ── Sample Nucleo script (shown in script editor on startup) ─────────────────
-const char* EditorApp::kSampleScript =
-    "class PlayerController\n"
-    "{\n"
-    "    float speed = 200.0;\n"
-    "    float health = 100.0;\n"
-    "\n"
-    "    void OnStart()\n"
-    "    {\n"
-    "        Log(\"PlayerController started\");\n"
-    "    }\n"
-    "\n"
-    "    void Update(float dt)\n"
-    "    {\n"
-    "        float dx = 0.0;\n"
-    "        if (Input.IsKeyDown(Key.A)) dx = dx - 1.0;\n"
-    "        if (Input.IsKeyDown(Key.D)) dx = dx + 1.0;\n"
-    "\n"
-    "        float dy = 0.0;\n"
-    "        if (Input.IsKeyDown(Key.W)) dy = dy - 1.0;\n"
-    "        if (Input.IsKeyDown(Key.S)) dy = dy + 1.0;\n"
-    "\n"
-    "        Node.Move(dx * speed * dt, dy * speed * dt, 0.0);\n"
-    "    }\n"
-    "\n"
-    "    void OnDestroy()\n"
-    "    {\n"
-    "        Log(\"PlayerController destroyed\");\n"
-    "    }\n"
-    "}\n";

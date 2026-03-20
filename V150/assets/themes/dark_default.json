@@ -1,0 +1,130 @@
+{
+  // Lightning Engine — Titan UI Default Dark Theme
+  // All fields are optional; absent fields keep the compiled-in defaults.
+  // Colors: [R, G, B] or [R, G, B, A]  (channels 0-255)
+  // layout.lineH / layout.titleH == 0 → derived from font metrics (recommended)
+
+  "name": "Dark Default",
+
+  "colors": {
+    // ── Backgrounds ───────────────────────────────────────────────────
+    "winBg":        [ 56,  56,  60, 255],
+    "panelBg":      [184, 184, 188, 255],
+    "panelHeader":  [204, 204, 208, 255],
+    "panelBorder":  [132, 132, 138, 255],
+
+    // ── Buttons ───────────────────────────────────────────────────────
+    "btnNormal":    [168, 168, 174, 255],
+    "btnHover":     [178, 178, 186, 255],
+    "btnActive":    [132, 150, 190, 255],
+    "btnBorder":    [122, 122, 132, 255],
+    "btnText":      [ 28,  28,  34, 255],
+
+    // ── Text ──────────────────────────────────────────────────────────
+    "textNormal":   [ 36,  36,  44, 255],
+    "textDim":      [ 84,  84,  96, 255],
+    "textBright":   [ 12,  12,  16, 255],
+    "textAccent":   [ 38, 112, 210, 255],
+    "textGreen":    [ 90, 210, 110, 255],
+    "textRed":      [235,  75,  75, 255],
+
+    // ── Selection / highlight ─────────────────────────────────────────
+    "selection":    [ 64, 112, 186, 155],
+    "highlight":    [ 40, 126, 224, 255],
+
+    // ── Slider ────────────────────────────────────────────────────────
+    "sliderTrack":  [152, 152, 160, 255],
+    "sliderFill":   [ 56, 124, 216, 255],
+    "sliderThumb":  [ 68, 142, 236, 255],
+
+    // ── Misc ──────────────────────────────────────────────────────────
+    "separator":    [ 98,  98, 108, 255],
+    "menuBg":       [ 24,  26,  40, 255],
+    "menuBorder":   [ 72,  74,  98, 255],
+    "statusBg":     [ 18,  20,  30, 255],
+    "checkMark":    [ 70, 185, 110, 255]
+  },
+
+  "layout": {
+    "padding": 5.0
+    // lineH and titleH are intentionally absent — derived from font metrics
+  },
+
+  "font": {
+    "path": "assets/fonts/Roboto-Regular.ttf",
+    "size": 13
+  },
+
+  "icons": {
+    // Formatos aceitos por item:
+    // 1) string: "assets/icons/folder.png" (retrocompatível)
+    // 2) objeto: { "svg": "...", "png": "...", "tint": [r,g,b,a], "size": 24, "prefer": "svg|png" }
+    //
+    // Observação: no estado atual de assets/icons existem PNGs, mas não SVGs.
+    // Quando os SVGs forem adicionados, basta trocar os itens desejados para o formato objeto.
+    // Recomendação: quando usar SVG, informe também "png" como fallback.
+    // A tint padrão pode ser alterada em runtime via API (SetThemeIconTint).
+
+    // ── Shell do Editor (abas, menu, toolbar, janela) ─────────────────
+    "folder":   "assets/icons/folder.png",
+    "scene":    "assets/icons/scene.png",
+    "script":   "assets/icons/csharp.png",
+    "texture":  "assets/icons/texture.png",
+    "shader":   "assets/icons/shader.png",
+    "material": "assets/icons/material.png",
+    "particle": "assets/icons/particles.png",
+    "prefab":   "assets/icons/default.png",
+    "mesh":     "assets/icons/static_mesh.png",
+    "skeletal_mesh": "assets/icons/sketmesh.png",
+    "config":   "assets/icons/settings.png",
+    "controller":"assets/icons/controller.png",
+    "camera":   "assets/icons/camera.png",
+    "camera_speed": "assets/icons/camera_speed.png",
+    "save":     "assets/icons/save.png",
+    "undo":     "assets/icons/undo.png",
+    "redo":     "assets/icons/redo.png",
+    "search":   "assets/icons/search.png",
+    "close":    "assets/icons/close.png",
+    "maximize": "assets/icons/maximize.png",
+
+    // ── Viewport / Transform / Manipulação ─────────────────────────────
+    "sprite":   "assets/icons/sprite.png",
+    "translate": "assets/icons/translate.png",
+    "rotate":   "assets/icons/rotate.png",
+    "scale":    "assets/icons/scale.png",
+    "snap":     "assets/icons/snap.png",
+    "drag":     "assets/icons/drag.png",
+
+    // ── Importação / Exportação / Execução ─────────────────────────────
+    "import":   "assets/icons/import.png",
+    "export":   "assets/icons/export.png",
+    "exec_connect": "assets/icons/exec_connect.png",
+    "exec_disconnect": "assets/icons/exec_disconnect.png",
+    "output":   "assets/icons/output.png",
+
+    // ── Módulos / Ferramentas ──────────────────────────────────────────
+    "gamesystem": "assets/icons/gamesystem.png",
+    "hud":      "assets/icons/hud.png",
+    "equinox":  "assets/icons/equinox.png",
+    "hurricane": "assets/icons/hurricane.png",
+    "random_ignite": "assets/icons/randomIgnite.png",
+    "lightning": "assets/icons/lightning.png",
+    "globe":    "assets/icons/globe.png",
+    "audio":    "assets/icons/movie.png",
+
+    // ── Graph / Materiais / Nós ────────────────────────────────────────
+    "material_functions": "assets/icons/material_functions.png",
+    "material_instance": "assets/icons/material_instance.png",
+    "material_layer": "assets/icons/material_layer.png",
+    "port_input": "assets/icons/port_input.png",
+    "port_output": "assets/icons/port_output.png",
+
+    // ── Content Browser (EXCLUSIVO: prefixo cb_) ───────────────────────
+    "cb_add":       "assets/icons/cb_add.png",
+    "cb_undo":      "assets/icons/cb_undo.png",
+    "cb_redo":      "assets/icons/cb_redo.png",
+    "cb_saveall":   "assets/icons/cb_saveall.png",
+    "cb_folder":    "assets/icons/cb_folder.png",
+    "cb_openfolder": "assets/icons/cb_openfolder.png"
+  }
+}

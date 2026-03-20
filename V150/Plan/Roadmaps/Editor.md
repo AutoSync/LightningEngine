@@ -47,6 +47,9 @@ O Editor é a interface gráfica principal para desenvolvimento de jogos com a L
   - Open Scene (Ctrl + Shift + O)
   - Save Files (Ctrl + S)
   - Save All (Ctrl + Shift + S)
+  -----------------------------
+  - Import Assets
+  -----------------------------
   - Close Project
   - Exit
 - Edit
@@ -65,6 +68,11 @@ O Editor é a interface gráfica principal para desenvolvimento de jogos com a L
   - Move Right (Mouse Left Click + D)
   - Move Up (Mouse Left Click + E)
   - Move Down (Mouse Left Click + Q)
+  ----------------------------------
+  - Project Settings
+  - Editor Settings
+  - Plugins
+
 - Tools
   - Open Atlas
   - Sprite Tool
