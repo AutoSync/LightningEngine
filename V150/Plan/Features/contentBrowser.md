@@ -13,4 +13,6 @@
 - [ ] Regras do Content Browser {status:pending,priority:high,column:doing}
   @desc: ContentBrowser só deve mapear arquivos e diretórios dentro da pasta do projeto com opção para exibir/ocultar diretórios da engine e dos plugins
 - [ ] Exibir Diretorios de recursos da engine exibe informações que estão dentro da pasta Content da engine exibindo materiais, código e texturas que podem ser usadas para expandir o projeto ou replicadas {status:pending,priority:medium,column:backlog}
+- [ ] Acesso rápido pelo tray {status:pending,priority:medium,column:backlog}
+  @desc: Um botão no Tray deve permitir abrir o Content Browser de qualquer aba para acessar arquivos sem precisar voltar na aba de cena e projeto
 
