@@ -132,6 +132,9 @@ public:
         float contentOX = ax;
         float contentOY = ay - scrollOffset;
 
+        // Hard-clip viewport to prevent partially visible children from leaking.
+        r.SetScissor(ax, ay, w, visH);
+
         for (auto& c : children) {
             if (!c->visible) continue;
             float childTop    = contentOY + c->y;
@@ -139,6 +142,7 @@ public:
             if (childBottom < ay || childTop > ay + visH) continue;
             c->Render(r, f, contentOX, contentOY);
         }
+        r.ClearScissor();
 
         // Border
         r.SetDrawColor(s.panelBorder.r, s.panelBorder.g, s.panelBorder.b);

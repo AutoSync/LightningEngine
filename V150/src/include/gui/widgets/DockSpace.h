@@ -321,8 +321,13 @@ public:
             dropZone   = leaf ? hitDropZone(leaf, mx, my) : DZ_None;
 
             if (lrelease) {
-                if (dropTarget && dropZone != DZ_None)
+                if (dropTarget && dropZone != DZ_None) {
                     performDock(dragWidget, dragTitle.c_str(), dropTarget, dropZone, ui);
+                } else {
+                    // Fallback: never lose the dragged panel when released outside any drop zone.
+                    DockNode* fallback = firstLeaf(root.get());
+                    if (fallback) performDock(dragWidget, dragTitle.c_str(), fallback, DZ_Tab, ui);
+                }
                 EndDrag();
                 return true;
             }
@@ -547,7 +552,10 @@ private:
             int ai = n->activeIdx;
             if (ai >= 0 && ai < (int)n->panels.size() && n->panels[ai].widget) {
                 n->panels[ai].widget->visible = true;
+                r.SetScissor(n->x, n->y + DockNode::kTabH,
+                             n->w, n->h - DockNode::kTabH);
                 n->panels[ai].widget->Render(r, f, 0.f, 0.f);
+                r.ClearScissor();
             }
         }
 
@@ -810,6 +818,14 @@ private:
             DockNode* newLeaf = first ? a : b;
             newLeaf->Dock(std::move(owned), title);
         }
+    }
+
+    DockNode* firstLeaf(DockNode* n)
+    {
+        if (!n) return nullptr;
+        if (n->type == DockNode::Type::Leaf) return n;
+        if (DockNode* a = firstLeaf(n->childA.get())) return a;
+        return firstLeaf(n->childB.get());
     }
 
     // ── TitanUI ownership bridge ─────────────────────────────────────────────

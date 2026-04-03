@@ -1,8 +1,120 @@
 #include "../include/Renderer.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <string>
+#include <vector>
+
+#if defined(_WIN32)
+#include <windows.h>
+#include <wincodec.h>
+#if defined(_MSC_VER)
+#pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "windowscodecs.lib")
+#endif
+#endif
 
 namespace LightningEngine {
+
+#if defined(_WIN32)
+namespace {
+
+std::wstring ToWidePath(const char* path)
+{
+	if (!path || !path[0]) return {};
+
+	int utf8Len = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
+	if (utf8Len > 0) {
+		std::wstring wide((size_t)utf8Len, L'\0');
+		MultiByteToWideChar(CP_UTF8, 0, path, -1, &wide[0], utf8Len);
+		if (!wide.empty() && wide.back() == L'\0') wide.pop_back();
+		return wide;
+	}
+
+	int ansiLen = MultiByteToWideChar(CP_ACP, 0, path, -1, nullptr, 0);
+	if (ansiLen <= 0) return {};
+
+	std::wstring wide((size_t)ansiLen, L'\0');
+	MultiByteToWideChar(CP_ACP, 0, path, -1, &wide[0], ansiLen);
+	if (!wide.empty() && wide.back() == L'\0') wide.pop_back();
+	return wide;
+}
+
+bool LoadImageWithWIC(const char* path, std::vector<Uint8>& rgba, int& outW, int& outH, std::string& err)
+{
+	rgba.clear();
+	outW = 0;
+	outH = 0;
+
+	std::wstring widePath = ToWidePath(path);
+	if (widePath.empty()) {
+		err = "invalid path";
+		return false;
+	}
+
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	const bool mustUninit = SUCCEEDED(hr);
+	if (FAILED(hr) && hr != RPC_E_CHANGED_MODE) {
+		err = "CoInitializeEx failed";
+		return false;
+	}
+
+	IWICImagingFactory* factory = nullptr;
+	IWICBitmapDecoder* decoder = nullptr;
+	IWICBitmapFrameDecode* frame = nullptr;
+	IWICFormatConverter* converter = nullptr;
+
+	bool ok = false;
+	do {
+		hr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER,
+			IID_IWICImagingFactory, (void**)&factory);
+		if (FAILED(hr) || !factory) { err = "CoCreateInstance(IWICImagingFactory) failed"; break; }
+
+		hr = factory->CreateDecoderFromFilename(widePath.c_str(), nullptr, GENERIC_READ,
+			WICDecodeMetadataCacheOnDemand, &decoder);
+		if (FAILED(hr) || !decoder) { err = "CreateDecoderFromFilename failed"; break; }
+
+		hr = decoder->GetFrame(0, &frame);
+		if (FAILED(hr) || !frame) { err = "decoder->GetFrame(0) failed"; break; }
+
+		UINT w = 0, h = 0;
+		hr = frame->GetSize(&w, &h);
+		if (FAILED(hr) || w == 0 || h == 0) { err = "frame->GetSize failed"; break; }
+
+		hr = factory->CreateFormatConverter(&converter);
+		if (FAILED(hr) || !converter) { err = "CreateFormatConverter failed"; break; }
+
+		hr = converter->Initialize(frame, GUID_WICPixelFormat32bppRGBA,
+			WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom);
+		if (FAILED(hr)) { err = "FormatConverter->Initialize(RGBA32) failed"; break; }
+
+		const size_t stride = (size_t)w * 4;
+		const size_t size = stride * (size_t)h;
+		rgba.resize(size);
+
+		hr = converter->CopyPixels(nullptr, (UINT)stride, (UINT)size, rgba.data());
+		if (FAILED(hr)) {
+			rgba.clear();
+			err = "CopyPixels failed";
+			break;
+		}
+
+		outW = (int)w;
+		outH = (int)h;
+		ok = true;
+	} while (false);
+
+	if (converter) converter->Release();
+	if (frame) frame->Release();
+	if (decoder) decoder->Release();
+	if (factory) factory->Release();
+	if (mustUninit) CoUninitialize();
+
+	return ok;
+}
+
+} // namespace
+#endif
 
 static constexpr float kPI = 3.14159265f;
 
@@ -407,6 +519,10 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 		Uint32 count;
 		float  r, g, b, a;
 		Texture* tex;
+		// Scissor control command (isScissor=true → no draw, just set clip rect)
+		bool   isScissor    = false;
+		bool   scissorClear = false;   // if true, restore full viewport
+		float  sx = 0, sy = 0, sw = 0, sh = 0; // scissor in screen pixels
 	};
 
 	std::vector<float>        cv;
@@ -419,21 +535,40 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 	const float th = (float)p.th;
 
 	for (const auto& c : q) {
+		// ── Scissor control command ───────────────────────────────────────
+		if (c.isScissor) {
+			DrawRange dr{};
+			dr.isScissor    = true;
+			dr.scissorClear = (c.w < 0.f);
+			dr.sx = c.x; dr.sy = c.y; dr.sw = c.w; dr.sh = c.h;
+			drawRanges.push_back(dr);
+			continue;
+		}
+
 		float ox = c.ss ? 0.f : camX;
 		float oy = c.ss ? 0.f : camY;
+		float zoom = c.ss ? 1.f : camZoom;
+		float originX = c.ss ? 0.f : camOriginX;
+		float originY = c.ss ? 0.f : camOriginY;
 
 		// NDC corners before any rotation
-		float x1 =  2.f * (c.x       - ox) / tw - 1.f;
-		float y1 =  1.f - 2.f * (c.y       - oy) / th;
-		float x2 =  2.f * (c.x + c.w - ox) / tw - 1.f;
-		float y2 =  1.f - 2.f * (c.y + c.h - oy) / th;
+		float sx1 = originX + (c.x       - ox) * zoom;
+		float sy1 = originY + (c.y       - oy) * zoom;
+		float sx2 = originX + (c.x + c.w - ox) * zoom;
+		float sy2 = originY + (c.y + c.h - oy) * zoom;
+		float x1 =  2.f * sx1 / tw - 1.f;
+		float y1 =  1.f - 2.f * sy1 / th;
+		float x2 =  2.f * sx2 / tw - 1.f;
+		float y2 =  1.f - 2.f * sy2 / th;
 
 		// ── Filled circle — triangle fan ──────────────────────────────────
 		if (c.isCircle) {
-			float ncx = 2.f * (c.pivX - ox) / tw - 1.f;
-			float ncy = 1.f - 2.f * (c.pivY - oy) / th;
-			float nrx = 2.f * (c.w * 0.5f) / tw;
-			float nry = 2.f * (c.h * 0.5f) / th;
+			float scx = originX + (c.pivX - ox) * zoom;
+			float scy = originY + (c.pivY - oy) * zoom;
+			float ncx = 2.f * scx / tw - 1.f;
+			float ncy = 1.f - 2.f * scy / th;
+			float nrx = 2.f * (c.w * 0.5f * zoom) / tw;
+			float nry = 2.f * (c.h * 0.5f * zoom) / th;
 			int segs  = c.segs > 4 ? c.segs : 32;
 			Uint32 first = (Uint32)(cv.size() / 2);
 			for (int i = 0; i < segs; ++i) {
@@ -453,8 +588,10 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 
 		// ── Rotated draw ──────────────────────────────────────────────────
 		if (c.angle != 0.f) {
-			float pnx  =  2.f * (c.pivX - ox) / tw - 1.f;
-			float pny  =  1.f - 2.f * (c.pivY - oy) / th;
+			float spx  = originX + (c.pivX - ox) * zoom;
+			float spy  = originY + (c.pivY - oy) * zoom;
+			float pnx  =  2.f * spx / tw - 1.f;
+			float pny  =  1.f - 2.f * spy / th;
 			float cosA = cosf(c.angle * kPI / 180.f);
 			float sinA = sinf(c.angle * kPI / 180.f);
 
@@ -568,6 +705,23 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 	bool hasBound = false;
 	bool boundTextured = false;
 	for (const auto& r : drawRanges) {
+		// ── Scissor control ───────────────────────────────────────────────
+		if (r.isScissor) {
+			SDL_Rect sr;
+			if (r.scissorClear) {
+				sr = { 0, 0, (int)p.tw, (int)p.th };
+			} else {
+				int sw = (int)r.sw;
+				int sh = (int)r.sh;
+				if (sw < 1) sw = 1;
+				if (sh < 1) sh = 1;
+				sr = { (int)r.sx, (int)r.sy, sw, sh };
+			}
+			SDL_SetGPUScissor(rp, &sr);
+			// Re-bind pipeline on next draw to stay consistent
+			hasBound = false;
+			continue;
+		}
 		if (r.textured) {
 			if (!p.pTex || !r.tex) continue;
 			if (!hasBound || !boundTextured) {
@@ -690,9 +844,26 @@ void Renderer::Release()
 
 Texture Renderer::LoadTexture(const char* path)
 {
+	if (!path || !path[0]) {
+		std::cerr << "[Renderer] LoadTexture failed: empty path.\n";
+		return Texture{};
+	}
+
+#if defined(_WIN32)
+	std::vector<Uint8> decodedPixels;
+	int w = 0, h = 0;
+	std::string wicErr;
+	if (LoadImageWithWIC(path, decodedPixels, w, h, wicErr)) {
+		return Texture::FromPixels(device, decodedPixels.data(), w, h);
+	}
+	std::cerr << "[Renderer] WIC decode failed for '" << path << "': " << wicErr
+		      << " (trying BMP fallback)\n";
+#endif
+
 	SDL_Surface* surf = SDL_LoadBMP(path);
 	if (!surf) {
-		std::cerr << "[Renderer] SDL_LoadBMP failed: " << SDL_GetError() << "\n";
+		std::cerr << "[Renderer] Texture load failed for '" << path
+		          << "': " << SDL_GetError() << "\n";
 		return Texture{};
 	}
 	SDL_Surface* rgba = SDL_ConvertSurface(surf, SDL_PIXELFORMAT_RGBA32);
@@ -723,6 +894,7 @@ void Renderer::Clear()
 	fbQueue.clear();
 	activeQueue = &mainQueue;
 	fbTarget    = nullptr;
+	scissorStack_.clear();
 }
 
 void Renderer::SetDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
@@ -810,6 +982,44 @@ void Renderer::FillCircle(float cx, float cy, float radius, int segs)
 	                         dr, dg, db, da, true,
 	                         nullptr, 0.f, 0.f, 1.f, 1.f, screenSpace,
 	                         0.f, cx, cy, true, segs });
+}
+
+// ── Scissor API ──────────────────────────────────────────────────────────────
+
+void Renderer::SetScissor(float x, float y, float w, float h)
+{
+	ScissorEntry next = { x, y, w, h };
+	if (!scissorStack_.empty()) {
+		const ScissorEntry& prev = scissorStack_.back();
+		float nx = (std::max)(prev.x, next.x);
+		float ny = (std::max)(prev.y, next.y);
+		float nr = (std::min)(prev.x + prev.w, next.x + next.w);
+		float nb = (std::min)(prev.y + prev.h, next.y + next.h);
+		next.x = nx;
+		next.y = ny;
+		next.w = (std::max)(0.f, nr - nx);
+		next.h = (std::max)(0.f, nb - ny);
+	}
+
+	scissorStack_.push_back(next);
+	DrawCmd c{};
+	c.isScissor = true;
+	c.x = next.x; c.y = next.y; c.w = next.w; c.h = next.h;
+	activeQueue->push_back(c);
+}
+
+void Renderer::ClearScissor()
+{
+	if (!scissorStack_.empty()) scissorStack_.pop_back();
+	DrawCmd c{};
+	c.isScissor = true;
+	if (scissorStack_.empty()) {
+		c.w = -1.f; // sentinel: restore full viewport
+	} else {
+		const ScissorEntry& prev = scissorStack_.back();
+		c.x = prev.x; c.y = prev.y; c.w = prev.w; c.h = prev.h;
+	}
+	activeQueue->push_back(c);
 }
 
 // ── 3D API ───────────────────────────────────────────────────────────────────

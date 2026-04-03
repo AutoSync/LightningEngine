@@ -1,6 +1,6 @@
 // Texture — GPU-side 2D texture.
 // Created via Renderer::LoadTexture(path). Released via Texture::Release().
-// Supports BMP natively. PNG/JPG requires stb_image (add third_party/stb/stb_image.h).
+// Supports PNG/JPG/BMP via WIC on Windows; BMP remains available via SDL fallback.
 
 #pragma once
 #include <SDL3/SDL.h>

@@ -85,6 +85,8 @@ namespace LightningEngine {
 
 		// Camera world offset
 		float camX = 0.f, camY = 0.f;
+		float camZoom = 1.f;
+		float camOriginX = 0.f, camOriginY = 0.f;
 
 		struct DrawCmd {
 			float    x, y, w, h;
@@ -98,6 +100,8 @@ namespace LightningEngine {
 			float    pivY  = 0.f; // pivot screen-space Y
 			bool     isCircle = false; // filled circle (triangle fan)
 			int      segs     = 0;     // circle segments (0 = auto 32)
+			// Scissor control command (no geometry emitted; x/y/w/h = scissor rect; w<0 = reset to viewport)
+			bool     isScissor = false;
 		};
 
 		// Active queue — points to mainQueue normally, fbQueue during FB render.
@@ -109,6 +113,10 @@ namespace LightningEngine {
 		SDL_GPUTexture* fbTarget   = nullptr;
 		int             fbTargetW  = 0;
 		int             fbTargetH  = 0;
+
+		// Scissor stack (tracks the effective clip rect across Push/Pop)
+		struct ScissorEntry { float x, y, w, h; };
+		std::vector<ScissorEntry> scissorStack_;
 
 		// ── Pipeline init helpers ──
 		bool           initPipeline2D();
@@ -174,8 +182,13 @@ namespace LightningEngine {
 
 		// --- Camera ---
 		void  SetCameraOffset(float x, float y) { camX = x; camY = y; }
+		void  SetCameraZoom(float zoom) { camZoom = zoom > 0.001f ? zoom : 0.001f; }
+		void  SetCameraOrigin(float x, float y) { camOriginX = x; camOriginY = y; }
 		float GetCameraX() const { return camX; }
 		float GetCameraY() const { return camY; }
+		float GetCameraZoom() const { return camZoom; }
+		float GetCameraOriginX() const { return camOriginX; }
+		float GetCameraOriginY() const { return camOriginY; }
 
 		void BeginScreenSpace() { screenSpace = true;  }
 		void EndScreenSpace()   { screenSpace = false; }
@@ -194,6 +207,11 @@ namespace LightningEngine {
 
 		// Thin line from (x1,y1) to (x2,y2). thickness in pixels.
 		void DrawLine(float x1, float y1, float x2, float y2, float thickness = 1.f);
+
+		// Scissor clipping — clips all subsequent draw calls to the given region.
+		// ClearScissor() restores full-viewport rendering.
+		void SetScissor(float x, float y, float w, float h);
+		void ClearScissor();
 
 		// Circle outline: segs segments (0 = auto).
 		void DrawCircle(float cx, float cy, float radius, int segs = 0);

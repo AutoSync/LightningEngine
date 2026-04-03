@@ -9,7 +9,8 @@ namespace Titan {
 class Panel : public Widget {
 public:
     std::string title;
-    bool showTitle = true;
+    bool showTitle    = true;
+    bool clipChildren = false;  // when true, children are scissor-clipped to panel bounds
 
     Panel() = default;
     Panel(float x, float y, float w, float h,
@@ -41,7 +42,13 @@ public:
         r.DrawRect(ax, ay, w, h);
 
         // Children
-        for (auto& c : children) c->Render(r, f, ax, ay);
+        if (clipChildren) {
+            r.SetScissor(ax, ay, w, h);
+            for (auto& c : children) c->Render(r, f, ax, ay);
+            r.ClearScissor();
+        } else {
+            for (auto& c : children) c->Render(r, f, ax, ay);
+        }
     }
 
     bool ProcessInput(float mx, float my, bool ldown, bool lclick, bool lrelease,
