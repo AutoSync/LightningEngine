@@ -149,6 +149,7 @@
     <ClCompile Include="src\core\Spark.cpp" />
     <ClCompile Include="src\core\Mesh.cpp" />
     <ClCompile Include="src\core\ProjectManager.cpp" />
+    <ClCompile Include="src\core\modules\character\CharacterMovementComponent.cpp" />
     <ClCompile Include="src\core\nucleo\NucleoLexer.cpp" />
     <ClCompile Include="src\core\nucleo\NucleoParser.cpp" />
     <ClCompile Include="src\core\nucleo\NucleoCompiler.cpp" />
@@ -217,6 +218,13 @@
     <ClInclude Include="src\include\GamePreviewWindow.h" />
     <ClInclude Include="src\include\Framebuffer.h" />
     <ClInclude Include="src\include\Node2D.h" />
+    <ClInclude Include="src\include\modules\character\CharacterMovementComponent.h" />
+    <ClInclude Include="src\include\modules\character\CharacterMovementConfig.h" />
+    <ClInclude Include="src\include\script\api\CharacterMovementApi.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="docs\GUI-Panel-Docking.md" />
+    <None Include="plan\final\docs\Game-Development.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

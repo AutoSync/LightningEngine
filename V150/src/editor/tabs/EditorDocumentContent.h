@@ -50,6 +50,7 @@ inline std::string FileKindLabel(EditorTabKind kind)
     case EditorTabKind::Texture: return "Textura";
     case EditorTabKind::Shader: return "Shader";
     case EditorTabKind::Material: return "Material";
+    case EditorTabKind::Equinox: return "Equinox";
     case EditorTabKind::Particle: return "Particula";
     case EditorTabKind::Prefab: return "Prefab";
     case EditorTabKind::StaticMesh: return "Malha Estatica";
@@ -142,6 +143,18 @@ inline std::vector<EditorDocumentOutlineItem> BuildOutline(const EditorTabDescri
             continue;
         }
 
+        if (tab.kind == EditorTabKind::Equinox) {
+            if (trimmed.rfind("type:", 0) == 0 || trimmed.rfind("name:", 0) == 0) {
+                AppendUniqueOutline(outline, trimmed, 60, 150, 80);
+            } else if (trimmed.rfind("graph:", 0) == 0 || trimmed.rfind("generator:", 0) == 0 ||
+                       trimmed.rfind("shader:", 0) == 0 || trimmed.rfind("parameters:", 0) == 0) {
+                AppendUniqueOutline(outline, trimmed, 180, 220, 130);
+            } else if (trimmed.find(':') != std::string::npos || trimmed.rfind("- ", 0) == 0) {
+                AppendUniqueOutline(outline, trimmed, 100, 160, 230);
+            }
+            continue;
+        }
+
         if (outline.size() < 12) {
             AppendUniqueOutline(outline, trimmed, 185, 185, 195);
         }
@@ -185,6 +198,13 @@ inline EditorDocumentContent BuildDocumentContent(const EditorTabDescriptor& tab
 
     if (tab.kind == EditorTabKind::Script) {
         content.syntax = Titan::RichText::SyntaxMode::CSharp;
+    } else if (tab.kind == EditorTabKind::Shader) {
+        content.syntax = Titan::RichText::SyntaxMode::GLSL;
+    } else if (tab.kind == EditorTabKind::Config) {
+        std::string ext = tab.extension;
+        std::transform(ext.begin(), ext.end(), ext.begin(),
+            [](unsigned char c) { return (char)std::tolower(c); });
+        if (ext == ".json") content.syntax = Titan::RichText::SyntaxMode::JSON;
     }
 
     content.outline = BuildOutline(tab, content.bodyText);

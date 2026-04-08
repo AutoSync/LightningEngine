@@ -16,6 +16,7 @@
 #pragma once
 #include <cstdio>
 #include <cmath>
+#include <cstdlib>
 #include <algorithm>
 #include <cctype>
 #include <limits>
@@ -31,10 +32,12 @@
 #include "../include/UndoStack.h"
 #include "../include/NativeDialog.h"
 #include "../include/GamePreviewWindow.h"
+#include "../include/Equinox.h"
 #include "../include/gui/TitanUI.h"
 #include "../include/gui/TitanStyle.h"
 #include "../include/gui/widgets/TextureViewerWidget.h"
 #include "../include/components/SpriteRenderer.h"
+#include "../include/EditorElementRegistry.h"
 #include "tabs/EditorTabSystem.h"
 #include "tabs/EditorDocumentContent.h"
 #include "tabs/EditorDocumentWorkspaceRenderer.h"
@@ -142,6 +145,15 @@ private:
     TextField*   tfCBRename      = nullptr;
     Label*       lblCBRenameStat = nullptr;
     Panel*       pCBPropsModal   = nullptr;
+    Panel*       pPluginWizardModal = nullptr;
+    TextField*   tfPluginName       = nullptr;
+    TextField*   tfPluginId         = nullptr;
+    TextField*   tfPluginVersion    = nullptr;
+    TextField*   tfPluginCategory   = nullptr;
+    TextField*   tfPluginSubcat     = nullptr;
+    Label*       lblPluginWizardStat = nullptr;
+    int          pluginScopeIdx     = 0; // 0=Project, 1=Global
+    int          pluginTypeIdx      = 0; // 0=C++, 1=C#, 2=Ignite
 
     std::string  cbCurrentDir;
     std::string  cbSelectedPath;
@@ -214,6 +226,17 @@ private:
     float     viewportPanCamX0 = 0.f;
     float     viewportPanCamY0 = 0.f;
 
+    enum class EditorCursorMode { Default, Text, Pan };
+    SDL_Cursor* cursorDefault = nullptr;
+    SDL_Cursor* cursorText    = nullptr;
+    SDL_Cursor* cursorPan     = nullptr;
+    EditorCursorMode cursorMode = EditorCursorMode::Default;
+    int       cacheBottomTrayActiveIdx = 0;
+    std::string cacheLastChange = "Session start";
+    bool      cacheDirty = false;
+    bool      cachePersistenceSuspended = false;
+    float     codeEditorFontScale = 1.0f;
+
     LightningEditor::EditorTabManager tabManager;
 
     std::string resolveProjectFilePath(const std::string& rawPath) const
@@ -276,6 +299,428 @@ private:
             if (!fs::exists(candidate)) return candidate;
         }
         return dir / (stem + "_x" + ext);
+    }
+
+    fs::path editorCacheDir() const
+    {
+        char* appdata = nullptr;
+        size_t appdataLen = 0;
+        std::string base = ".";
+        if (_dupenv_s(&appdata, &appdataLen, "APPDATA") == 0 && appdata) {
+            base = appdata;
+            std::free(appdata);
+        }
+        return fs::path(base) / "LightningEngine";
+    }
+
+    fs::path cacheFilePath() const
+    {
+        return editorCacheDir() / "editor_cache.ini";
+    }
+
+    fs::path legacyCacheFilePath() const
+    {
+        if (pm.isOpen) return fs::path(pm.project.rootPath) / "editor_cache.ini";
+        return fs::current_path() / ".lightning_editor_cache.ini";
+    }
+
+    void noteEngineChange(const std::string& message)
+    {
+        if (cachePersistenceSuspended) return;
+        cacheLastChange = message + " @" + std::to_string((unsigned long long)SDL_GetTicks());
+        cacheDirty = true;
+        saveEditorCache();
+    }
+
+    void saveEditorCache()
+    {
+        fs::path path = cacheFilePath();
+        std::error_code ec;
+        if (path.has_parent_path()) fs::create_directories(path.parent_path(), ec);
+
+        IniFile ini;
+
+        SDL_Window* win = renderer.GetWindow();
+        if (win) {
+            int ww = 0, wh = 0;
+            SDL_GetWindowSize(win, &ww, &wh);
+            const Uint64 flags = SDL_GetWindowFlags(win);
+            ini.Set("Window", "Width", std::to_string(ww));
+            ini.Set("Window", "Height", std::to_string(wh));
+            ini.Set("Window", "Fullscreen", (flags & SDL_WINDOW_FULLSCREEN) ? "true" : "false");
+            ini.Set("Window", "Maximized", (flags & SDL_WINDOW_MAXIMIZED) ? "true" : "false");
+        }
+
+        ini.Set("Viewport", "CamX", std::to_string(viewportCamX));
+        ini.Set("Viewport", "CamY", std::to_string(viewportCamY));
+        ini.Set("Viewport", "Zoom", std::to_string(viewportZoom));
+        ini.Set("Viewport", "ShowGrid", viewportShowGrid ? "true" : "false");
+        ini.Set("Viewport", "SnapToGrid", viewportSnapToGrid ? "true" : "false");
+
+        ini.Set("ContentBrowser", "CurrentDir", cbCurrentDir);
+        ini.Set("ContentBrowser", "SelectedPath", cbSelectedPath);
+        ini.Set("ContentBrowser", "TypeFilter", std::to_string(cbTypeFilter));
+        ini.Set("ContentBrowser", "ViewMode", std::to_string(cbViewMode));
+
+        ini.Set("Containers", "BottomTrayActive", std::to_string(pBottomTrayNode ? pBottomTrayNode->activeIdx : cacheBottomTrayActiveIdx));
+        ini.Set("Containers", "HierarchyX", std::to_string(pHierarchy ? pHierarchy->x : 0.f));
+        ini.Set("Containers", "HierarchyY", std::to_string(pHierarchy ? pHierarchy->y : 0.f));
+        ini.Set("Containers", "HierarchyW", std::to_string(pHierarchy ? pHierarchy->w : 0.f));
+        ini.Set("Containers", "HierarchyH", std::to_string(pHierarchy ? pHierarchy->h : 0.f));
+        ini.Set("Containers", "InspectorX", std::to_string(pInspector ? pInspector->x : 0.f));
+        ini.Set("Containers", "InspectorY", std::to_string(pInspector ? pInspector->y : 0.f));
+        ini.Set("Containers", "InspectorW", std::to_string(pInspector ? pInspector->w : 0.f));
+        ini.Set("Containers", "InspectorH", std::to_string(pInspector ? pInspector->h : 0.f));
+        ini.Set("Containers", "ViewportX", std::to_string(pViewport ? pViewport->x : 0.f));
+        ini.Set("Containers", "ViewportY", std::to_string(pViewport ? pViewport->y : 0.f));
+        ini.Set("Containers", "ViewportW", std::to_string(pViewport ? pViewport->w : 0.f));
+        ini.Set("Containers", "ViewportH", std::to_string(pViewport ? pViewport->h : 0.f));
+
+        ini.Set("Changes", "LastEngineChange", cacheLastChange);
+        ini.Set("CodeEditor", "FontScale", std::to_string(codeEditorFontScale));
+
+        if (ini.Save(path.string())) {
+            cacheDirty = false;
+        } else {
+            Logger::LogWarning("[Editor] Failed to save editor cache: " + path.string());
+        }
+    }
+
+    bool loadEditorCacheFrom(const fs::path& path)
+    {
+        IniFile ini;
+        if (!ini.Load(path.string())) return false;
+
+        auto readFloat = [&](const char* sec, const char* key, float defVal) {
+            try { return std::stof(ini.Get(sec, key, std::to_string(defVal))); }
+            catch (...) { return defVal; }
+        };
+
+        SDL_Window* win = renderer.GetWindow();
+        if (win) {
+            int ww = ini.GetInt("Window", "Width", (int)kW);
+            int wh = ini.GetInt("Window", "Height", (int)kH);
+            if (ww > 320 && wh > 240) {
+                SDL_SetWindowSize(win, ww, wh);
+                kW = (float)ww;
+                kH = (float)wh;
+            }
+            if (ini.GetBool("Window", "Fullscreen", false)) SDL_SetWindowFullscreen(win, true);
+            if (ini.GetBool("Window", "Maximized", false)) SDL_MaximizeWindow(win);
+        }
+
+        viewportCamX = readFloat("Viewport", "CamX", viewportCamX);
+        viewportCamY = readFloat("Viewport", "CamY", viewportCamY);
+        viewportZoom = std::clamp(readFloat("Viewport", "Zoom", viewportZoom), 0.2f, 8.0f);
+        viewportShowGrid = ini.GetBool("Viewport", "ShowGrid", viewportShowGrid);
+        viewportSnapToGrid = ini.GetBool("Viewport", "SnapToGrid", viewportSnapToGrid);
+
+        cbCurrentDir = ini.Get("ContentBrowser", "CurrentDir", cbCurrentDir);
+        cbSelectedPath = ini.Get("ContentBrowser", "SelectedPath", cbSelectedPath);
+        cbTypeFilter = ini.GetInt("ContentBrowser", "TypeFilter", cbTypeFilter);
+        cbViewMode = ini.GetInt("ContentBrowser", "ViewMode", cbViewMode);
+
+        cacheBottomTrayActiveIdx = std::max(0, ini.GetInt("Containers", "BottomTrayActive", cacheBottomTrayActiveIdx));
+        cacheLastChange = ini.Get("Changes", "LastEngineChange", cacheLastChange);
+        codeEditorFontScale = std::clamp(readFloat("CodeEditor", "FontScale", codeEditorFontScale), 0.75f, 2.5f);
+        return true;
+    }
+
+    void loadEditorCache()
+    {
+        cacheDirty = false;
+        if (loadEditorCacheFrom(cacheFilePath())) return;
+        if (loadEditorCacheFrom(legacyCacheFilePath())) saveEditorCache();
+    }
+
+    void applyEditorTextPreferences(RichText* editor)
+    {
+        if (!editor) return;
+        editor->SetFontScale(codeEditorFontScale);
+        editor->showLineNums = true;
+        editor->onFontScaleChanged = [this](float scale) {
+            codeEditorFontScale = std::clamp(scale, 0.75f, 2.5f);
+            noteEngineChange("Code editor font scale changed");
+        };
+    }
+
+    void adjustCodeEditorFontScale(float delta)
+    {
+        float next = std::clamp(codeEditorFontScale + delta, 0.75f, 2.5f);
+        if (std::fabs(next - codeEditorFontScale) < 0.001f) return;
+        codeEditorFontScale = next;
+
+        applyEditorTextPreferences(pScriptEdit);
+        applyEditorTextPreferences(pScriptDockEdit);
+
+        noteEngineChange("Code editor font scale changed");
+    }
+
+    std::string normalizePluginId(const std::string& source) const
+    {
+        std::string out;
+        out.reserve(source.size());
+        bool lastDash = false;
+
+        for (unsigned char ch : source) {
+            if (std::isalnum(ch)) {
+                out.push_back((char)std::tolower(ch));
+                lastDash = false;
+                continue;
+            }
+
+            if (ch == '.' || ch == '_' || ch == '-') {
+                if (out.empty() || lastDash) continue;
+                out.push_back('-');
+                lastDash = true;
+                continue;
+            }
+
+            if (std::isspace(ch)) {
+                if (out.empty() || lastDash) continue;
+                out.push_back('-');
+                lastDash = true;
+            }
+        }
+
+        while (!out.empty() && out.back() == '-') out.pop_back();
+        if (out.empty()) out = "new-plugin";
+        return out;
+    }
+
+    fs::path pluginBaseDirForScope(int scopeIdx) const
+    {
+        if (scopeIdx == 1) {
+            return fs::current_path() / "plugins" / "global";
+        }
+        if (!pm.isOpen) return fs::path();
+        return fs::path(pm.project.rootPath) / "plugins";
+    }
+
+    void addPluginToProject()
+    {
+        if (!pm.isOpen) {
+            Logger::LogWarning("[Editor] Add Plugin: open a project first.");
+            return;
+        }
+
+        std::string picked = NativeDialog::PickFolderSDL(renderer.GetWindow(), "Select Plugin Folder");
+        if (picked.empty()) return;
+
+        std::error_code ec;
+        fs::path src(picked);
+        if (!fs::exists(src, ec) || !fs::is_directory(src, ec)) {
+            Logger::LogWarning("[Editor] Add Plugin: invalid folder.");
+            return;
+        }
+
+        fs::path dstRoot = fs::path(pm.project.rootPath) / "plugins";
+        fs::create_directories(dstRoot, ec);
+        if (ec) {
+            Logger::LogWarning("[Editor] Add Plugin: cannot create plugin root.");
+            return;
+        }
+
+        fs::path dst = makeUniquePath(dstRoot, src.filename().string(), "");
+        fs::copy(src, dst, fs::copy_options::recursive, ec);
+        if (ec) {
+            Logger::LogWarning("[Editor] Add Plugin failed: " + ec.message());
+            return;
+        }
+
+        Logger::LogInfo("[Editor] Plugin added: " + dst.filename().string());
+        noteEngineChange("Plugin added: " + dst.filename().string());
+        if (pm.isOpen) refreshContentBrowser();
+    }
+
+    void createPluginWizardProject()
+    {
+        if (!tfPluginName || !tfPluginVersion || !tfPluginCategory || !tfPluginSubcat) return;
+
+        std::string name = tfPluginName->text;
+        std::string rawId = tfPluginId ? tfPluginId->text : "";
+        if (name.empty()) {
+            if (lblPluginWizardStat) lblPluginWizardStat->SetText("Plugin name is required.");
+            return;
+        }
+
+        std::string pluginId = normalizePluginId(rawId.empty() ? name : rawId);
+        fs::path base = pluginBaseDirForScope(pluginScopeIdx);
+        if (base.empty()) {
+            if (lblPluginWizardStat) lblPluginWizardStat->SetText("Open a project for project-scope plugin.");
+            return;
+        }
+
+        std::error_code ec;
+        fs::create_directories(base, ec);
+        if (ec) {
+            if (lblPluginWizardStat) lblPluginWizardStat->SetText("Failed to create plugin base folder.");
+            return;
+        }
+
+        fs::path pluginDir = base / pluginId;
+        if (fs::exists(pluginDir, ec)) {
+            pluginDir = makeUniquePath(base, pluginId, "");
+            pluginId = pluginDir.filename().string();
+        }
+
+        fs::create_directories(pluginDir / "src", ec);
+        if (ec) {
+            if (lblPluginWizardStat) lblPluginWizardStat->SetText("Failed to create plugin folder.");
+            return;
+        }
+
+        const std::string version = tfPluginVersion->text.empty() ? "0.1.0" : tfPluginVersion->text;
+        const std::string category = tfPluginCategory->text.empty() ? "General" : tfPluginCategory->text;
+        const std::string subcat = tfPluginSubcat->text.empty() ? "Core" : tfPluginSubcat->text;
+        const bool globalScope = (pluginScopeIdx == 1);
+
+        std::ofstream manifest((pluginDir / "plugin.yaml").string(), std::ios::binary | std::ios::trunc);
+        manifest
+            << "id: " << pluginId << "\n"
+            << "name: \"" << name << "\"\n"
+            << "version: " << version << "\n"
+            << "scope: " << (globalScope ? "global" : "project") << "\n"
+            << "category: \"" << category << "\"\n"
+            << "subcategory: \"" << subcat << "\"\n"
+            << "entrypoints:\n";
+
+        if (pluginTypeIdx == 0) manifest << "  native: src/PluginMain.h\n";
+        else if (pluginTypeIdx == 1) manifest << "  csharp: src/PluginMain.cs\n";
+        else manifest << "  ignite: src/PluginMain.ignite\n";
+
+        manifest << "permissions:\n"
+                 << "  - editor-ui\n"
+                 << "enabledByDefault: true\n";
+        manifest.close();
+
+        std::ofstream readme((pluginDir / "README.md").string(), std::ios::binary | std::ios::trunc);
+        readme << "# " << name << "\n\n"
+               << "Plugin generated by Lightning Engine Plugin Wizard.\n\n"
+               << "- id: " << pluginId << "\n"
+               << "- scope: " << (globalScope ? "global" : "project") << "\n"
+               << "- category: " << category << " / " << subcat << "\n";
+        readme.close();
+
+        if (pluginTypeIdx == 0) {
+            std::ofstream cpp((pluginDir / "src" / "PluginMain.h").string(), std::ios::binary | std::ios::trunc);
+            cpp << "#pragma once\n"
+                << "#include \"../../../../src/include/PluginContracts.h\"\n\n"
+                << "class " << normalizePluginId(name) << "Plugin : public LightningEngine::IEnginePlugin {\n"
+                << "public:\n"
+                << "    const LightningEngine::PluginManifest& Manifest() const override { return manifest; }\n"
+                << "    bool OnLoad() override { return true; }\n"
+                << "    void OnRegister() override {}\n"
+                << "    void OnActivate() override {}\n"
+                << "    void OnDeactivate() override {}\n"
+                << "    void OnUnload() override {}\n"
+                << "private:\n"
+                << "    LightningEngine::PluginManifest manifest{\n"
+                << "        \"" << pluginId << "\", \"" << name << "\", \"" << version << "\"\n"
+                << "    };\n"
+                << "};\n";
+            cpp.close();
+        } else if (pluginTypeIdx == 1) {
+            std::ofstream cs((pluginDir / "src" / "PluginMain.cs").string(), std::ios::binary | std::ios::trunc);
+            cs << "namespace LightningPlugins {\n"
+               << "    public class PluginMain {\n"
+               << "        public string Id => \"" << pluginId << "\";\n"
+               << "        public void OnLoad() {}\n"
+               << "        public void OnActivate() {}\n"
+               << "        public void OnDeactivate() {}\n"
+               << "    }\n"
+               << "}\n";
+            cs.close();
+        } else {
+            std::ofstream ig((pluginDir / "src" / "PluginMain.ignite").string(), std::ios::binary | std::ios::trunc);
+            ig << "plugin \"" << name << "\" {\n"
+               << "    id: \"" << pluginId << "\"\n"
+               << "    fn OnLoad() {}\n"
+               << "    fn OnActivate() {}\n"
+               << "    fn OnDeactivate() {}\n"
+               << "}\n";
+            ig.close();
+        }
+
+        if (lblPluginWizardStat) lblPluginWizardStat->SetText("Plugin created successfully.");
+        Logger::LogInfo("[Editor] Plugin wizard created: " + pluginDir.string());
+        noteEngineChange("Plugin wizard created: " + pluginId);
+        refreshContentBrowser();
+    }
+
+    void openPluginWizardModal()
+    {
+        if (!pPluginWizardModal) {
+            pPluginWizardModal = buildModalPanel(
+                "Plugin Wizard",
+                [this](Panel* p) {
+                    float pad = gStyle.padding;
+                    float lh = gStyle.lineH;
+                    float mw = p->w;
+                    float ty = gStyle.titleH + pad;
+
+                    p->Add<Label>(pad, ty, "Plugin Name")->h = lh; ty += lh + 2.f;
+                    tfPluginName = p->Add<TextField>(pad, ty, mw - pad * 2.f, lh + 2.f);
+                    tfPluginName->SetText("MyPlugin");
+                    ty += lh + 8.f;
+
+                    p->Add<Label>(pad, ty, "Plugin ID (optional)")->h = lh; ty += lh + 2.f;
+                    tfPluginId = p->Add<TextField>(pad, ty, mw - pad * 2.f, lh + 2.f);
+                    tfPluginId->SetText("");
+                    ty += lh + 8.f;
+
+                    p->Add<Label>(pad, ty, "Version")->h = lh; ty += lh + 2.f;
+                    tfPluginVersion = p->Add<TextField>(pad, ty, mw - pad * 2.f, lh + 2.f);
+                    tfPluginVersion->SetText("0.1.0");
+                    ty += lh + 8.f;
+
+                    p->Add<Label>(pad, ty, "Category")->h = lh; ty += lh + 2.f;
+                    tfPluginCategory = p->Add<TextField>(pad, ty, mw - pad * 2.f, lh + 2.f);
+                    tfPluginCategory->SetText("Gameplay");
+                    ty += lh + 8.f;
+
+                    p->Add<Label>(pad, ty, "Subcategory")->h = lh; ty += lh + 2.f;
+                    tfPluginSubcat = p->Add<TextField>(pad, ty, mw - pad * 2.f, lh + 2.f);
+                    tfPluginSubcat->SetText("General");
+                    ty += lh + 8.f;
+
+                    p->Add<Label>(pad, ty, "Scope")->h = lh; ty += lh + 2.f;
+                    auto* ddScope = p->Add<Dropdown>(pad, ty, mw - pad * 2.f, lh + 2.f, "Scope");
+                    ddScope->AddItem("Project");
+                    ddScope->AddItem("Global");
+                    ddScope->SetSelected(pluginScopeIdx);
+                    ddScope->onSelect = [this](int idx, const std::string&) { pluginScopeIdx = idx; };
+                    ty += lh + 8.f;
+
+                    p->Add<Label>(pad, ty, "Plugin Type")->h = lh; ty += lh + 2.f;
+                    auto* ddType = p->Add<Dropdown>(pad, ty, mw - pad * 2.f, lh + 2.f, "Plugin Type");
+                    ddType->AddItem("C++");
+                    ddType->AddItem("C#");
+                    ddType->AddItem("Ignite");
+                    ddType->SetSelected(pluginTypeIdx);
+                    ddType->onSelect = [this](int idx, const std::string&) { pluginTypeIdx = idx; };
+                    ty += lh + 10.f;
+
+                    lblPluginWizardStat = p->Add<Label>(pad, ty, "");
+                    lblPluginWizardStat->h = lh;
+                    lblPluginWizardStat->SetColor(220, 80, 80);
+                    ty += lh + 8.f;
+
+                    float bw = (mw - pad * 3.f) * 0.5f;
+                    auto* btnCreate = p->Add<Button>(pad, ty, bw, lh + 4.f, "Create Plugin");
+                    btnCreate->onClick = [this]{ createPluginWizardProject(); };
+                    auto* btnCancel = p->Add<Button>(pad * 2.f + bw, ty, bw, lh + 4.f, "Cancel");
+                    btnCancel->onClick = [this]{ if (pPluginWizardModal) pPluginWizardModal->visible = false; };
+                },
+                520.f
+            );
+        }
+
+        if (pPluginWizardModal) {
+            pPluginWizardModal->visible = true;
+            if (lblPluginWizardStat) lblPluginWizardStat->SetText("");
+            ui.BringToFront(pPluginWizardModal);
+        }
     }
 
     bool isMouseOverViewport(float mx, float my) const
@@ -361,6 +806,59 @@ private:
             if (item.label == "Grid") item.active = viewportShowGrid;
             if (item.label == "Snap") item.active = viewportSnapToGrid;
         }
+    }
+
+    void initializeEditorCursors()
+    {
+        cursorDefault = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_DEFAULT);
+        cursorText    = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_TEXT);
+        cursorPan     = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_MOVE);
+
+        if (cursorDefault) SDL_SetCursor(cursorDefault);
+        cursorMode = EditorCursorMode::Default;
+    }
+
+    void releaseEditorCursors()
+    {
+        if (cursorDefault) { SDL_DestroyCursor(cursorDefault); cursorDefault = nullptr; }
+        if (cursorText)    { SDL_DestroyCursor(cursorText);    cursorText = nullptr; }
+        if (cursorPan)     { SDL_DestroyCursor(cursorPan);     cursorPan = nullptr; }
+    }
+
+    void applyEditorCursor(EditorCursorMode mode)
+    {
+        if (mode == cursorMode) return;
+
+        SDL_Cursor* target = cursorDefault;
+        if (mode == EditorCursorMode::Text && cursorText) target = cursorText;
+        if (mode == EditorCursorMode::Pan  && cursorPan)  target = cursorPan;
+
+        if (target) SDL_SetCursor(target);
+        cursorMode = mode;
+    }
+
+    void updateEditorCursor()
+    {
+        if (state != State::Editor) {
+            applyEditorCursor(EditorCursorMode::Default);
+            return;
+        }
+
+        const bool editingText =
+            (pScriptEdit && pScriptEdit->isFocused) ||
+            (pScriptDockEdit && pScriptDockEdit->isFocused);
+
+        if (editingText) {
+            applyEditorCursor(EditorCursorMode::Text);
+            return;
+        }
+
+        if (viewportPanning) {
+            applyEditorCursor(EditorCursorMode::Pan);
+            return;
+        }
+
+        applyEditorCursor(EditorCursorMode::Default);
     }
 
     bool isCursorOverGizmo(float mx, float my) const
@@ -483,6 +981,7 @@ private:
         bool overViewport = isMouseOverViewport(mx, my);
 
         if (overViewport) {
+            bool changed = false;
             float scroll = inputManager.GetScrollWheelY();
             if (scroll != 0.f) {
                 Lightning::V2 before = viewportScreenToWorld(mx, my);
@@ -490,12 +989,14 @@ private:
                 viewportZoom = std::clamp(viewportZoom * zoomFactor, 0.2f, 8.0f);
                 viewportCamX = before.x - (mx - vpAX) / viewportZoom;
                 viewportCamY = before.y - (my - vpAY) / viewportZoom;
+                changed = true;
             }
 
-            if (inputManager.IsKeyPressed(SDL_SCANCODE_G)) viewportShowGrid = !viewportShowGrid;
-            if (inputManager.IsKeyPressed(SDL_SCANCODE_S)) viewportSnapToGrid = !viewportSnapToGrid;
+            if (inputManager.IsKeyPressed(SDL_SCANCODE_G)) { viewportShowGrid = !viewportShowGrid; changed = true; }
+            if (inputManager.IsKeyPressed(SDL_SCANCODE_S)) { viewportSnapToGrid = !viewportSnapToGrid; changed = true; }
             if (inputManager.IsKeyPressed(SDL_SCANCODE_F)) frameViewportSelection();
             if (inputManager.IsKeyPressed(SDL_SCANCODE_0)) resetViewportView();
+            if (changed) noteEngineChange("Viewport settings changed");
             syncViewportToolbarState();
         }
 
@@ -553,23 +1054,25 @@ private:
         cbDragging = false;
         cbDragFile.clear();
         cbDragExt.clear();
+        noteEngineChange("Content browser directory changed");
         refreshContentBrowser();
     }
 
-    void handleCBEntryClick(const fs::path& absPath, bool isDir)
+    void handleCBEntryClick(const fs::path& absPath, bool isDirectory)
     {
         const std::string clicked = absPath.string();
         const Uint64 now = SDL_GetTicks();
         const bool isDouble = (clicked == cbLastClickPath) && (now - cbLastClickMs <= 350ULL);
 
         cbSelectedPath = clicked;
-        cbSelectedIsDir = isDir;
+        cbSelectedIsDir = isDirectory;
         cbLastClickPath = clicked;
         cbLastClickMs = now;
+        noteEngineChange("Content browser selection changed");
 
         if (!isDouble) return;
 
-        if (isDir) openContentDirectory(absPath);
+        if (isDirectory) openContentDirectory(absPath);
         else       openAssetContextTab(clicked);
     }
 
@@ -592,10 +1095,14 @@ private:
             pCBPropsModal->zOrder = 250;
         }
 
+        const bool isEquinoxAsset = !cbSelectedIsDir && EquinoxFileManager::IsEquinoxAssetPath(p.string());
+        EquinoxDocumentInfo equinoxInfo;
+        if (isEquinoxAsset) equinoxInfo = EquinoxFileManager::InspectDocument(p.string());
+
         pCBPropsModal->Clear();
         pCBPropsModal->visible = true;
         pCBPropsModal->w = 560.f;
-        pCBPropsModal->h = 220.f;
+        pCBPropsModal->h = isEquinoxAsset ? 320.f : 220.f;
         pCBPropsModal->x = (kW - pCBPropsModal->w) * 0.5f;
         pCBPropsModal->y = (kH - pCBPropsModal->h) * 0.5f;
         ui.BringToFront(pCBPropsModal);
@@ -617,6 +1124,15 @@ private:
         pCBPropsModal->Add<Label>(pad, y, ("Tamanho: " + sizeText).c_str()); y += lh + 2.f;
         pCBPropsModal->Add<Label>(pad, y, ("Caminho: " + p.string()).c_str()); y += lh + 10.f;
 
+        if (isEquinoxAsset) {
+            pCBPropsModal->Add<Label>(pad, y, "Equinox")->SetColor(60, 150, 80); y += lh + 2.f;
+            pCBPropsModal->Add<Label>(pad, y, ("Documento: " + equinoxInfo.displayName).c_str()); y += lh + 2.f;
+            pCBPropsModal->Add<Label>(pad, y, ("Stage: " + equinoxInfo.stage).c_str()); y += lh + 2.f;
+            pCBPropsModal->Add<Label>(pad, y, ("Output: " + equinoxInfo.output).c_str()); y += lh + 2.f;
+            pCBPropsModal->Add<Label>(pad, y, ("Nodes detectados: " + std::to_string(equinoxInfo.nodeCount)).c_str()); y += lh + 2.f;
+            pCBPropsModal->Add<Label>(pad, y, ("Parametros detectados: " + std::to_string(equinoxInfo.parameterCount)).c_str()); y += lh + 10.f;
+        }
+
         auto* btnClose = pCBPropsModal->Add<Button>(pCBPropsModal->w - pad - 72.f,
                                                     pCBPropsModal->h - pad - (lh + 4.f),
                                                     72.f, lh + 4.f, "Fechar");
@@ -631,17 +1147,27 @@ private:
 
         fs::path p(cbSelectedPath);
         std::error_code ec;
-        if (!fs::exists(p, ec) || !fs::is_regular_file(p, ec)) return;
+        if (!fs::exists(p, ec)) return;
+
+        const bool targetIsDir = fs::is_directory(p, ec);
+        const bool targetIsFile = fs::is_regular_file(p, ec);
+        if (!targetIsDir && !targetIsFile) return;
 
         cbRenameTargetPath = p.string();
-        cbRenameTargetExt  = p.extension().string();
+        cbRenameTargetExt  = targetIsFile ? p.extension().string() : "";
+
+        const char* modalTitle = targetIsDir ? "Renomear Diretorio" : "Renomear Arquivo";
+        const char* inputLabel = targetIsDir
+            ? "Novo nome do diretorio:"
+            : "Novo nome (extensao preservada):";
 
         if (!pCBRenameModal) {
-            pCBRenameModal = ui.AddRoot<Panel>(0.f, 0.f, 440.f, 150.f, "Renomear Arquivo", true);
+            pCBRenameModal = ui.AddRoot<Panel>(0.f, 0.f, 440.f, 150.f, modalTitle, true);
             pCBRenameModal->zOrder = 260;
         }
 
         pCBRenameModal->Clear();
+        pCBRenameModal->title = modalTitle;
         pCBRenameModal->visible = true;
         pCBRenameModal->w = 440.f;
         pCBRenameModal->h = 150.f;
@@ -653,7 +1179,7 @@ private:
         const float lh = gStyle.lineH;
         float y = gStyle.titleH + pad;
 
-        pCBRenameModal->Add<Label>(pad, y, "Novo nome (extensao preservada):");
+        pCBRenameModal->Add<Label>(pad, y, inputLabel);
         y += lh + 2.f;
 
         tfCBRename = pCBRenameModal->Add<TextField>(pad, y, pCBRenameModal->w - pad * 2.f, lh + 3.f);
@@ -697,8 +1223,11 @@ private:
             }
 
             cbSelectedPath = newP.string();
+            cbSelectedIsDir = fs::is_directory(newP, ec);
             cbLastClickPath.clear();
             if (pCBRenameModal) pCBRenameModal->visible = false;
+            const bool renamedDir = cbRenameTargetExt.empty();
+            noteEngineChange(std::string(renamedDir ? "Directory renamed: " : "File renamed: ") + newP.filename().string());
             refreshContentBrowser();
         };
 
@@ -847,6 +1376,7 @@ private:
         }
 
         Logger::LogInfo("[Editor] Imported: " + dst.filename().string());
+        noteEngineChange("Asset imported: " + dst.filename().string());
         refreshContentBrowser();
         openAssetContextTab(dst.string());
     }
@@ -863,6 +1393,7 @@ private:
             return;
         }
         Logger::LogInfo("[Editor] Folder created: " + target.filename().string());
+        noteEngineChange("Folder created: " + target.filename().string());
         refreshContentBrowser();
     }
 
@@ -883,8 +1414,47 @@ private:
         out.close();
 
         Logger::LogInfo("[Editor] Created: " + target.filename().string());
+        noteEngineChange("Asset created: " + target.filename().string());
         refreshContentBrowser();
         openAssetContextTab(target.string());
+    }
+
+    void createEquinoxAssetInCurrentDir(EquinoxAssetType type)
+    {
+        const std::string stem = EquinoxFileManager::DefaultStem(type);
+        const std::string ext = EquinoxFileManager::DefaultExtension(type);
+        if (ext.empty()) return;
+        createAssetInCurrentDir(stem, ext, EquinoxFileManager::BuildDefaultDocument(type, stem));
+    }
+
+    fs::path equinoxWorkspaceDir() const
+    {
+        return fs::path(pm.AssetsDir()) / "equinox";
+    }
+
+    void openEquinoxWorkspace()
+    {
+        if (!pm.isOpen) return;
+
+        std::error_code ec;
+        fs::path dir = equinoxWorkspaceDir();
+        fs::create_directories(dir, ec);
+        if (ec) {
+            Logger::LogWarning("[Editor] Equinox: failed to create workspace directory: " + ec.message());
+            return;
+        }
+
+        openContentDirectory(dir);
+
+        for (const auto& entry : fs::directory_iterator(dir, ec)) {
+            if (ec) break;
+            if (!entry.is_regular_file()) continue;
+            if (!EquinoxFileManager::IsEquinoxAssetPath(entry.path().string())) continue;
+            openAssetContextTab(entry.path().string());
+            return;
+        }
+
+        createEquinoxAssetInCurrentDir(EquinoxAssetType::ShaderComposer);
     }
 
     void syncTabStripFromManager()
@@ -965,6 +1535,8 @@ public:
 
         kW = (float)GetWidth();
         kH = (float)GetHeight();
+        initializeEditorCursors();
+        loadEditorCache();
         computeLayout();
 
         // Inject context into the live level (no nodes yet)
@@ -976,6 +1548,8 @@ public:
 
     void Shutdown() override
     {
+        noteEngineChange("Editor shutdown");
+        releaseEditorCursors();
         editorLevel.Shutdown();
         if (pm.isOpen) pm.Save();
         ui.Release();
@@ -1010,6 +1584,7 @@ public:
             if ((float)ww != kW || (float)wh != kH) {
                 kW = (float)ww;
                 kH = (float)wh;
+                noteEngineChange("Window resized");
                 computeLayout();
                 if (state == State::Editor) {
                     if (pDockSpace) {
@@ -1048,7 +1623,7 @@ public:
         }
 
         ui.ProcessInput(inputManager);
-
+        updateEditorCursor();
         if (state == State::Editor) {
             if (inputManager.IsKeyPressed(SDL_SCANCODE_F2)) {
                 beginCBRenameSelected();
@@ -1059,6 +1634,10 @@ public:
                         inputManager.IsKeyDown(SDL_SCANCODE_RCTRL);
             if (ctrl && inputManager.IsKeyPressed(SDL_SCANCODE_Z)) undoStack.Undo();
             if (ctrl && inputManager.IsKeyPressed(SDL_SCANCODE_Y)) undoStack.Redo();
+            if (ctrl && (inputManager.IsKeyPressed(SDL_SCANCODE_EQUALS) || inputManager.IsKeyPressed(SDL_SCANCODE_KP_PLUS)))
+                adjustCodeEditorFontScale(+0.08f);
+            if (ctrl && (inputManager.IsKeyPressed(SDL_SCANCODE_MINUS) || inputManager.IsKeyPressed(SDL_SCANCODE_KP_MINUS)))
+                adjustCodeEditorFontScale(-0.08f);
         }
 
         if (state == State::Editor) {
@@ -1068,7 +1647,10 @@ public:
                 float my = inputManager.GetMouseY();
                 bool overCB = pContentBrow && pContentBrow->Contains(mx, my, 0.f, 0.f);
                 bool overHier = pHierarchy && pHierarchy->Contains(mx, my, 0.f, 0.f);
-                if (overCB && cbMenu) cbMenu->Open(mx, my);
+                if (overCB && cbMenu) {
+                    rebuildContentBrowserContextMenu();
+                    cbMenu->Open(mx, my);
+                }
                 else if (overHier && hierMenu) hierMenu->Open(mx, my);
             }
 
@@ -1108,6 +1690,10 @@ public:
             if (Logger::Dirty() && pConsoleSV) {
                 refreshConsole();
                 Logger::ClearDirty();
+            }
+
+            if (cacheDirty) {
+                saveEditorCache();
             }
         }
     }
@@ -1440,12 +2026,14 @@ private:
     void switchToEditor()
     {
         state = State::Editor;
+        cachePersistenceSuspended = true;
         ui.ClearRoots();
         clearEditorPtrs();
         resetTabsToSceneOnly();
         buildEditorUI();
         rebuildHierarchyTree();
         refreshContentBrowser();
+        cachePersistenceSuspended = false;
     }
 
     void rebuildSplash()
@@ -1474,6 +2062,7 @@ private:
 
     void rebuildEditorUI()
     {
+        cachePersistenceSuspended = true;
         int   selTabIdx = tabManager.ActiveIndex();
         ui.ClearRoots();
         clearEditorPtrs();
@@ -1481,6 +2070,7 @@ private:
         buildEditorUI();
         rebuildHierarchyTree();
         refreshContentBrowser();
+        cachePersistenceSuspended = false;
     }
 
     void clearEditorPtrs()
@@ -1493,6 +2083,10 @@ private:
         pHierarchy = nullptr; pInspector = nullptr; inspLastW = 0.f;
         pViewport = nullptr; pHierTree = nullptr; pCBTree = nullptr; pCBScroll = nullptr; pCBGrid = nullptr;
         cbTreeNodePaths.clear(); cbLastPanelW = 0.f; cbLastPanelH = 0.f;
+        pPluginWizardModal = nullptr;
+        tfPluginName = nullptr; tfPluginId = nullptr; tfPluginVersion = nullptr;
+        tfPluginCategory = nullptr; tfPluginSubcat = nullptr;
+        lblPluginWizardStat = nullptr;
         pScriptPanel = nullptr; pScriptEdit = nullptr;
         pScriptDock = nullptr; pDocumentFilesPanel = nullptr;
         pDocumentOutlinePanel = nullptr; pDocumentEditorPanel = nullptr;
@@ -1553,6 +2147,9 @@ private:
         pMenuBar->AddItem("FILE", "Open Project", [this]{ closeAndGoSplash(); openOpenProjectModal(); });
         pMenuBar->AddItem("FILE", "Open Scene",   [this]{ openSceneDialog(); });
         pMenuBar->AddSeparator("FILE");
+        pMenuBar->AddItem("FILE", "Plugins -> Adicionar",    [this]{ addPluginToProject(); });
+        pMenuBar->AddItem("FILE", "Plugins -> Criar Wizard", [this]{ openPluginWizardModal(); });
+        pMenuBar->AddSeparator("FILE");
         pMenuBar->AddItem("FILE", "Save Files",   [this]{ saveScene(); saveDirtyDocuments(); });
         pMenuBar->AddItem("FILE", "Save All",     [this]{ saveScene(); saveDirtyDocuments(); pm.Save(); });
         pMenuBar->AddSeparator("FILE");
@@ -1583,7 +2180,7 @@ private:
         pMenuBar->AddItem("TOOLS", "Open Atlas",        []{});
         pMenuBar->AddItem("TOOLS", "Sprite Tool",       []{});
         pMenuBar->AddSeparator("TOOLS");
-        pMenuBar->AddItem("TOOLS", "Open Equinox",      []{});
+        pMenuBar->AddItem("TOOLS", "Open Equinox",      [this]{ openEquinoxWorkspace(); });
         pMenuBar->AddItem("TOOLS", "Open Hurricane",    []{});
         pMenuBar->AddItem("TOOLS", "Open Level Script", []{});
         pMenuBar->AddSeparator("TOOLS");
@@ -1635,9 +2232,9 @@ private:
         pToolbar->AddButton("Config Cena", [](bool){}, false);
         pToolbar->AddButton("Ferramentas", [](bool){}, false);
         pToolbar->AddSeparator();
-        pToolbar->AddButton("Grid", [this](bool active){ viewportShowGrid = active; }, true);
+        pToolbar->AddButton("Grid", [this](bool active){ viewportShowGrid = active; noteEngineChange("Viewport grid toggled"); }, true);
         pToolbar->items.back().active = viewportShowGrid;
-        pToolbar->AddButton("Snap", [this](bool active){ viewportSnapToGrid = active; }, true);
+        pToolbar->AddButton("Snap", [this](bool active){ viewportSnapToGrid = active; noteEngineChange("Viewport snap toggled"); }, true);
         pToolbar->items.back().active = viewportSnapToGrid;
         pToolbar->AddButton("Enquadrar", [this](bool){ frameViewportSelection(); }, false);
         pToolbar->AddButton("Reset View", [this](bool){ resetViewportView(); }, false);
@@ -1667,15 +2264,17 @@ private:
         right->Dock(buildInspector(),           "Properties");
         bottomNode->Dock(buildContentBrowser(), "Content Browser");
         bottomNode->Dock(buildConsolePanel(),   "Console");
-        bottomNode->activeIdx = 0;
+        bottomNode->activeIdx = std::clamp(cacheBottomTrayActiveIdx, 0, (int)bottomNode->panels.size() - 1);
         bottomNode->applyPanelGeometry();
 
         left->SetLayout(pHierarchy, [this](float w, float h) {
             float pad = gStyle.padding;
             if (pHierTree) { pHierTree->w = w - pad * 2.f; pHierTree->h = h - pHierTree->y - pad; }
+            noteEngineChange("Hierarchy layout changed");
         });
         center->SetLayout(pViewport, [this](float w, float h) {
             if (pViewport) { pViewport->w = w; pViewport->h = h; }
+            noteEngineChange("Viewport layout changed");
         });
         bottomNode->SetLayout(pContentBrow, [this](float w, float h) {
             cbLastPanelW = w;
@@ -1711,13 +2310,15 @@ private:
                     pCBGrid->MarkDirty();
                 }
             }
+            noteEngineChange("Content browser layout changed");
         });
         bottomNode->SetLayout(pConsolePanel, [this](float w, float h) {
             float pad = gStyle.padding;
             if (pConsoleSV) { pConsoleSV->w = w - pad * 2.f; pConsoleSV->h = h - pConsoleSV->y - pad; }
+            noteEngineChange("Console layout changed");
         });
         right->SetLayout(pInspector, [this](float w, float /*h*/) {
-            if (std::abs(w - inspLastW) > 0.5f) { inspLastW = w; refreshInspector(); }
+            if (std::abs(w - inspLastW) > 0.5f) { inspLastW = w; refreshInspector(); noteEngineChange("Inspector layout changed"); }
         });
         if (pInspector && pInspector->w > 0.f) {
             inspLastW = pInspector->w;
@@ -1816,6 +2417,7 @@ private:
         ddType->onSelect = [this](int idx, const std::string&) {
             cbTypeFilter = idx;
             refreshContentBrowser();
+            noteEngineChange("Content browser type filter changed");
         };
 
         auto* ddView = pContentBrow->Add<Dropdown>(panelW - pad - btnW - 102.f, ty, 96.f, lh + 2.f, "View");
@@ -1825,6 +2427,7 @@ private:
         ddView->onSelect = [this](int idx, const std::string&) {
             cbViewMode = idx;
             refreshContentBrowser();
+            noteEngineChange("Content browser view mode changed");
         };
         ty += lh + 6.f;
 
@@ -2307,60 +2910,274 @@ private:
     }
 
     // ── Context menus ─────────────────────────────────────────────────────
+    void registerHierarchyElements()
+    {
+        auto& reg = EditorElementRegistry::Instance();
+        reg.Clear();
+
+        reg.Register({
+            "core.hierarchy.add_child_node",
+            "Add Child Node",
+            "Hierarchy",
+            "Nodes",
+            EditorElementKind::NodeFactory,
+            EditorElementSource::Core,
+            10,
+            true,
+            [this]{ addChildToSelected(); }
+        });
+
+        reg.Register({
+            "core.hierarchy.add_script_component",
+            "Add Script Component",
+            "Hierarchy",
+            "Components",
+            EditorElementKind::ComponentFactory,
+            EditorElementSource::Core,
+            20,
+            true,
+            [this]{
+                if (selectedNode && !selectedNode->HasComponent<NucleoScriptComponent>()) {
+                    selectedNode->AddComponent<NucleoScriptComponent>();
+                    refreshInspector();
+                }
+            }
+        });
+    }
+
+    void buildHierarchyContextMenuFromRegistry()
+    {
+        if (!hierMenu) return;
+
+        auto& reg = EditorElementRegistry::Instance();
+        auto groupedNode = reg.GroupByCategory(EditorElementKind::NodeFactory);
+        auto groupedComp = reg.GroupByCategory(EditorElementKind::ComponentFactory);
+
+        auto appendGrouped = [this](const EditorElementRegistry::CategoryMap& grouped) {
+            for (const auto& [category, subMap] : grouped) {
+                for (const auto& [subcategory, bucket] : subMap) {
+                    for (const auto& d : bucket) {
+                        std::string label = category + "/" + subcategory + "/" + d.label;
+                        hierMenu->AddItem(label.c_str(), d.action, d.enabled);
+                    }
+                }
+            }
+        };
+
+        appendGrouped(groupedNode);
+        appendGrouped(groupedComp);
+    }
+
+    void revealSelectedOnExplorer()
+    {
+        if (cbSelectedPath.empty()) return;
+
+        std::error_code ec;
+        fs::path selected(cbSelectedPath);
+        if (!fs::exists(selected, ec)) {
+            Logger::LogWarning("[Editor] Reveal: selected path does not exist.");
+            return;
+        }
+
+        fs::path openDir = fs::is_directory(selected, ec) ? selected : selected.parent_path();
+        if (openDir.empty()) openDir = selected;
+
+        std::string url = "file:///" + openDir.generic_string();
+        if (!SDL_OpenURL(url.c_str())) {
+            Logger::LogWarning("[Editor] Reveal on Explorer failed.");
+        }
+    }
+
+    void createInstanceFromSelectedScript()
+    {
+        if (cbSelectedPath.empty()) return;
+
+        fs::path selected(cbSelectedPath);
+        std::error_code ec;
+        if (!fs::exists(selected, ec) || !fs::is_regular_file(selected, ec)) return;
+
+        std::string ext = LightningEditor::ToLowerCopy(selected.extension().string());
+        if (ext != ".spark" && ext != ".cs") {
+            Logger::LogInfo("[Editor] Create Instance: select Ignite/C# script.");
+            return;
+        }
+
+        const std::string body =
+            "PREFAB \"" + selected.stem().string() + "Instance\"\n"
+            "NODE Node \"" + selected.stem().string() + "\"\n"
+            "  TRANSFORM 0 0 0  0 0 0  1 1 1\n"
+            "  TAG \"ScriptInstance\"\n"
+            "  ACTIVE 1\n"
+            "  SCRIPT \"" + selected.filename().string() + "\"\n"
+            "END\n";
+
+        createAssetInCurrentDir(selected.stem().string() + "_Instance", ".lprefab", body);
+    }
+
+    void rebuildContentBrowserContextMenu()
+    {
+        if (!cbMenu) return;
+
+        cbMenu->items.clear();
+        cbMenu->hoverIndex = -1;
+
+        cbMenu->AddItem("Importar arquivo aqui", [this]{ importFileToCurrentDir(); });
+        cbMenu->AddItem("Nova pasta", [this]{ createFolderInCurrentDir(); });
+        cbMenu->AddItem("Renomear", [this]{ beginCBRenameSelected(); }, !cbSelectedPath.empty());
+        cbMenu->AddSeparator();
+        cbMenu->AddItem("Propriedades", [this]{ openSelectedCBProperties(); }, !cbSelectedPath.empty());
+        cbMenu->AddSeparator();
+
+        auto addCreate = [this](const std::string& label,
+                                const std::string& stem,
+                                const std::string& ext,
+                                const std::string& initial) {
+            cbMenu->AddItem(label.c_str(), [this, stem, ext, initial]{
+                createAssetInCurrentDir(stem, ext, initial);
+            });
+        };
+
+        addCreate("Add Prefab", "NewPrefab", ".lprefab",
+                  "PREFAB \"NewPrefab\"\n"
+                  "NODE Node \"Root\"\n"
+                  "  TRANSFORM 0 0 0  0 0 0  1 1 1\n"
+                  "  TAG \"\"\n"
+                  "  ACTIVE 1\n"
+                  "END\n");
+
+        addCreate("Scripts/Ignite (Graph)", "NewIgniteScript", ".spark",
+                  "class NewIgniteScript {\n"
+                  "    void OnStart() {}\n"
+                  "    void Update(float dt) {}\n"
+                  "}\n");
+        addCreate("Scripts/C#", "NewScript", ".cs",
+                  "using System;\n\n"
+                  "public class NewScript {\n"
+                  "    public void OnStart() {}\n"
+                  "    public void OnUpdate(float dt) {}\n"
+                  "}\n");
+        addCreate("Scripts/Enum", "NewEnum", ".cs",
+                  "public enum NewEnum {\n"
+                  "    None = 0\n"
+                  "}\n");
+        addCreate("Scripts/Struct", "NewStruct", ".cs",
+                  "public struct NewStruct {\n"
+                  "    public int Id;\n"
+                  "}\n");
+        addCreate("Scripts/Interface", "INewInterface", ".cs",
+                  "public interface INewInterface {\n"
+                  "    void Execute();\n"
+                  "}\n");
+        addCreate("Scripts/Misselaneus/DataSet", "NewDataSet", ".json", "{\n  \"items\": []\n}\n");
+        addCreate("Scripts/Curves/Float Curve", "FloatCurve", ".curve", "type: float\nkeys: []\n");
+        addCreate("Scripts/Curves/Linear Curves", "LinearCurve", ".curve", "type: linear\nkeys: []\n");
+        addCreate("Scripts/Curves/Color Curves", "ColorCurve", ".curve", "type: color\nkeys: []\n");
+
+        addCreate("Animation/ScriptAnimation", "NewScriptAnimation", ".spark", "class NewScriptAnimation {}\n");
+        addCreate("Animation/RIG/ControlRig", "NewControlRig", ".lrig", "rig: control\n");
+        addCreate("Animation/RIG/RetargetAnimation", "NewRetarget", ".lretarget", "retarget: {}\n");
+        addCreate("Animation/2D/Rig2D", "NewRig2D", ".lrig2d", "rig2d: {}\n");
+
+        addCreate("VisionDirect/Filmaker", "NewFilmaker", ".lfilm", "filmaker: {}\n");
+        addCreate("VisionDirect/Cutscene", "NewCutscene", ".lcutscene", "timeline: []\n");
+        addCreate("VisionDirect/Capture Scene", "NewCaptureScene", ".lcapture", "capture: {}\n");
+
+        addCreate("AI/Behavior Tree", "NewBehaviorTree", ".btree", "root: Selector\nchildren: []\n");
+        addCreate("AI/Blackboard", "NewBlackboard", ".blackboard", "entries: []\n");
+        addCreate("AI/Pathfinder", "NewPathfinder", ".json", "{\n  \"grid\": []\n}\n");
+        addCreate("AI/Task Rules", "NewTaskRules", ".json", "{\n  \"rules\": []\n}\n");
+
+        addCreate("Textures/2D/Sprites2D", "NewSprite2D", ".sprite", "sprite: {}\n");
+        addCreate("Textures/2D/Sprites3D", "NewSprite3D", ".sprite3d", "sprite3d: {}\n");
+        addCreate("Textures/2D/AnimationSprites", "NewAnimSprite", ".animsprite", "frames: []\n");
+        addCreate("Textures/2D/Billboard", "NewBillboard", ".billboard", "billboard: {}\n");
+        addCreate("Textures/2D/TileSet", "NewTileSet", ".tileset", "tiles: []\n");
+        addCreate("Textures/2D/TileMap", "NewTileMap", ".tilemap", "layers: []\n");
+        addCreate("Textures/Cubemap", "NewCubemap", ".cubemap", "faces: []\n");
+        addCreate("Textures/RenderTargets (RT)", "NewRenderTarget", ".rt", "size: 1024x1024\n");
+        addCreate("Textures/VolumeTextures", "NewVolumeTexture", ".vtex", "depth: 16\n");
+        addCreate("Textures/VirtualTextures", "NewVirtualTexture", ".virttex", "virtual: true\n");
+
+        addCreate("Materials/Material", "NewMaterial", ".lmat", "shader: default\n");
+        addCreate("Materials/Function Material", "NewMaterialFunction", ".lmatfunc", "nodes: []\n");
+        addCreate("Materials/Instances Material", "NewMaterialInstance", ".lmatinst", "parent: NewMaterial\n");
+        addCreate("Materials/Layer Material", "NewMaterialLayer", ".lmatlayer", "layers: []\n");
+
+        cbMenu->AddItem("Equinox/Equinox Shader Composer", [this] {
+            createEquinoxAssetInCurrentDir(EquinoxAssetType::ShaderComposer);
+        });
+        cbMenu->AddItem("Equinox/Texture Generator", [this] {
+            createEquinoxAssetInCurrentDir(EquinoxAssetType::TextureGenerator);
+        });
+
+        addCreate("Hurricane/Particle System", "NewParticleSystem", ".hurricane", "emitters: []\n");
+        addCreate("Hurricane/Fluids Sim", "NewFluidSim", ".fluid", "simulation: fluid\n");
+
+        addCreate("Audio/Spatial Sound", "NewSpatialSound", ".laudio", "spatial: true\n");
+        addCreate("Audio/Audio Mixer", "NewAudioMixer", ".lmixer", "buses: []\n");
+
+        addCreate("Level/Scene2D", "NewScene2D", ".lescene", "# Lightning Engine Scene 1.0\n");
+        addCreate("Level/Scene3D", "NewScene3D", ".lescene", "# Lightning Engine Scene 1.0\n");
+
+        if (cbSelectedPath.empty()) return;
+
+        fs::path selected(cbSelectedPath);
+        std::error_code ec;
+        if (!fs::exists(selected, ec) || !fs::is_regular_file(selected, ec)) return;
+
+        std::string ext = LightningEditor::ToLowerCopy(selected.extension().string());
+        cbMenu->AddSeparator();
+        cbMenu->AddItem("Reveal on Explorer Files", [this]{ revealSelectedOnExplorer(); });
+
+        if (EquinoxFileManager::IsEquinoxAssetPath(selected.string())) {
+            cbMenu->AddItem("Equinox/Abrir no Editor", [this, selected] {
+                openAssetContextTab(selected.string());
+            });
+            cbMenu->AddItem("Equinox/Abrir Workspace", [this] {
+                openEquinoxWorkspace();
+            });
+            cbMenu->AddItem("Equinox/Novo Shader Composer", [this] {
+                createEquinoxAssetInCurrentDir(EquinoxAssetType::ShaderComposer);
+            });
+            cbMenu->AddItem("Equinox/Novo Texture Generator", [this] {
+                createEquinoxAssetInCurrentDir(EquinoxAssetType::TextureGenerator);
+            });
+        }
+
+        if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".tga") {
+            cbMenu->AddItem("Sprite Actions/Convert in Sprites", [this, selected] {
+                createAssetInCurrentDir(selected.stem().string() + "_Sprite", ".sprite",
+                                        "source: \"" + selected.filename().string() + "\"\n");
+            });
+            cbMenu->AddItem("Sprite Actions/Convert in TileSet", [this, selected] {
+                createAssetInCurrentDir(selected.stem().string() + "_TileSet", ".tileset",
+                                        "source: \"" + selected.filename().string() + "\"\n"
+                                        "tiles: []\n");
+            });
+        }
+
+        if (ext == ".spark" || ext == ".cs") {
+            cbMenu->AddItem("Criar Instancia", [this]{ createInstanceFromSelectedScript(); });
+            cbMenu->AddItem("Mudar Heranca", [this, selected]{
+                Logger::LogInfo("[Editor] Heranca: abra e edite o tipo base em " + selected.filename().string());
+                openAssetContextTab(selected.string());
+            });
+        }
+    }
+
     void buildContextMenus()
     {
         hierMenu = ui.AddRoot<ContextMenu>();
-        hierMenu->AddItem("Add Child Node",  [this]{ addChildToSelected(); });
+        registerHierarchyElements();
+        buildHierarchyContextMenuFromRegistry();
+        hierMenu->AddSeparator();
         hierMenu->AddItem("Duplicate",       [this]{ duplicateSelected(); });
         hierMenu->AddSeparator();
         hierMenu->AddItem("Delete",          [this]{ deleteSelected(); });
-        hierMenu->AddSeparator();
-        hierMenu->AddItem("Add Script",      [this]{
-            if (selectedNode && !selectedNode->HasComponent<NucleoScriptComponent>()) {
-                selectedNode->AddComponent<NucleoScriptComponent>();
-                refreshInspector();
-            }
-        });
         ui.BringToFront(hierMenu);
 
         cbMenu = ui.AddRoot<ContextMenu>();
-        cbMenu->AddItem("Importar arquivo aqui", [this]{ importFileToCurrentDir(); });
-        cbMenu->AddItem("Nova pasta", [this]{ createFolderInCurrentDir(); });
-        cbMenu->AddSeparator();
-        cbMenu->AddItem("Propriedades", [this]{ openSelectedCBProperties(); });
-        cbMenu->AddSeparator();
-        cbMenu->AddItem("Novo Script (.spark)", [this]{
-            createAssetInCurrentDir("NewScript", ".spark",
-                "class NewScript {\n"
-                "    void OnStart() {}\n"
-                "    void Update(float dt) {}\n"
-                "}\n");
-        });
-        cbMenu->AddItem("Novo Shader Vert (.vert)", [this]{
-            createAssetInCurrentDir("new_shader", ".vert",
-                "#version 450\n\n"
-                "layout(location = 0) in vec3 inPos;\n"
-                "void main() { gl_Position = vec4(inPos, 1.0); }\n");
-        });
-        cbMenu->AddItem("Novo Shader Frag (.frag)", [this]{
-            createAssetInCurrentDir("new_shader", ".frag",
-                "#version 450\n\n"
-                "layout(location = 0) out vec4 outColor;\n"
-                "void main() { outColor = vec4(1.0); }\n");
-        });
-        cbMenu->AddItem("Novo Prefab (.lprefab)", [this]{
-            createAssetInCurrentDir("NewPrefab", ".lprefab",
-                "PREFAB \"NewPrefab\"\n"
-                "NODE Node \"Root\"\n"
-                "  TRANSFORM 0 0 0  0 0 0  1 1 1\n"
-                "  TAG \"\"\n"
-                "  ACTIVE 1\n"
-                "END\n");
-        });
-        cbMenu->AddItem("Novo Level (.lescene)", [this]{
-            createAssetInCurrentDir("NewScene", ".lescene",
-                "# Lightning Engine Scene 1.0\n");
-        });
+        rebuildContentBrowserContextMenu();
         ui.BringToFront(cbMenu);
     }
 
@@ -2548,12 +3365,14 @@ private:
         pScriptEdit = pScriptPanel->Add<RichText>(pad, ty + gStyle.lineH, spW - pad * 2.f, rh);
         pScriptEdit->syntax = RichText::SyntaxMode::None;
         pScriptEdit->SetText("");
+        applyEditorTextPreferences(pScriptEdit);
 
         if (!scriptPath.empty()) {
             auto scriptTab = LightningEditor::BuildAssetTab(scriptPath);
             auto content = LightningEditor::BuildDocumentContent(scriptTab);
             pScriptEdit->syntax = content.syntax;
             pScriptEdit->SetText(content.bodyText);
+            applyEditorTextPreferences(pScriptEdit);
         }
     }
 
@@ -2586,6 +3405,8 @@ private:
         if (!pBottomTrayNode || pBottomTrayNode->panels.empty()) return;
         if ((int)pBottomTrayNode->panels.size() == 1) return;
         pBottomTrayNode->activeIdx = (pBottomTrayNode->activeIdx == 1) ? 0 : 1;
+        cacheBottomTrayActiveIdx = pBottomTrayNode->activeIdx;
+        noteEngineChange("Container state changed: bottom tray tab");
         pBottomTrayNode->applyPanelGeometry();
     }
 
@@ -2679,6 +3500,7 @@ private:
         };
 
         LightningEditor::RenderDocumentWorkspace(tabManager, context);
+        applyEditorTextPreferences(pScriptDockEdit);
     }
 
     // ── Footer ────────────────────────────────────────────────────────────
@@ -2711,6 +3533,7 @@ private:
         Node* raw = node.get();
         editorLevel.AddNode(std::move(node));
         rebuildHierarchyTree();
+        noteEngineChange("Node added: " + name);
 
         // Push undo record (action already done above)
         // Redo = re-add, Undo = remove
@@ -2735,6 +3558,7 @@ private:
         auto child = std::make_unique<Node>("Node");
         selectedNode->AddChild(std::move(child));
         rebuildHierarchyTree();
+        noteEngineChange("Child node added");
     }
 
     void duplicateSelected()
@@ -2743,11 +3567,13 @@ private:
         auto clone = selectedNode->Clone();
         editorLevel.AddNode(std::move(clone));
         rebuildHierarchyTree();
+        noteEngineChange("Node duplicated");
     }
 
     void deleteSelected()
     {
         if (!selectedNode) return;
+        std::string deletedName = selectedNode->name;
         // Capture state for undo
         std::string name = selectedNode->name;
         std::string tag  = selectedNode->tag;
@@ -2760,6 +3586,7 @@ private:
         selectedNode = nullptr;
         rebuildHierarchyTree();
         refreshInspector();
+        noteEngineChange("Node deleted: " + deletedName);
 
         // Push undo record (action already done above)
         // Redo = delete again (find by name), Undo = re-create
@@ -2800,6 +3627,7 @@ private:
         syncPrimarySceneTabLabel();
         rebuildHierarchyTree();
         refreshInspector();
+        noteEngineChange("New scene created");
     }
 
     void saveScene()
@@ -2808,6 +3636,7 @@ private:
         pm.project.lastScene = currentScenePath;
         pm.SaveScene(currentScenePath, editorLevel);
         pm.Save();
+        noteEngineChange("Scene saved: " + currentScenePath);
     }
 
     void saveDirtyDocuments()

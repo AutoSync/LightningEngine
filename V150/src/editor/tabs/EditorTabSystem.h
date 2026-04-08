@@ -18,6 +18,7 @@ enum class EditorTabKind {
     Texture,
     Shader,
     Material,
+    Equinox,
     Particle,
     Prefab,
     StaticMesh,
@@ -67,7 +68,7 @@ inline std::string ToLowerCopy(std::string text)
 inline std::string SceneTabLabel(const std::string& sceneRelPath)
 {
     if (sceneRelPath.empty()) return "Cena";
-    std::string label = fs::path(sceneRelPath).filename().string();
+    std::string label = fs::path(sceneRelPath).stem().string();
     return label.empty() ? "Cena" : label;
 }
 
@@ -91,7 +92,8 @@ inline EditorTabDescriptor BuildAssetTab(const std::string& absPath)
     EditorTabDescriptor tab;
     tab.id = absPath;
     tab.path = absPath;
-    tab.label = fs::path(absPath).filename().string();
+    tab.label = fs::path(absPath).stem().string();
+    if (tab.label.empty()) tab.label = fs::path(absPath).filename().string();
     tab.extension = ToLowerCopy(fs::path(absPath).extension().string());
     tab.layout = EditorTabLayout::DocumentWorkspace;
     tab.closable = true;
@@ -108,6 +110,11 @@ inline EditorTabDescriptor BuildAssetTab(const std::string& absPath)
                tab.extension == ".spv") {
         tab.kind = EditorTabKind::Shader;
         tab.accent = { 72, 190, 90 };
+    } else if (tab.extension == ".equinox" || tab.extension == ".etexgen" ||
+               tab.extension == ".lmat" || tab.extension == ".lmatfunc" ||
+               tab.extension == ".lmatinst" || tab.extension == ".lmatlayer") {
+        tab.kind = EditorTabKind::Equinox;
+        tab.accent = { 60, 150, 80 };
     } else if (tab.extension == ".mat" || tab.extension == ".material") {
         tab.kind = EditorTabKind::Material;
         tab.accent = { 60, 150, 80 };
@@ -140,6 +147,7 @@ inline EditorTabDescriptor BuildAssetTab(const std::string& absPath)
 inline bool IsTextDocument(const EditorTabDescriptor& tab)
 {
     if (tab.kind == EditorTabKind::Script ||
+        tab.kind == EditorTabKind::Equinox ||
         tab.kind == EditorTabKind::Material ||
         tab.kind == EditorTabKind::Config) {
         return true;

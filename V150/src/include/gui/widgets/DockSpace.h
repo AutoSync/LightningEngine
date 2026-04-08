@@ -722,7 +722,6 @@ private:
             n->hoverCloseBtn = true;
             if (lclick && n->HasValidActivePanel()) {
                 auto owned = n->Undock(n->panels[n->activeIdx].widget.get());
-                owned.reset();  // destroy panel
                 if (n->panels.empty()) n->CollapseIfEmpty();
             }
             return true;
@@ -749,7 +748,6 @@ private:
                         n->hoverTabDot = i;
                         if (lclick) {
                             auto owned = n->Undock(n->panels[i].widget.get());
-                            owned.reset();
                             if (n->panels.empty()) n->CollapseIfEmpty();
                             return true;
                         }

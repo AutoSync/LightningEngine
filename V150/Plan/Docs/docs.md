@@ -1,5 +1,13 @@
 # Lightning Engine — Documentação
 
+## Hub de documentacao ativa
+
+- Documentacao central fora de Plan: [../../Docs/README.md](../../Docs/README.md)
+
+## Documentacao complementar
+
+- Estruturacao dos elementos da engine e expansao por codigo: [EstruturaElementosEngine.md](EstruturaElementosEngine.md)
+
 > Versão 0.15.0 · Windows / Linux · Backend: SDL3 GPU (Vulkan / D3D12 / Metal — selecionado automaticamente)
 
 ---

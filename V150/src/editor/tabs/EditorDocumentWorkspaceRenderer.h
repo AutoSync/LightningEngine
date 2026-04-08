@@ -2,6 +2,7 @@
 
 #include "EditorDocumentContent.h"
 #include "EditorDocumentPageContext.h"
+#include "EditorEquinoxDocumentPage.h"
 #include "EditorFallbackDocumentPage.h"
 #include "EditorTextDocumentPage.h"
 #include "EditorTextureDocumentPage.h"
@@ -110,7 +111,64 @@ inline void RenderDocumentWorkspace(const EditorTabManager& tabManager,
     fileLabel->SetColor(Titan::gStyle.textDim.r, Titan::gStyle.textDim.g, Titan::gStyle.textDim.b);
     editorY += lh + 4.f;
 
-    if (RenderTextDocumentPage(content, context, pad, editorY)) return;
+    if (RenderEquinoxDocumentPage(*active, content, context, pad, lh, infoY, editorY)) return;
+
+    if (RenderTextDocumentPage(content, context, pad, editorY)) {
+        auto* editor = (context.activeTextEditor) ? *context.activeTextEditor : nullptr;
+
+        auto* lintTitle = context.outlinePanel->Add<Titan::Label>(pad, infoY, "Diagnosticos (Lint)");
+        lintTitle->h = lh;
+        lintTitle->SetColor(Titan::gStyle.textBright.r, Titan::gStyle.textBright.g, Titan::gStyle.textBright.b);
+        infoY += lh + 4.f;
+
+        if (!editor) {
+            auto* noEditor = context.outlinePanel->Add<Titan::Label>(pad, infoY, "Editor de texto indisponivel.");
+            noEditor->h = lh;
+            noEditor->SetColor(Titan::gStyle.textDim.r, Titan::gStyle.textDim.g, Titan::gStyle.textDim.b);
+            return;
+        }
+
+        const auto& diagnostics = editor->GetDiagnostics();
+        if (diagnostics.empty()) {
+            auto* ok = context.outlinePanel->Add<Titan::Label>(pad, infoY, "Sem diagnosticos.");
+            ok->h = lh;
+            ok->SetColor(110, 190, 130);
+            return;
+        }
+
+        float ow = (context.outlinePanel->w > 0.f) ? context.outlinePanel->w : 220.f;
+        int shown = 0;
+        for (const auto& d : diagnostics) {
+            if (shown >= 12) break; // keep panel compact
+
+            const char* sev = (d.severity == Titan::RichText::LintSeverity::Error)
+                ? "Erro"
+                : (d.severity == Titan::RichText::LintSeverity::Warning ? "Aviso" : "Info");
+            std::string label = "L" + std::to_string(d.line + 1) + " [" + sev + "] " + d.message;
+
+            auto* btn = context.outlinePanel->Add<Titan::Button>(
+                pad, infoY, ow - pad * 2.f, lh + 2.f, label.c_str());
+
+            if (d.severity == Titan::RichText::LintSeverity::Error) btn->SetColor(220, 90, 90);
+            else if (d.severity == Titan::RichText::LintSeverity::Warning) btn->SetColor(220, 170, 80);
+            else btn->SetColor(100, 160, 220);
+
+            btn->onClick = [editor, line = d.line]() {
+                if (editor) editor->MoveCursorToLine(line);
+            };
+
+            infoY += lh + 4.f;
+            ++shown;
+        }
+
+        if ((int)diagnostics.size() > shown) {
+            std::string more = "+" + std::to_string((int)diagnostics.size() - shown) + " diagnosticos";
+            auto* rest = context.outlinePanel->Add<Titan::Label>(pad, infoY, more.c_str());
+            rest->h = lh;
+            rest->SetColor(Titan::gStyle.textDim.r, Titan::gStyle.textDim.g, Titan::gStyle.textDim.b);
+        }
+        return;
+    }
     if (RenderTextureDocumentPage(*active, content, context, pad, lh, infoY, editorY)) return;
     RenderFallbackDocumentPage(context, pad, lh, editorY);
 }

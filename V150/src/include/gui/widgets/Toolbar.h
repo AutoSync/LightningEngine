@@ -65,7 +65,7 @@ public:
                 cx += 6.f; // separator width
                 continue;
             }
-            float bw = itemWidth(it);
+            float bw = it.bw > 0.f ? it.bw : itemWidth(it);
             if (mx >= cx && mx < cx + bw) {
                 hoverIdx = i;
                 if (lclick) {

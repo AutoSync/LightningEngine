@@ -23,13 +23,236 @@
 //   lib.Add("fire", fireMat);
 //   MaterialInstance* m = lib.Get("fire");
 #pragma once
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "Spark.h"
 #include "Texture.h"
 #include "Renderer.h"
 
 namespace LightningEngine {
+
+enum class EquinoxAssetType {
+    Unknown,
+    ShaderComposer,
+    TextureGenerator,
+};
+
+struct EquinoxDocumentInfo {
+    EquinoxAssetType type = EquinoxAssetType::Unknown;
+    std::string path;
+    std::string name;
+    std::string displayName;
+    std::string extension;
+    std::string stage = "fragment";
+    std::string output;
+    int nodeCount = 0;
+    int parameterCount = 0;
+    int outputCount = 0;
+    bool exists = false;
+    bool textual = false;
+};
+
+class EquinoxFileManager {
+public:
+    static std::string ToLowerCopy(std::string text)
+    {
+        std::transform(text.begin(), text.end(), text.begin(),
+            [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+        return text;
+    }
+
+    static std::string TrimCopy(const std::string& text)
+    {
+        std::size_t start = 0;
+        while (start < text.size() && std::isspace(static_cast<unsigned char>(text[start]))) ++start;
+        std::size_t end = text.size();
+        while (end > start && std::isspace(static_cast<unsigned char>(text[end - 1]))) --end;
+        return text.substr(start, end - start);
+    }
+
+    static EquinoxAssetType DetectAssetTypeFromExtension(const std::string& extension)
+    {
+        const std::string ext = ToLowerCopy(extension);
+        if (ext == ".equinox" || ext == ".lmat" || ext == ".lmatfunc" ||
+            ext == ".lmatinst" || ext == ".lmatlayer") {
+            return EquinoxAssetType::ShaderComposer;
+        }
+        if (ext == ".etexgen") return EquinoxAssetType::TextureGenerator;
+        return EquinoxAssetType::Unknown;
+    }
+
+    static EquinoxAssetType DetectAssetTypeFromPath(const std::string& path)
+    {
+        return DetectAssetTypeFromExtension(std::filesystem::path(path).extension().string());
+    }
+
+    static bool IsEquinoxExtension(const std::string& extension)
+    {
+        return DetectAssetTypeFromExtension(extension) != EquinoxAssetType::Unknown;
+    }
+
+    static bool IsEquinoxAssetPath(const std::string& path)
+    {
+        return DetectAssetTypeFromPath(path) != EquinoxAssetType::Unknown;
+    }
+
+    static const char* DisplayName(EquinoxAssetType type)
+    {
+        switch (type) {
+        case EquinoxAssetType::ShaderComposer: return "Equinox Shader Composer";
+        case EquinoxAssetType::TextureGenerator: return "Equinox Texture Generator";
+        default: return "Equinox Asset";
+        }
+    }
+
+    static const char* DefaultStem(EquinoxAssetType type)
+    {
+        switch (type) {
+        case EquinoxAssetType::ShaderComposer: return "NewEquinoxComposer";
+        case EquinoxAssetType::TextureGenerator: return "NewTextureGenerator";
+        default: return "NewEquinoxAsset";
+        }
+    }
+
+    static const char* DefaultExtension(EquinoxAssetType type)
+    {
+        switch (type) {
+        case EquinoxAssetType::ShaderComposer: return ".equinox";
+        case EquinoxAssetType::TextureGenerator: return ".etexgen";
+        default: return "";
+        }
+    }
+
+    static std::string BuildDefaultDocument(EquinoxAssetType type,
+                                            const std::string& assetName = "")
+    {
+        const std::string safeName = assetName.empty() ? DefaultStem(type) : assetName;
+
+        if (type == EquinoxAssetType::TextureGenerator) {
+            return
+                "type: texture_generator\n"
+                "name: " + safeName + "\n"
+                "generator:\n"
+                "  width: 1024\n"
+                "  height: 1024\n"
+                "  format: rgba8\n"
+                "  output: " + safeName + ".png\n"
+                "graph:\n"
+                "  - node: Noise\n"
+                "    id: base_noise\n"
+                "  - node: Output\n"
+                "    id: final_output\n";
+        }
+
+        return
+            "type: shader_composer\n"
+            "name: " + safeName + "\n"
+            "shader:\n"
+            "  stage: fragment\n"
+            "  output: material\n"
+            "parameters:\n"
+            "  - name: BaseColor\n"
+            "    kind: color\n"
+            "graph:\n"
+            "  - node: TextureSample\n"
+            "    id: albedo\n"
+            "  - node: Output\n"
+            "    id: surface\n";
+    }
+
+    static bool ReadTextFile(const std::string& path, std::string& outText)
+    {
+        std::ifstream in(path, std::ios::binary);
+        if (!in) return false;
+
+        std::ostringstream buffer;
+        buffer << in.rdbuf();
+        outText = buffer.str();
+
+        const std::size_t checkLen = std::min<std::size_t>(outText.size(), 2048);
+        for (std::size_t i = 0; i < checkLen; ++i) {
+            if (outText[i] == '\0') return false;
+        }
+        return true;
+    }
+
+    static bool WriteTextFile(const std::string& path, const std::string& text)
+    {
+        std::ofstream out(path, std::ios::binary | std::ios::trunc);
+        if (!out) return false;
+        out << text;
+        return static_cast<bool>(out);
+    }
+
+    static EquinoxDocumentInfo InspectDocument(const std::string& path,
+                                               const std::string& bodyText = "")
+    {
+        EquinoxDocumentInfo info;
+        info.path = path;
+        info.extension = ToLowerCopy(std::filesystem::path(path).extension().string());
+        info.type = DetectAssetTypeFromExtension(info.extension);
+        info.displayName = DisplayName(info.type);
+        info.name = std::filesystem::path(path).stem().string();
+        info.exists = !path.empty() && std::filesystem::exists(std::filesystem::path(path));
+
+        std::string text = bodyText;
+        if (text.empty() && info.exists) {
+            if (!ReadTextFile(path, text)) return info;
+        }
+
+        if (text.empty()) return info;
+        info.textual = true;
+
+        auto extractValue = [](const std::string& line) {
+            const std::size_t colon = line.find(':');
+            if (colon == std::string::npos) return std::string();
+            return TrimCopy(line.substr(colon + 1));
+        };
+
+        std::istringstream stream(text);
+        std::string line;
+        while (std::getline(stream, line)) {
+            const std::string trimmed = TrimCopy(line);
+            if (trimmed.empty() || trimmed[0] == '#') continue;
+
+            const std::string lower = ToLowerCopy(trimmed);
+            if (lower.rfind("name:", 0) == 0) {
+                const std::string value = extractValue(trimmed);
+                if (!value.empty()) info.name = value;
+            } else if (lower.find("stage:") != std::string::npos) {
+                const std::string value = extractValue(trimmed);
+                if (!value.empty()) info.stage = value;
+            } else if (lower.find("output:") != std::string::npos) {
+                const std::string value = extractValue(trimmed);
+                if (!value.empty()) info.output = value;
+                ++info.outputCount;
+            }
+
+            if (lower.rfind("- node:", 0) == 0 || lower.find(" node:") != std::string::npos) {
+                ++info.nodeCount;
+            } else if (lower.rfind("- ", 0) == 0 && (lower.find("id:") != std::string::npos ||
+                       lower.find("kind:") != std::string::npos || lower.find("type:") != std::string::npos)) {
+                ++info.nodeCount;
+            }
+
+            if (lower.find("parameter") != std::string::npos || lower.find("uniform:") != std::string::npos ||
+                lower.find("param:") != std::string::npos || lower.find("kind:") != std::string::npos) {
+                ++info.parameterCount;
+            }
+        }
+
+        if (info.output.empty()) {
+            info.output = (info.type == EquinoxAssetType::TextureGenerator) ? "generated.png" : "material";
+        }
+        return info;
+    }
+};
 
 // ── Color (linear float RGBA) ─────────────────────────────────────────────────
 

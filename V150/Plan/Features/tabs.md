@@ -14,6 +14,6 @@ Baseado no roadmap v0.15.0, com status unificado por contexto.
 
 ## Pendente
 
-- Expansão de editor visual por tipo de asset
-- Integração mais profunda com preview em tempo real e customização de estilo
-- Evolução de workflows de edição multi-documento
+- [ ] Expansão de editor visual por tipo de asset
+- [ ] Integração mais profunda com preview em tempo real e customização de estilo
+- [ ] Evolução de workflows de edição multi-documento
