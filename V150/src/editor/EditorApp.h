@@ -32,6 +32,7 @@
 #include "../include/UndoStack.h"
 #include "../include/NativeDialog.h"
 #include "../include/GamePreviewWindow.h"
+#include "../include/EditorBridge.h"
 #include "../include/Equinox.h"
 #include "../include/gui/TitanUI.h"
 #include "../include/gui/TitanStyle.h"
@@ -1505,6 +1506,17 @@ private:
         refreshDocumentWorkspace();
     }
 
+    void syncBridgeState(const std::string& lastChange = {})
+    {
+        EditorBridge::SetRunning(isPlaying);
+        EditorBridge::SetFps(curFps);
+        EditorBridge::SetScene(currentScenePath);
+        EditorBridge::SetProject(pm.isOpen ? pm.project.name : std::string("No Project"));
+        if (!lastChange.empty()) {
+            EditorBridge::SetLastChange(lastChange);
+        }
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // Public lifecycle
     // ─────────────────────────────────────────────────────────────────────────
@@ -1543,6 +1555,9 @@ public:
         editorLevel.SetContext(renderer, inputManager);
         editorLevel.Initialize();
 
+        EditorBridge::Reset();
+        syncBridgeState("Editor initialized");
+
         buildSplash();
     }
 
@@ -1571,6 +1586,7 @@ public:
         cbIconStaticMesh.Release();
         cbIconParticles.Release();
         if (texEditorTex.IsValid()) { texEditorTex.Release(); texEditorPath.clear(); }
+        syncBridgeState("Editor shutdown");
     }
 
     void Update(float dt) override
@@ -1656,6 +1672,7 @@ public:
 
             // Play: tick real scene (scripts run here)
             if (isPlaying) editorLevel.Update(dt);
+            syncBridgeState();
 
             // Game Preview window tick
             if (gamePreview.IsOpen()) gamePreview.Tick(dt);
@@ -2000,6 +2017,7 @@ private:
             return;
         }
         currentScenePath = "scenes/main.lescene";
+        syncBridgeState("Project created");
         resetTabsToSceneOnly();
         switchToEditor();
     }
@@ -2017,6 +2035,8 @@ private:
         std::string absScene = pm.AbsScene(currentScenePath);
         if (fs::exists(absScene))
             pm.LoadScene(currentScenePath, editorLevel);
+
+        syncBridgeState("Project opened");
 
         resetTabsToSceneOnly();
 
@@ -2220,6 +2240,7 @@ private:
                     refreshInspector();
                 }
             }
+            syncBridgeState(act ? "Editor entered play mode" : "Editor exited play mode");
         }, true);
         pToolbar->AddButton("Compilar", [this](bool){
             if (!pm.isOpen || currentScenePath.empty()) {
@@ -3627,6 +3648,7 @@ private:
         syncPrimarySceneTabLabel();
         rebuildHierarchyTree();
         refreshInspector();
+        syncBridgeState("New scene created");
         noteEngineChange("New scene created");
     }
 
@@ -3686,6 +3708,7 @@ private:
         selectedNode = nullptr;
         rebuildHierarchyTree();
         refreshInspector();
+        syncBridgeState("Scene loaded: " + rel);
         Logger::LogInfo("[Editor] Scene loaded: " + rel);
     }
 
@@ -3698,6 +3721,7 @@ private:
         selectedNode = nullptr;
         isPlaying    = false;
         state        = State::Splash;
+        syncBridgeState("Returned to splash");
         rebuildSplash();
     }
 

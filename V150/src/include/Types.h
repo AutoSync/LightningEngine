@@ -47,17 +47,24 @@
 
 //usings
 
-using namespace std;
-using namespace std::chrono;
+
+// Evite poluição global: use aliases explícitos
+using std::string;
+using std::vector;
+using std::ifstream;
+using std::ofstream;
+using std::stringstream;
+using std::ostream;
+using std::istream;
+using std::chrono::steady_clock;
+using std::chrono::duration;
+using std::chrono::time_point;
 
 namespace Lightning
 {
 	//Typedefs
-	
-	
-	typedef unsigned int uint;					//Unsigned int 
-	typedef unsigned char uchar;				//Unsigned char
-	//Steady Clock Now
+
+	   Directional, Spotlight, Point, Rect
 	typedef steady_clock::time_point now;
 
 	//Enums
@@ -66,12 +73,10 @@ namespace Lightning
 	enum LightType
 	{
 		Directional, Spotlight, Point, Rect
-	};
-	//Mobility objects
-	enum Mobility
-	{
-		Static, Mutable, Mobile
-	};
+	
+	using uint = unsigned int;    // Unsigned int
+	using uchar = unsigned char;  // Unsigned char
+	using now = steady_clock::time_point;
 
 	//Enum Vector Direction
 	enum Direction
@@ -613,9 +618,9 @@ namespace Lightning
 	// Legacy asset descriptor (id + path). Use LightningEngine::Texture for GPU textures.
 	struct TextureAsset
 	{
-		uint   Id   = 0;
-		string type;
-		string path;
+		unsigned int   Id   = 0;
+		std::string type;
+		std::string path;
 	};
 	struct Transform
 	{

@@ -149,6 +149,7 @@
     <ClCompile Include="src\core\Spark.cpp" />
     <ClCompile Include="src\core\Mesh.cpp" />
     <ClCompile Include="src\core\ProjectManager.cpp" />
+    <ClCompile Include="src\core\EditorBridge.cpp" />
     <ClCompile Include="src\core\modules\character\CharacterMovementComponent.cpp" />
     <ClCompile Include="src\core\nucleo\NucleoLexer.cpp" />
     <ClCompile Include="src\core\nucleo\NucleoParser.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="src\include\Nucleo.h" />
     <ClInclude Include="src\include\ProjectConfig.h" />
     <ClInclude Include="src\include\ProjectManager.h" />
+    <ClInclude Include="src\include\EditorBridge.h" />
     <ClInclude Include="src\include\Prefab.h" />
     <ClInclude Include="src\include\components\MeshRenderer.h" />
     <ClInclude Include="src\include\nucleo\NucleoToken.h" />

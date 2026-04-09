@@ -54,6 +54,9 @@
     <ClCompile Include="src\core\ProjectManager.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\EditorBridge.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
     <ClCompile Include="src\core\nucleo\NucleoLexer.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
@@ -186,6 +189,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\include\ProjectManager.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\EditorBridge.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="src\include\Prefab.h">
