@@ -11,13 +11,6 @@ type AssetTab = {
   closable: boolean;
 };
 
-type MotorStatus = {
-  running: boolean;
-  fps: number;
-  scene: string;
-  project: string;
-};
-
 const tabs: AssetTab[] = [
   { id: 'project', label: 'Project', type: 'project', accent: '#f5f5f5', closable: false },
   { id: 'scene', label: 'Scene', type: 'scene', accent: '#7db1ff', closable: false },
@@ -62,7 +55,7 @@ export default function App() {
   const visibleTabs = useMemo(() => tabs.filter((tab) => tab.closable || tab.id === activeTab.id || tab.id === 'project' || tab.id === 'scene'), [activeTab]);
 
   useEffect(() => {
-    let unsubscribe = () => undefined;
+    let unsubscribe: () => void = () => {};
 
     tauriService.getStatus().then(setStatus).catch(() => undefined);
     tauriService.onStatusChange((nextStatus) => setStatus(nextStatus)).then((dispose) => {

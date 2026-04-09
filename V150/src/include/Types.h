@@ -63,20 +63,17 @@ using std::chrono::time_point;
 namespace Lightning
 {
 	//Typedefs
-
-	   Directional, Spotlight, Point, Rect
-	typedef steady_clock::time_point now;
+	using uint = unsigned int;    // Unsigned int
+	using uchar = unsigned char;  // Unsigned char
+	using now = steady_clock::time_point;
 
 	//Enums
-	
+
 	//Selectable Light type
 	enum LightType
 	{
 		Directional, Spotlight, Point, Rect
-	
-	using uint = unsigned int;    // Unsigned int
-	using uchar = unsigned char;  // Unsigned char
-	using now = steady_clock::time_point;
+	};
 
 	//Enum Vector Direction
 	enum Direction

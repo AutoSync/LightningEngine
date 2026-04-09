@@ -75,6 +75,18 @@
                 "reveal": "always",
                 "panel": "shared"
             }
+        },
+        {
+            "label": "Run Editor UI (Tauri Dev)",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "tauri:dev"],
+            "options": {
+                "cwd": "${workspaceFolder}\\editor-ui"
+            },
+            "isBackground": true,
+            "group": "build",
+            "problemMatcher": []
         }
     ]
 }

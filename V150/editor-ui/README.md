@@ -1,6 +1,6 @@
 # Lightning Engine Editor UI
 
-Scaffold React + Tauri para o MVP da interface do editor.
+Scaffold Vinext + Tauri para o MVP da interface do editor.
 
 ## Desenvolvimento
 
@@ -10,10 +10,18 @@ Scaffold React + Tauri para o MVP da interface do editor.
 npm install
 ```
 
+Isso também instala o Vinext e o CLI do Tauri usados pelo script de desenvolvimento.
+
 * Inicie o host desktop com Tauri:
 
 ```bash
 npm run tauri:dev
+```
+
+* Rode o frontend Vinext isolado, se quiser depurar a UI sem Tauri:
+
+```bash
+npm run dev
 ```
 
 ## Build

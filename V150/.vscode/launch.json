@@ -2,49 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug x64 (MSVC)",
-            "type": "cppvsdbg",
+            "name": "Run Editor UI (Tauri Dev)",
+            "type": "node-terminal",
             "request": "launch",
-            "program": "${workspaceFolder}/x64/Debug/LightningEngine.exe",
+            "command": "npm run tauri:dev",
             "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "console": "integratedTerminal",
-            "preLaunchTask": "Build Debug x64 (MSBuild)"
+            "cwd": "${workspaceFolder}\\editor-ui",
+            "console": "integratedTerminal"
         },
         {
-            "name": "Release x64 (MSVC)",
-            "type": "cppvsdbg",
+            "name": "Build Editor UI (Tauri)",
+            "type": "node-terminal",
             "request": "launch",
-            "program": "${workspaceFolder}/x64/Release/LightningEngine.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "console": "integratedTerminal",
-            "preLaunchTask": "Build Release x64 (MSBuild)"
-        },
-        {
-            "name": "Debug (Makefile / GDB)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/LightningEngine.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb",
-            "preLaunchTask": "Build Debug (Makefile)",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
+            "command": "npm run tauri:build",
+            "cwd": "${workspaceFolder}\\editor-ui",
+            "console": "integratedTerminal"
         }
     ]
 }
