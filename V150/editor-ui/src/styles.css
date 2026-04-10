@@ -2,16 +2,19 @@
   color-scheme: dark;
   --bg: #13131a;
   --surface: #1b1b24;
-  --surface-2: #232330;
-  --surface-3: #2b2b3b;
-  --border: #3f4155;
-  --text: #ececf4;
-  --muted: #aaaac0;
-  --accent: #5e9bff;
-  --accent-2: #ff9d4d;
-  --good: #58d07d;
-  --danger: #ff6666;
-  --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --bg: #f1f2f4;
+  --surface: rgba(255, 255, 255, 0.86);
+  --surface-2: rgba(248, 249, 251, 0.92);
+  --surface-3: rgba(236, 238, 242, 0.92);
+  --border: rgba(25, 28, 35, 0.08);
+  --border-strong: rgba(25, 28, 35, 0.14);
+  --text: #16181d;
+  --muted: #6d7280;
+  --accent: #5c7cff;
+  --accent-2: #f4a35d;
+  --good: #1fa971;
+  --danger: #e05252;
+  --shadow: 0 18px 40px rgba(21, 25, 32, 0.08);
   font-family: "Segoe UI", "Aptos", "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -26,9 +29,9 @@ body,
   min-height: 100%;
   width: 100%;
   background:
-    radial-gradient(circle at top left, rgba(94, 155, 255, 0.16), transparent 36%),
-    radial-gradient(circle at top right, rgba(255, 157, 77, 0.12), transparent 28%),
-    linear-gradient(180deg, #101016 0%, #151520 100%);
+    radial-gradient(circle at 16% 14%, rgba(255, 255, 255, 0.92), transparent 26%),
+    radial-gradient(circle at 82% 18%, rgba(255, 248, 237, 0.88), transparent 22%),
+    linear-gradient(180deg, #f5f6f8 0%, #eceef2 100%);
   color: var(--text);
 }
 
@@ -46,10 +49,20 @@ button {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto auto auto auto 1fr auto;
-  gap: 10px;
-  padding: 14px;
+  padding: 24px;
 }
 
+.shell-frame {
+  min-height: calc(100vh - 48px);
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 28px 60px rgba(31, 36, 46, 0.08);
+  backdrop-filter: blur(18px);
 .titlebar,
 .menubar,
 .toolbar,
@@ -59,8 +72,8 @@ button {
   border: 1px solid var(--border);
   background: rgba(25, 25, 35, 0.92);
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow);
-}
+  background: var(--surface);
+  backdrop-filter: blur(16px);
 
 .titlebar {
   display: flex;
@@ -68,8 +81,8 @@ button {
   justify-content: space-between;
   padding: 18px 20px;
   border-radius: 20px;
-}
-
+  padding: 12px 16px;
+  border-radius: 24px;
 .eyebrow {
   color: var(--muted);
   text-transform: uppercase;
@@ -114,9 +127,7 @@ button {
 
 .primary-button {
   color: #fff;
-  background: linear-gradient(135deg, var(--accent), #3f75ff);
-  padding: 10px 16px;
-}
+  font-size: 0.78rem;
 
 .primary-button.danger {
   background: linear-gradient(135deg, #ff8a68, var(--danger));
@@ -210,14 +221,14 @@ button {
 .asset-item.selected {
   background: rgba(94, 155, 255, 0.14);
   border-color: rgba(94, 155, 255, 0.34);
-}
+  grid-template-columns: 250px minmax(0, 1fr) 330px;
 
 .center-stack {
   display: grid;
   grid-template-rows: minmax(320px, 1.3fr) minmax(260px, 0.9fr);
   gap: 12px;
-  min-height: 0;
-}
+  border-radius: 24px;
+  padding: 14px;
 
 .viewport,
 .scene-dock {

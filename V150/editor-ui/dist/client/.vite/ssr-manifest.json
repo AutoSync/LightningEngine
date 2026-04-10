@@ -1,0 +1,86 @@
+{
+  "\u0000rolldown/runtime.js": [
+    "assets/rolldown-runtime-Dw2cE7zH.js"
+  ],
+  "\u0000virtual:vinext-client-entry": [],
+  "\u0000vite/preload-helper.js": [
+    "assets/preload-helper-D4M6sveU.js"
+  ],
+  "node_modules/@tauri-apps/api/core.js": [
+    "assets/core-CWnj-wwW.js"
+  ],
+  "node_modules/@tauri-apps/api/event.js": [
+    "assets/event-B0nQhtAj.js"
+  ],
+  "node_modules/@tauri-apps/api/external/tslib/tslib.es6.js": [
+    "assets/core-CWnj-wwW.js"
+  ],
+  "node_modules/react-dom/cjs/react-dom-client.production.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react-dom/cjs/react-dom.production.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react-dom/client.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react-dom/index.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react/cjs/react-jsx-runtime.production.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react/cjs/react.production.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react/index.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/react/jsx-runtime.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/scheduler/cjs/scheduler.production.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/scheduler/index.js": [
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "node_modules/vinext/dist/client/empty-module.js": [],
+  "node_modules/vinext/dist/client/instrumentation-client-state.js": [],
+  "node_modules/vinext/dist/client/instrumentation-client.js": [],
+  "node_modules/vinext/dist/client/validate-module-path.js": [],
+  "node_modules/vinext/dist/shims/internal/router-context.js": [],
+  "node_modules/vinext/dist/shims/router.js": [],
+  "node_modules/vinext/dist/shims/url-utils.js": [],
+  "node_modules/vinext/dist/utils/base-path.js": [],
+  "node_modules/vinext/dist/utils/domain-locale.js": [],
+  "node_modules/vinext/dist/utils/query.js": [],
+  "pages/_app.tsx": [
+    "assets/_app-C_5OX9rL.js",
+    "assets/_app-BVl59tv2.css",
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "pages/index.tsx": [
+    "assets/pages-D1XdJJB6.js",
+    "assets/rolldown-runtime-Dw2cE7zH.js",
+    "assets/preload-helper-D4M6sveU.js",
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "src/App.tsx": [
+    "assets/pages-D1XdJJB6.js",
+    "assets/rolldown-runtime-Dw2cE7zH.js",
+    "assets/preload-helper-D4M6sveU.js",
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "src/services/tauri-service.ts": [
+    "assets/pages-D1XdJJB6.js",
+    "assets/rolldown-runtime-Dw2cE7zH.js",
+    "assets/preload-helper-D4M6sveU.js",
+    "assets/framework-DXoDV-V_.js"
+  ],
+  "src/styles.css": [
+    "assets/_app-C_5OX9rL.js",
+    "assets/_app-BVl59tv2.css",
+    "assets/framework-DXoDV-V_.js"
+  ]
+}
