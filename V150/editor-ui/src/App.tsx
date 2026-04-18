@@ -27,6 +27,7 @@ const statusSeed: MotorStatus = {
   fps: 60,
   scene: 'studio_scene.lescene',
   project: '3D Boy Character',
+  lastChange: 'Waiting for C++ bridge',
 };
 
 const sceneItems = [
@@ -92,7 +93,7 @@ export default function App() {
             <div className="brand-mark" aria-hidden="true">◇</div>
             <div>
               <div className="project-name">{status.project}</div>
-              <div className="project-subtitle">3D Design Project</div>
+              <div className="project-subtitle">React layout on top, C++ state below</div>
             </div>
           </div>
 
@@ -155,8 +156,8 @@ export default function App() {
           <aside className="panel sidebar-left">
             <div className="sidebar-head">
               <div>
-                <div className="sidebar-title">{status.project}</div>
-                <div className="sidebar-subtitle">3D Design Project</div>
+                <div className="sidebar-title">Layout map</div>
+                <div className="sidebar-subtitle">Left data, center viewport, right inspector</div>
               </div>
               <button type="button" className="small-icon-button">▣</button>
             </div>
@@ -181,6 +182,17 @@ export default function App() {
               ))}
             </div>
 
+            <div className="search-box" style={{ display: 'grid', gap: '8px', alignItems: 'stretch' }}>
+              <div style={{ display: 'grid', gap: '4px' }}>
+                <strong style={{ fontSize: '0.9rem' }}>Bridge snapshot</strong>
+                <span style={{ color: 'var(--muted)', fontSize: '0.82rem' }}>The C++ editor writes status here, and Tauri reads it.</span>
+              </div>
+              <div style={{ display: 'grid', gap: '4px' }}>
+                <span>Last change</span>
+                <strong>{status.lastChange ?? 'Waiting for C++ bridge'}</strong>
+              </div>
+            </div>
+
             <div className="search-box">
               <span>⌕</span>
               <input type="text" value="Search..." readOnly />
@@ -197,7 +209,7 @@ export default function App() {
                     {['◻', '⟲', '◌', '◩'].map((item) => (
                       <button key={item} type="button" className="icon-button small">{item}</button>
                     ))}
-                    <span className="stage-toolbar-label">{status.running ? 'Live' : 'Idle'}</span>
+                    <span className="stage-toolbar-label">{status.running ? 'Live bridge' : 'Bridge idle'}</span>
                   </div>
 
                   <div className="viewport-figure">
@@ -213,10 +225,10 @@ export default function App() {
 
                   <div className="stage-caption">
                     <div>
-                      <strong>Brainwave 2.5</strong>
-                      <span>Scene view</span>
+                      <strong>Viewport region</strong>
+                      <span>Pure render surface fed by runtime state</span>
                     </div>
-                    <button type="button" className="caption-button">Inspiration ▾</button>
+                    <button type="button" className="caption-button">Bridge ▾</button>
                   </div>
                 </div>
               </div>
@@ -330,6 +342,7 @@ export default function App() {
           <span>Scene: {status.scene}</span>
           <span>Motor: {status.running ? 'Running' : 'Stopped'}</span>
           <span>FPS: {status.fps}</span>
+          <span>Bridge: {status.lastChange ?? 'Waiting for C++ bridge'}</span>
         </footer>
       </div>
     </div>

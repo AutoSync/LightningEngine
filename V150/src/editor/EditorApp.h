@@ -1515,6 +1515,7 @@ private:
         if (!lastChange.empty()) {
             EditorBridge::SetLastChange(lastChange);
         }
+        EditorBridge::SaveStatusSnapshot();
     }
 
     // ─────────────────────────────────────────────────────────────────────────

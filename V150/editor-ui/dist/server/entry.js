@@ -3252,7 +3252,8 @@ var TauriService = class {
 			running: true,
 			fps: 60,
 			scene: "main_scene.lescene",
-			project: "LightningEngine Demo"
+			project: "LightningEngine Demo",
+			lastChange: "Waiting for C++ bridge"
 		};
 	}
 	async onStatusChange(callback) {
@@ -3264,7 +3265,8 @@ var TauriService = class {
 			running: true,
 			fps: 60,
 			scene: "main_scene.lescene",
-			project: "LightningEngine Demo"
+			project: "LightningEngine Demo",
+			lastChange: "Waiting for C++ bridge"
 		});
 		return () => void 0;
 	}
@@ -3334,7 +3336,8 @@ var statusSeed = {
 	running: true,
 	fps: 60,
 	scene: "studio_scene.lescene",
-	project: "3D Boy Character"
+	project: "3D Boy Character",
+	lastChange: "Waiting for C++ bridge"
 };
 var sceneItems = [
 	{
@@ -3444,7 +3447,7 @@ function App$1() {
 								children: status.project
 							}), /* @__PURE__ */ jsx("div", {
 								className: "project-subtitle",
-								children: "3D Design Project"
+								children: "React layout on top, C++ state below"
 							})] })]
 						}),
 						/* @__PURE__ */ jsxs("div", {
@@ -3576,10 +3579,10 @@ function App$1() {
 									className: "sidebar-head",
 									children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("div", {
 										className: "sidebar-title",
-										children: status.project
+										children: "Layout map"
 									}), /* @__PURE__ */ jsx("div", {
 										className: "sidebar-subtitle",
-										children: "3D Design Project"
+										children: "Left data, center viewport, right inspector"
 									})] }), /* @__PURE__ */ jsx("button", {
 										type: "button",
 										className: "small-icon-button",
@@ -3623,6 +3626,36 @@ function App$1() {
 								}),
 								/* @__PURE__ */ jsxs("div", {
 									className: "search-box",
+									style: {
+										display: "grid",
+										gap: "8px",
+										alignItems: "stretch"
+									},
+									children: [/* @__PURE__ */ jsxs("div", {
+										style: {
+											display: "grid",
+											gap: "4px"
+										},
+										children: [/* @__PURE__ */ jsx("strong", {
+											style: { fontSize: "0.9rem" },
+											children: "Bridge snapshot"
+										}), /* @__PURE__ */ jsx("span", {
+											style: {
+												color: "var(--muted)",
+												fontSize: "0.82rem"
+											},
+											children: "The C++ editor writes status here, and Tauri reads it."
+										})]
+									}), /* @__PURE__ */ jsxs("div", {
+										style: {
+											display: "grid",
+											gap: "4px"
+										},
+										children: [/* @__PURE__ */ jsx("span", { children: "Last change" }), /* @__PURE__ */ jsx("strong", { children: status.lastChange ?? "Waiting for C++ bridge" })]
+									})]
+								}),
+								/* @__PURE__ */ jsxs("div", {
+									className: "search-box",
 									children: [
 										/* @__PURE__ */ jsx("span", { children: "⌕" }),
 										/* @__PURE__ */ jsx("input", {
@@ -3658,7 +3691,7 @@ function App$1() {
 													children: item
 												}, item)), /* @__PURE__ */ jsx("span", {
 													className: "stage-toolbar-label",
-													children: status.running ? "Live" : "Idle"
+													children: status.running ? "Live bridge" : "Bridge idle"
 												})]
 											}),
 											/* @__PURE__ */ jsxs("div", {
@@ -3676,10 +3709,10 @@ function App$1() {
 											}),
 											/* @__PURE__ */ jsxs("div", {
 												className: "stage-caption",
-												children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("strong", { children: "Brainwave 2.5" }), /* @__PURE__ */ jsx("span", { children: "Scene view" })] }), /* @__PURE__ */ jsx("button", {
+												children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("strong", { children: "Viewport region" }), /* @__PURE__ */ jsx("span", { children: "Pure render surface fed by runtime state" })] }), /* @__PURE__ */ jsx("button", {
 													type: "button",
 													className: "caption-button",
-													children: "Inspiration ▾"
+													children: "Bridge ▾"
 												})]
 											})
 										]
@@ -3877,7 +3910,8 @@ function App$1() {
 					children: [
 						/* @__PURE__ */ jsxs("span", { children: ["Scene: ", status.scene] }),
 						/* @__PURE__ */ jsxs("span", { children: ["Motor: ", status.running ? "Running" : "Stopped"] }),
-						/* @__PURE__ */ jsxs("span", { children: ["FPS: ", status.fps] })
+						/* @__PURE__ */ jsxs("span", { children: ["FPS: ", status.fps] }),
+						/* @__PURE__ */ jsxs("span", { children: ["Bridge: ", status.lastChange ?? "Waiting for C++ bridge"] })
 					]
 				})
 			]
@@ -3894,7 +3928,7 @@ function App({ Component, pageProps }) {
 }
 //#endregion
 //#region \0virtual:vinext-server-entry
-var buildId = "97521f87-9b7c-4513-b53e-e1bfcf6238e3";
+var buildId = "4edfe49d-833a-42db-a8d7-c270a1e11321";
 var vinextConfig = {
 	"basePath": "",
 	"trailingSlash": false,

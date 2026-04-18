@@ -21,6 +21,7 @@ void SetScene(const std::string& scenePath);
 void SetRunning(bool running);
 void SetFps(float fps);
 void SetLastChange(const std::string& message);
+void SaveStatusSnapshot(const std::string& filePath = "editor-bridge-status.json");
 
 Status GetStatus();
 std::string GetStatusJson();

@@ -3,6 +3,7 @@ export interface MotorStatus {
   fps?: number;
   scene?: string;
   project?: string;
+  lastChange?: string;
 }
 
 class TauriService {
@@ -42,7 +43,13 @@ class TauriService {
       return core.invoke<MotorStatus>('get_motor_status');
     }
 
-    return { running: true, fps: 60, scene: 'main_scene.lescene', project: 'LightningEngine Demo' };
+    return {
+      running: true,
+      fps: 60,
+      scene: 'main_scene.lescene',
+      project: 'LightningEngine Demo',
+      lastChange: 'Waiting for C++ bridge',
+    };
   }
 
   async onStatusChange(callback: (status: MotorStatus) => void): Promise<() => void> {
@@ -55,7 +62,13 @@ class TauriService {
       return unlisten;
     }
 
-    callback({ running: true, fps: 60, scene: 'main_scene.lescene', project: 'LightningEngine Demo' });
+    callback({
+      running: true,
+      fps: 60,
+      scene: 'main_scene.lescene',
+      project: 'LightningEngine Demo',
+      lastChange: 'Waiting for C++ bridge',
+    });
     return () => undefined;
   }
 }

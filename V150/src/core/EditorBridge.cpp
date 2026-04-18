@@ -2,6 +2,7 @@
 #include <mutex>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
 
 namespace LightningEngine::EditorBridge {
 
@@ -82,6 +83,16 @@ std::string GetStatusJson()
         << "\"lastChange\":\"" << jsonEscape(gStatus.lastChange) << "\""
         << '}';
     return out.str();
+}
+
+void SaveStatusSnapshot(const std::string& filePath)
+{
+    std::ofstream out(filePath, std::ios::trunc);
+    if (!out.is_open()) {
+        return;
+    }
+
+    out << GetStatusJson();
 }
 
 void Reset()
