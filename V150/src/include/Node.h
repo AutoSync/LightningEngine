@@ -46,7 +46,7 @@ namespace LightningEngine
 		{
 			for (auto& [type, comp] : components)
 				comp->OnDetach();
-			for (auto* child : children)
+			for (auto& child : children)
 				child->parent = nullptr;
 		}
 
@@ -117,20 +117,20 @@ namespace LightningEngine
 			child->renderer = renderer;
 			child->input    = input;
 			child->level    = level;
-			children.push_back(child.get());
-			ownedChildren.push_back(std::move(child));
+			child->MarkTransformDirty();
+			children.push_back(std::move(child));
 		}
 
 		std::unique_ptr<Node> RemoveChild(Node* child)
 		{
-			for (auto it = ownedChildren.begin(); it != ownedChildren.end(); ++it)
+			for (auto it = children.begin(); it != children.end(); ++it)
 			{
 				if (it->get() == child)
 				{
 					child->parent = nullptr;
-					children.erase(std::find(children.begin(), children.end(), child));
+					child->MarkTransformDirty();
 					auto owned = std::move(*it);
-					ownedChildren.erase(it);
+					children.erase(it);
 					return owned;
 				}
 			}
@@ -138,7 +138,7 @@ namespace LightningEngine
 		}
 
 		Node*                        GetParent()   const { return parent;   }
-		const std::vector<Node*>&    GetChildren() const { return children; }
+		const std::vector<std::unique_ptr<Node>>& GetChildren() const { return children; }
 
 		// -----------------------------------------------------------------------
 		// Transform matrices (GLM, world-space cascade)
@@ -160,12 +160,26 @@ namespace LightningEngine
 			return m;
 		}
 
-		// World matrix: cascades through the entire parent chain.
-		glm::mat4 WorldMatrix() const
+		// Marks the cached world transform dirty on this node and all descendants.
+		void MarkTransformDirty()
 		{
-			if (parent)
-				return parent->WorldMatrix() * LocalMatrix();
-			return LocalMatrix();
+			if (transformDirty)
+				return;
+
+			transformDirty = true;
+			for (auto& child : children)
+				child->MarkTransformDirty();
+		}
+
+		// World matrix: cached and invalidated whenever local or parent transform changes.
+		const glm::mat4& WorldMatrix() const
+		{
+			if (transformDirty)
+			{
+				cachedWorldMatrix = parent ? (parent->WorldMatrix() * LocalMatrix()) : LocalMatrix();
+				transformDirty = false;
+			}
+			return cachedWorldMatrix;
 		}
 
 		// 2D world position — derived from the full WorldMatrix (rotation-aware).
@@ -206,7 +220,7 @@ namespace LightningEngine
 			if (!active) return;
 			for (auto& [type, comp] : components)
 				if (comp->enabled) comp->Update(dt);
-			for (auto* child : children)
+			for (auto& child : children)
 				child->Update(dt);
 		}
 
@@ -215,7 +229,7 @@ namespace LightningEngine
 			if (!active) return;
 			for (auto& [type, comp] : components)
 				if (comp->enabled) comp->Render();
-			for (auto* child : children)
+			for (auto& child : children)
 				child->Render();
 		}
 
@@ -227,16 +241,17 @@ namespace LightningEngine
 			level    = lv;
 			for (auto& [type, comp] : components)
 				comp->owner = this;
-			for (auto* child : children)
+			for (auto& child : children)
 				child->SetContext(r, im, lv);
 		}
 
 	private:
 		std::unordered_map<std::type_index, std::unique_ptr<Component>> components;
+		mutable glm::mat4                    cachedWorldMatrix = glm::mat4(1.f);
+		mutable bool                         transformDirty    = true;
 
 		Node*                                parent = nullptr;
-		std::vector<Node*>                   children;
-		std::vector<std::unique_ptr<Node>>   ownedChildren;
+		std::vector<std::unique_ptr<Node>>   children;
 	};
 
 	// Alias for familiarity — both names are valid.

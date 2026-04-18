@@ -23,7 +23,7 @@ bool Framebuffer::Create(Renderer& r, int w, int h)
 	texInfo.layer_count_or_depth = 1;
 	texInfo.num_levels           = 1;
 
-	fbTex = SDL_CreateGPUTexture(device, &texInfo);
+	fbTex.reset(device, SDL_CreateGPUTexture(device, &texInfo));
 	if (!fbTex) {
 		std::cerr << "[Framebuffer] SDL_CreateGPUTexture failed: " << SDL_GetError() << "\n";
 		return false;
@@ -38,16 +38,15 @@ bool Framebuffer::Create(Renderer& r, int w, int h)
 	sampInfo.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
 	sampInfo.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
 
-	sampler = SDL_CreateGPUSampler(device, &sampInfo);
+	sampler.reset(device, SDL_CreateGPUSampler(device, &sampInfo));
 	if (!sampler) {
 		std::cerr << "[Framebuffer] SDL_CreateGPUSampler failed: " << SDL_GetError() << "\n";
-		SDL_ReleaseGPUTexture(device, fbTex);
-		fbTex = nullptr;
+		fbTex.reset();
 		return false;
 	}
 
 	// Non-owning Texture view (device=nullptr → Release() is a no-op)
-	view = Texture::ViewOf(fbTex, sampler, w, h);
+	view = Texture::ViewOf(fbTex.get(), sampler.get(), w, h);
 	return true;
 }
 
@@ -61,10 +60,8 @@ bool Framebuffer::Resize(Renderer& r, int newW, int newH)
 void Framebuffer::Release()
 {
 	view = Texture{}; // reset view (no GPU release — device is nullptr in view)
-	if (device) {
-		if (sampler) { SDL_ReleaseGPUSampler(device, sampler); sampler = nullptr; }
-		if (fbTex)   { SDL_ReleaseGPUTexture(device, fbTex);   fbTex   = nullptr; }
-	}
+	sampler.reset();
+	fbTex.reset();
 	device = nullptr;
 	fbW    = 0;
 	fbH    = 0;

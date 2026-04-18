@@ -48,6 +48,7 @@ namespace LightningEngine
 			{
 				owner->transform.Position.x = body.position.x;
 				owner->transform.Position.y = body.position.y;
+				owner->MarkTransformDirty();
 			}
 		}
 

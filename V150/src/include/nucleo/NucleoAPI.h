@@ -87,6 +87,7 @@ public:
         addNative(prog, "Node.SetPosition", [node](const std::vector<Value>& a) -> Value {
             if (node && a.size() >= 3) {
                 node->transform.Position = Lightning::V3(a[0].toFloat(), a[1].toFloat(), a[2].toFloat());
+                node->MarkTransformDirty();
             }
             return Value::Null();
         });
@@ -95,6 +96,7 @@ public:
                 node->transform.Position.x += a[0].toFloat();
                 node->transform.Position.y += a[1].toFloat();
                 if (a.size() >= 3) node->transform.Position.z += a[2].toFloat();
+                node->MarkTransformDirty();
             }
             return Value::Null();
         });
@@ -110,12 +112,14 @@ public:
         addNative(prog, "Node.SetRotation", [node](const std::vector<Value>& a) -> Value {
             if (node && a.size() >= 3) {
                 node->transform.Rotation = Lightning::V3(a[0].toFloat(), a[1].toFloat(), a[2].toFloat());
+                node->MarkTransformDirty();
             }
             return Value::Null();
         });
         addNative(prog, "Node.SetScale", [node](const std::vector<Value>& a) -> Value {
             if (node && a.size() >= 3) {
                 node->transform.Scale = Lightning::V3(a[0].toFloat(), a[1].toFloat(), a[2].toFloat());
+                node->MarkTransformDirty();
             }
             return Value::Null();
         });

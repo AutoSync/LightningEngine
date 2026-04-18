@@ -19,6 +19,7 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_gpu.h>
+#include "GPUResource.h"
 #include "Texture.h"
 
 namespace LightningEngine {
@@ -28,8 +29,8 @@ class Renderer; // forward
 class Framebuffer {
 private:
 	SDL_GPUDevice*       device  = nullptr;
-	SDL_GPUTexture*      fbTex   = nullptr;
-	SDL_GPUSampler*      sampler = nullptr;
+	UniqueTexture        fbTex;
+	UniqueSampler        sampler;
 	Texture              view;      // non-owning Texture view (for DrawTexture)
 	int                  fbW = 0, fbH = 0;
 
@@ -48,7 +49,7 @@ public:
 	// Free GPU resources.
 	void Release();
 
-	bool IsValid()   const { return fbTex != nullptr; }
+	bool IsValid()   const { return static_cast<bool>(fbTex); }
 	int  GetWidth()  const { return fbW; }
 	int  GetHeight() const { return fbH; }
 
@@ -57,8 +58,8 @@ public:
 	Texture& GetTexture() { return view; }
 
 	// Internal — used by Renderer only.
-	SDL_GPUTexture*      GetGPUTexture() const { return fbTex;   }
-	SDL_GPUSampler*      GetSamplerPtr() const { return sampler; }
+	SDL_GPUTexture*      GetGPUTexture() const { return fbTex.get();   }
+	SDL_GPUSampler*      GetSamplerPtr() const { return sampler.get(); }
 	SDL_GPUTextureFormat GetFormat()     const { return kFormat;  }
 };
 

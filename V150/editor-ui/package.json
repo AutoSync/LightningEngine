@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vinext dev",
-    "build": "vinext build",
-    "preview": "vinext start",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build"
   },

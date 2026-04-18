@@ -25,6 +25,7 @@ public:
         transform.Position.x = x;
         transform.Position.y = y;
         transform.Position.z = z;
+        MarkTransformDirty();
     }
 
     void SetPosition(Lightning::V3 v) { SetPosition(v.x, v.y, v.z); }
@@ -39,6 +40,7 @@ public:
         transform.Position.x += dx;
         transform.Position.y += dy;
         transform.Position.z += dz;
+        MarkTransformDirty();
     }
 
     void Move(Lightning::V3 delta) { Move(delta.x, delta.y, delta.z); }
@@ -51,6 +53,7 @@ public:
         transform.Rotation.x = pitch;
         transform.Rotation.y = yaw;
         transform.Rotation.z = roll;
+        MarkTransformDirty();
     }
 
     void SetRotation(Lightning::V3 euler) { SetRotation(euler.x, euler.y, euler.z); }
@@ -65,6 +68,7 @@ public:
         transform.Rotation.x += dpitch;
         transform.Rotation.y += dyaw;
         transform.Rotation.z += droll;
+        MarkTransformDirty();
     }
 
     // -----------------------------------------------------------------------
@@ -75,6 +79,7 @@ public:
         transform.Scale.x = x;
         transform.Scale.y = y;
         transform.Scale.z = z;
+        MarkTransformDirty();
     }
 
     void SetScale(float uniform) { SetScale(uniform, uniform, uniform); }
@@ -136,6 +141,7 @@ public:
         transform.Rotation.x = glm::degrees(asinf(-model[2][1]));
         transform.Rotation.y = glm::degrees(atan2f(model[2][0], model[2][2]));
         transform.Rotation.z = 0.f;
+        MarkTransformDirty();
     }
 
     // Distance to a world-space target position.

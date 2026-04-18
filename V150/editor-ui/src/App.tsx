@@ -1,350 +1,433 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { tauriService, type MotorStatus } from './services/tauri-service';
 
-type TabType = 'project' | 'scene' | 'assets' | 'materials' | 'styles' | 'camera' | 'inspector' | 'animation';
-
-type AssetTab = {
+/* ── Tab types with semantic colors (design.md §3.2) ── */
+type EditorTab = {
   id: string;
   label: string;
-  type: TabType;
   accent: string;
   closable: boolean;
 };
 
-const tabs: AssetTab[] = [
-  { id: 'project', label: '3D Boy Character', type: 'project', accent: '#111827', closable: false },
-  { id: 'scene', label: 'Scene', type: 'scene', accent: '#2563eb', closable: false },
-  { id: 'assets', label: 'Assets', type: 'assets', accent: '#8b5cf6', closable: false },
-  { id: 'materials', label: 'Materials', type: 'materials', accent: '#b45309', closable: true },
-  { id: 'styles', label: 'Styles', type: 'styles', accent: '#0f766e', closable: true },
-  { id: 'camera', label: 'Camera', type: 'camera', accent: '#475569', closable: true },
-  { id: 'inspector', label: 'Inspector', type: 'inspector', accent: '#6366f1', closable: true },
-  { id: 'animation', label: 'Animation', type: 'animation', accent: '#dc2626', closable: true },
+const TABS: EditorTab[] = [
+  { id: 'scene', label: 'Scene', accent: '#62a7ff', closable: false },
+  { id: 'project', label: 'Project', accent: '#f5f5f5', closable: true },
+  { id: 'random', label: 'Random', accent: '#ff9a2d', closable: true },
+  { id: 'texture', label: 'Textura', accent: '#ff6363', closable: true },
+  { id: 'shader', label: 'Shaders', accent: '#57cf73', closable: true },
+  { id: 'material', label: 'Materiais', accent: '#36b86f', closable: true },
+  { id: 'particle', label: 'Particulas', accent: '#a66cff', closable: true },
+  { id: 'prefab', label: 'Prefabs', accent: '#ffd34f', closable: true },
+  { id: 'mesh', label: 'Malha', accent: '#70bbff', closable: true },
+  { id: 'animation', label: 'Animacao', accent: '#ef8fd0', closable: true },
+  { id: 'struct', label: 'Struct', accent: '#d7dbe5', closable: true },
+  { id: 'enum', label: 'Enum', accent: '#9ca3b1', closable: true },
+  { id: 'class', label: 'Classes', accent: '#8355d6', closable: true },
+];
+
+const MENU_MODEL: Record<string, string[]> = {
+  FILE: ['New Scene', 'Open Project', 'Save', 'Save All', 'Exit'],
+  EDIT: ['Undo', 'Redo', 'Duplicate', 'Delete'],
+  TOOLS: ['Build', 'Compile Shaders', 'Profiler', 'Settings'],
+  WINDOW: ['Viewport', 'Hierarchy', 'Properties', 'Content Browser'],
+  HELP: ['Documentation', 'Roadmap', 'About'],
+};
+
+/* ── Hierarchy mock data ── */
+const hierarchyItems = [
+  { id: 'root', label: 'Root', depth: 0 },
+];
+
+/* ── Content Browser mock data ── */
+type CBFolder = { id: string; label: string; color: string };
+const cbFolders: CBFolder[] = [
+  { id: 'all', label: 'All', color: '#f5a623' },
+  { id: 'player', label: 'Player', color: '#4cd964' },
+  { id: 'enemies', label: 'Enemies', color: '#4cd964' },
+  { id: 'levels', label: 'Levels', color: '#f5a623' },
+  { id: 'textures', label: 'Textures', color: '#f5a623' },
+];
+
+type CBFilter = { id: string; label: string; color: string };
+const cbFilters: CBFilter[] = [
+  { id: 'static-meshes', label: 'Static Meshes', color: '#70bbff' },
+  { id: 'textures', label: 'Textures', color: '#ff6363' },
+  { id: 'prefabs', label: 'Prefabs', color: '#a66cff' },
+];
+
+type CBAsset = { id: string; name: string; subtitle: string; borderColor: string };
+const cbAssets: CBAsset[] = [
+  { id: 'playermaster', name: 'PlayerMaster', subtitle: 'CharacterMovem...', borderColor: '#62a7ff' },
+  { id: 'enemies', name: 'enemies', subtitle: 'ignite', borderColor: '#ff6363' },
+  { id: 'level-spawner', name: 'level_spawner', subtitle: 'csharp', borderColor: '#a66cff' },
+];
+
+/* ── Inspector / Properties mock ── */
+const inspectorFields = [
+  { label: 'Name', value: 'Player' },
+  { label: 'Transform', values: [
+    { axis: 'X', val: '200.0', color: '#ff4444' },
+    { axis: 'Y', val: '200.0', color: '#44cc44' },
+    { axis: 'Z', val: '0', color: '#4488ff' },
+  ]},
+  { label: 'IsActive', checked: true },
 ];
 
 const statusSeed: MotorStatus = {
-  running: true,
+  running: false,
   fps: 60,
-  scene: 'studio_scene.lescene',
-  project: '3D Boy Character',
-  lastChange: 'Waiting for C++ bridge',
+  scene: 'main_scene.lescene',
+  project: 'MyProject',
+  lastChange: '',
 };
 
-const sceneItems = [
-  { label: 'Camera 1', icon: '◌' },
-  { label: 'Dome Light', icon: '☼' },
-  { label: 'Key Light', icon: '⌖' },
-  { label: 'Area Light', icon: '✦' },
-  { label: 'Object 2', icon: '⬚', active: true },
-  { label: 'Background 2', icon: '⬡' },
-  { label: 'Character', icon: '◉' },
-  { label: 'Background 1', icon: '⬟' },
-];
-
-const materialItems = ['F4F4F4', 'D6A08A', '3F3F44', '1F1F22'];
-const styleItems = ['Warm Studio', 'Sunset Mood'];
-const inspectorFields = [
-  { label: 'X', value: '12.0' },
-  { label: 'Y', value: '4.0' },
-  { label: 'Z', value: '2.0' },
-  { label: 'Scale', value: '1.0' },
-  { label: 'Opacity', value: '100%' },
-];
-
 export default function App() {
-  const [activeTab, setActiveTab] = useState<AssetTab>(tabs[1]);
+  const [openTabs, setOpenTabs] = useState<EditorTab[]>(TABS);
+  const [activeTab, setActiveTab] = useState<EditorTab>(TABS[0]);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [status, setStatus] = useState(statusSeed);
-  const [selectedItem, setSelectedItem] = useState(sceneItems[4].label);
   const [loadingMotor, setLoadingMotor] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState('player');
+  const [collapsedPanels, setCollapsedPanels] = useState({
+    hierarchy: false,
+    properties: false,
+    browser: false,
+  });
 
-  const visibleTabs = useMemo(() => tabs, []);
+  const effectiveTabs = useMemo(
+    () => (openTabs.length ? openTabs : [TABS[0]]),
+    [openTabs],
+  );
+
+  useEffect(() => {
+    if (!effectiveTabs.some((tab) => tab.id === activeTab.id)) {
+      setActiveTab(effectiveTabs[0]);
+    }
+  }, [activeTab.id, effectiveTabs]);
 
   useEffect(() => {
     let unsubscribe: () => void = () => {};
-
     tauriService.getStatus().then(setStatus).catch(() => undefined);
-    tauriService.onStatusChange((nextStatus) => setStatus(nextStatus)).then((dispose) => {
-      unsubscribe = dispose;
-    });
-
-    return () => {
-      unsubscribe();
-    };
+    tauriService.onStatusChange((s) => setStatus(s)).then((d) => { unsubscribe = d; });
+    return () => { unsubscribe(); };
   }, []);
 
   const toggleMotor = async () => {
     setLoadingMotor(true);
     try {
-      if (status.running) {
-        await tauriService.stopMotor();
-      } else {
-        await tauriService.startMotor();
-      }
+      if (status.running) await tauriService.stopMotor();
+      else await tauriService.startMotor();
     } finally {
       setLoadingMotor(false);
     }
   };
 
+  const togglePanel = (panel: 'hierarchy' | 'properties' | 'browser') => {
+    setCollapsedPanels((prev) => ({ ...prev, [panel]: !prev[panel] }));
+  };
+
+  const closeTab = (tabId: string) => {
+    setOpenTabs((prev) => {
+      const next = prev.filter((tab) => tab.id !== tabId || !tab.closable);
+      return next.length ? next : [TABS[0]];
+    });
+  };
+
   return (
     <div className="editor-shell">
-      <div className="shell-frame">
-        <header className="titlebar">
-          <div className="project-meta">
-            <div className="brand-mark" aria-hidden="true">◇</div>
-            <div>
-              <div className="project-name">{status.project}</div>
-              <div className="project-subtitle">React layout on top, C++ state below</div>
-            </div>
-          </div>
-
-          <div className="top-controls" aria-label="Viewport controls">
-            {['↖', '⟲', '▢', '◫', '▶'].map((symbol) => (
-              <button key={symbol} type="button" className="icon-button" aria-label={symbol}>
-                {symbol}
+      {/* ═══ TOPBAR: logo + tabs + project name ═══ */}
+      <header className="topbar">
+        <div className="topbar-left">
+          <div className="logo" aria-label="Lightning Engine">⚡</div>
+          <nav className="tabs-strip" aria-label="Open tabs">
+            {effectiveTabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className={tab.id === activeTab.id ? 'editor-tab active' : 'editor-tab'}
+                style={{ '--tab-accent': tab.accent } as CSSProperties}
+                onClick={() => setActiveTab(tab)}
+              >
+                <span className="tab-label">{tab.label}</span>
+                {tab.closable && (
+                  <span
+                    className="tab-close"
+                    role="button"
+                    tabIndex={0}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      closeTab(tab.id);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        closeTab(tab.id);
+                      }
+                    }}
+                  >
+                    ×
+                  </span>
+                )}
               </button>
             ))}
-            <div className="zoom-chip">100%</div>
-            <button type="button" className="arrow-button" aria-label="Undo">←</button>
-            <button type="button" className="arrow-button" aria-label="Redo">→</button>
-            <button type="button" className="export-button">Export</button>
-          </div>
-
-          <div className="titlebar-actions">
-            <div className="avatar-stack" aria-label="Collaborators">
-              <span className="avatar avatar-a" />
-              <span className="avatar avatar-b" />
-            </div>
-            <button type="button" className="share-button">Share</button>
-          </div>
-        </header>
-
-        <nav className="tabs-row" aria-label="Context tabs">
-          {visibleTabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={`tab-pill ${activeTab.id === tab.id ? 'active' : ''}`}
-              style={{ '--tab-accent': tab.accent } as CSSProperties}
-              onClick={() => setActiveTab(tab)}
-            >
-              <span className="tab-dot" />
-              {tab.label}
-              {tab.closable ? <span className="tab-close">×</span> : null}
-            </button>
-          ))}
-        </nav>
-
-        <div className="menu-row">
-          {['File', 'Edit', 'View', 'GameObject', 'Component', 'Window', 'Help'].map((item) => (
-            <button key={item} type="button" className="menu-item">{item}</button>
-          ))}
-          <div className="menu-spacer" />
-          <button type="button" className={status.running ? 'play-pill running' : 'play-pill'} onClick={toggleMotor} disabled={loadingMotor}>
-            {loadingMotor ? '...' : status.running ? 'Pause' : 'Play'}
-          </button>
+          </nav>
         </div>
+        <span className="topbar-project">{status.project}</span>
+      </header>
 
-        <section className="toolbar" aria-label="Quick actions">
-          {['□', '○', '△', '⌂', '▣'].map((item) => (
-            <button key={item} type="button" className="toolbar-button">{item}</button>
-          ))}
-          <div className="toolbar-divider" />
-          <span className="toolbar-note">Scene mode</span>
-        </section>
-
-        <main className="workspace">
-          <aside className="panel sidebar-left">
-            <div className="sidebar-head">
-              <div>
-                <div className="sidebar-title">Layout map</div>
-                <div className="sidebar-subtitle">Left data, center viewport, right inspector</div>
-              </div>
-              <button type="button" className="small-icon-button">▣</button>
-            </div>
-
-            <div className="segmented-control" aria-label="Scene tabs">
-              <button type="button" className="segmented-button active">Scene</button>
-              <button type="button" className="segmented-button">Assets</button>
-            </div>
-
-            <div className="scene-list">
-              {sceneItems.map((item) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  className={`scene-row ${selectedItem === item.label ? 'active' : ''}`}
-                  onClick={() => setSelectedItem(item.label)}
-                >
-                  <span className="scene-icon">{item.icon}</span>
-                  <span className="scene-label">{item.label}</span>
-                  <span className="scene-actions">⌂ ◎</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="search-box" style={{ display: 'grid', gap: '8px', alignItems: 'stretch' }}>
-              <div style={{ display: 'grid', gap: '4px' }}>
-                <strong style={{ fontSize: '0.9rem' }}>Bridge snapshot</strong>
-                <span style={{ color: 'var(--muted)', fontSize: '0.82rem' }}>The C++ editor writes status here, and Tauri reads it.</span>
-              </div>
-              <div style={{ display: 'grid', gap: '4px' }}>
-                <span>Last change</span>
-                <strong>{status.lastChange ?? 'Waiting for C++ bridge'}</strong>
-              </div>
-            </div>
-
-            <div className="search-box">
-              <span>⌕</span>
-              <input type="text" value="Search..." readOnly />
-              <kbd>⌘K</kbd>
-            </div>
-          </aside>
-
-          <section className="stage-column">
-            <div className="panel viewport">
-              <div className="viewport-stage">
-                <div className="viewport-grid" />
-                <div className="viewport-canvas">
-                  <div className="stage-toolbar" aria-label="Viewport toolbar">
-                    {['◻', '⟲', '◌', '◩'].map((item) => (
-                      <button key={item} type="button" className="icon-button small">{item}</button>
-                    ))}
-                    <span className="stage-toolbar-label">{status.running ? 'Live bridge' : 'Bridge idle'}</span>
-                  </div>
-
-                  <div className="viewport-figure">
-                    <div className="figure-head" />
-                    <div className="figure-glasses">
-                      <span />
-                      <span />
-                    </div>
-                    <div className="figure-body" />
-                    <div className="figure-bag" />
-                    <div className="figure-shadow" />
-                  </div>
-
-                  <div className="stage-caption">
-                    <div>
-                      <strong>Viewport region</strong>
-                      <span>Pure render surface fed by runtime state</span>
-                    </div>
-                    <button type="button" className="caption-button">Bridge ▾</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bottom-toolbar">
-              <button type="button" className="bottom-action">＋</button>
-              <div className="bottom-cta">
-                <span className="cta-label">Add photos or videos</span>
-                <button type="button" className="cta-pill">Add 3D objects</button>
-                <button type="button" className="cta-pill secondary">Add files</button>
-              </div>
-              <div className="bottom-prompt">Create something...</div>
-              <button type="button" className="bottom-submit">↑</button>
-            </div>
-          </section>
-
-          <aside className="panel sidebar-right">
-            <div className="sidebar-right-top">
-              <div className="avatar-stack">
-                <span className="avatar avatar-a" />
-                <span className="avatar avatar-b" />
-              </div>
-              <button type="button" className="share-button compact">Share</button>
-            </div>
-
-            <div className="segmented-control right-segmented">
-              <button type="button" className="segmented-button active">Design</button>
-              <button type="button" className="segmented-button">Animation</button>
-            </div>
-
-            <section className="right-section">
-              <div className="section-header">
-                <h2>Materials</h2>
-                <button type="button" className="plus-button">+</button>
-              </div>
-              <div className="material-grid">
-                {materialItems.map((item, index) => (
-                  <button key={item} type="button" className={`material-swatch swatch-${index + 1}`} aria-label={`Material ${item}`}>
-                    <span>{item}</span>
+      {/* ═══ MENUBAR ═══ */}
+      <nav className="menubar" aria-label="Editor menu">
+        {Object.keys(MENU_MODEL).map((m) => (
+          <div
+            key={m}
+            className="menu-group"
+            onMouseEnter={() => setActiveMenu(m)}
+            onMouseLeave={() => setActiveMenu((prev) => (prev === m ? null : prev))}
+          >
+            <button
+              type="button"
+              className={activeMenu === m ? 'menu-item active' : 'menu-item'}
+              onClick={() => setActiveMenu((prev) => (prev === m ? null : m))}
+            >
+              {m}
+            </button>
+            {activeMenu === m ? (
+              <div className="menu-dropdown" role="menu" aria-label={`${m} options`}>
+                {MENU_MODEL[m].map((item) => (
+                  <button key={item} type="button" className="menu-dropdown-item">
+                    {item}
                   </button>
                 ))}
               </div>
-            </section>
+            ) : null}
+          </div>
+        ))}
+      </nav>
 
-            <section className="right-section">
-              <div className="section-header">
-                <h2>Styles</h2>
-                <button type="button" className="plus-button">+</button>
+      {/* ═══ TOOLBAR ═══ */}
+      <div className="toolbar">
+        <button type="button" className="tool-btn" title="Scene Settings">⚙</button>
+        <button
+          type="button"
+          className={`tool-btn ${status.running ? 'running' : ''}`}
+          title={status.running ? 'Stop' : 'Play'}
+          onClick={toggleMotor}
+          disabled={loadingMotor}
+        >▶</button>
+        <button type="button" className="tool-btn" title="Compile">⛭</button>
+      </div>
+
+      {/* ═══ DOCKSPACE ═══ */}
+      <main className="dockspace">
+        {/* ── Hierarchy (left) ── */}
+        <section className="panel panel-hierarchy">
+          <div className="panel-header">
+            <span className="panel-drag">⋮</span>
+            <span className="panel-title">Root</span>
+            <div className="panel-actions">
+              <button
+                type="button"
+                className="panel-btn"
+                title="Minimize"
+                onClick={() => togglePanel('hierarchy')}
+              >
+                —
+              </button>
+              <button type="button" className="panel-btn" title="Detach">●</button>
+            </div>
+          </div>
+          <div className={collapsedPanels.hierarchy ? 'panel-body hidden' : 'panel-body'}>
+            {hierarchyItems.map((item) => (
+              <div key={item.id} className="hierarchy-item" style={{ paddingLeft: `${8 + item.depth * 16}px` }}>
+                {item.label}
               </div>
-              <div className="style-grid">
-                {styleItems.map((item) => (
-                  <div key={item} className="style-card">
-                    <div className="style-preview" />
-                    <span>{item}</span>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Viewport (center) ── */}
+        <section className="panel panel-viewport">
+          <div className="viewport-surface">
+            {/* Gizmo cube */}
+            <div className="viewport-gizmo-cube">
+              <div className="gizmo-cube-face">
+                <div className="gizmo-axis-x">X</div>
+                <div className="gizmo-axis-y">Y</div>
+                <div className="gizmo-axis-z">Z</div>
+              </div>
+              <div className="gizmo-label-line">
+                <span className="gizmo-label cyan">ILUMINADO</span>
+              </div>
+              <div className="gizmo-label-line">
+                <span>ORTHO - </span>
+                <span className="gizmo-label cyan">PESPEC</span>
+              </div>
+            </div>
+            {/* Viewport settings */}
+            <div className="viewport-top-left">
+              <span className="viewport-dot">●</span>
+              <button type="button" className="viewport-settings-btn" title="Viewport settings">⚙</button>
+            </div>
+            {/* Grid checkered */}
+            <div className="viewport-grid" />
+            {/* Watermark */}
+            <div className="viewport-watermark">Scene2D</div>
+            {/* Gizmo toolbar */}
+            <div className="viewport-gizmo-bar">
+              <button type="button" className="gizmo-tool active" title="Move">✥</button>
+              <button type="button" className="gizmo-tool" title="Rotate">↻</button>
+              <button type="button" className="gizmo-tool" title="Scale">⤴</button>
+              <button type="button" className="gizmo-tool" title="More">›</button>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Properties (right) ── */}
+        <section className="panel panel-properties">
+          <div className="panel-header">
+            <span className="panel-drag">⋮</span>
+            <span className="panel-title">Properties</span>
+            <div className="panel-actions">
+              <button
+                type="button"
+                className="panel-btn"
+                title="Minimize"
+                onClick={() => togglePanel('properties')}
+              >
+                —
+              </button>
+              <button type="button" className="panel-btn" title="Detach">●</button>
+            </div>
+          </div>
+          <div className={collapsedPanels.properties ? 'panel-body properties-body hidden' : 'panel-body properties-body'}>
+            {inspectorFields.map((field) => {
+              if (field.values) {
+                return (
+                  <div key={field.label} className="prop-row">
+                    <span className="prop-label">{field.label}:</span>
+                    <div className="prop-transform">
+                      {field.values.map((v) => (
+                        <label key={v.axis} className="transform-field">
+                          <span style={{ color: v.color }}>{v.axis}</span>
+                          <input type="text" defaultValue={v.val} readOnly />
+                        </label>
+                      ))}
+                      <button type="button" className="transform-reset" title="Reset">↺</button>
+                    </div>
+                  </div>
+                );
+              }
+              if (field.checked !== undefined) {
+                return (
+                  <div key={field.label} className="prop-row">
+                    <span className="prop-label">{field.label}:</span>
+                    <input type="checkbox" checked={field.checked} readOnly className="prop-checkbox" />
+                  </div>
+                );
+              }
+              return (
+                <div key={field.label} className="prop-row">
+                  <span className="prop-label">{field.label}:</span>
+                  <input type="text" defaultValue={field.value} readOnly className="prop-input" />
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── Content Browser (bottom) ── */}
+        <section className="panel panel-browser">
+          <div className="panel-header">
+            <span className="panel-drag">⋮</span>
+            <span className="panel-title">Content Browser</span>
+            <div className="panel-actions">
+              <button
+                type="button"
+                className="panel-btn"
+                title="Minimize"
+                onClick={() => togglePanel('browser')}
+              >
+                —
+              </button>
+              <button type="button" className="panel-btn" title="Detach">●</button>
+            </div>
+          </div>
+          <div className={collapsedPanels.browser ? 'browser-body hidden' : 'browser-body'}>
+            {/* Browser toolbar */}
+            <div className="browser-toolbar">
+              <div className="browser-toolbar-icons">
+                <button type="button" title="Back">⊙</button>
+                <button type="button" title="Forward">⊙</button>
+                <button type="button" title="Add">⊕</button>
+                <button type="button" title="Import">⬇</button>
+              </div>
+              <div className="browser-path">
+                <span>📁</span>
+                <span>Content &gt;</span>
+              </div>
+            </div>
+            <div className="browser-content">
+              {/* Folder tree */}
+              <div className="browser-tree">
+                <div className="tree-section">
+                  <div className="tree-header">Favorites <span>▼</span></div>
+                </div>
+                <div className="tree-section">
+                  <div className="tree-header">My Project <span>▼</span></div>
+                  {cbFolders.map((f) => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      className={`tree-item ${f.id === selectedFolder ? 'selected' : ''}`}
+                      onClick={() => setSelectedFolder(f.id)}
+                    >
+                      <span className="tree-dot" style={{ background: f.color }} />
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="tree-section">
+                  <div className="tree-header">Collections <span>▼</span></div>
+                </div>
+              </div>
+              {/* Filters */}
+              <div className="browser-filters">
+                <div className="filters-header">Filters <span className="filters-collapse">‹</span></div>
+                {cbFilters.map((f) => (
+                  <div key={f.id} className="filter-tag">
+                    <span className="filter-dot" style={{ background: f.color }} />
+                    <span>{f.label}</span>
+                    <button type="button" className="filter-remove">×</button>
                   </div>
                 ))}
               </div>
-            </section>
-
-            <section className="right-section compact-grid">
-              <div className="section-header">
-                <h2>Backgrounds</h2>
-                <button type="button" className="plus-button">+</button>
-              </div>
-              <div className="background-row">
-                <div className="background-field">F4F4F4</div>
-                <div className="background-field percent">100 %</div>
-              </div>
-            </section>
-
-            <section className="right-section compact-grid">
-              <div className="section-header">
-                <h2>Camera</h2>
-                <button type="button" className="plus-button">+</button>
-              </div>
-              <div className="segmented-control camera-control">
-                <button type="button" className="segmented-button active">Isometric</button>
-                <button type="button" className="segmented-button">Perspective</button>
-              </div>
-              <div className="slider-card">
-                <span>Distortion</span>
-                <div className="slider-track">
-                  <div className="slider-fill" />
-                </div>
-                <div className="slider-value">0.283</div>
-              </div>
-            </section>
-
-            <section className="right-section status-block">
-              <div className="section-header">
-                <h2>Inspector</h2>
-              </div>
-              <div className="inspector-grid">
-                {inspectorFields.map((field) => (
-                  <label key={field.label} className="field-row">
-                    <span>{field.label}</span>
-                    <input type="text" defaultValue={field.value} />
-                  </label>
+              {/* Asset grid */}
+              <div className="browser-assets">
+                {cbAssets.map((a) => (
+                  <div key={a.id} className="asset-card" style={{ '--asset-border': a.borderColor } as CSSProperties}>
+                    <div className="asset-thumb" />
+                    <div className="asset-info">
+                      <span className="asset-name">{a.name}</span>
+                      <span className="asset-sub">{a.subtitle}</span>
+                    </div>
+                  </div>
                 ))}
-                <label className="field-row">
-                  <span>Selected Item</span>
-                  <input type="text" value={selectedItem} readOnly />
-                </label>
               </div>
-            </section>
-          </aside>
-        </main>
+            </div>
+          </div>
+        </section>
+      </main>
 
-        <footer className="statusbar">
+      {/* ═══ TRAY / STATUS BAR ═══ */}
+      <footer className="tray">
+        <div className="tray-info">
           <span>Scene: {status.scene}</span>
+          <span>FPS: {status.fps ?? 0}</span>
           <span>Motor: {status.running ? 'Running' : 'Stopped'}</span>
-          <span>FPS: {status.fps}</span>
-          <span>Bridge: {status.lastChange ?? 'Waiting for C++ bridge'}</span>
-        </footer>
-      </div>
+          <span>Tab: {activeTab.label}</span>
+        </div>
+        <span className="tray-icon" title="Collections">🔖</span>
+      </footer>
     </div>
   );
 }

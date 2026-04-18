@@ -122,7 +122,7 @@ bool SparkShader::Load(Renderer& r, const char* spvBase, uint32_t injectFlags)
         return false;
     }
 
-    pipeline = makePipeline(device, vert, frag);
+    pipeline.reset(device, makePipeline(device, vert, frag));
     SDL_ReleaseGPUShader(device, vert);
     SDL_ReleaseGPUShader(device, frag);
 
@@ -136,10 +136,9 @@ bool SparkShader::Load(Renderer& r, const char* spvBase, uint32_t injectFlags)
     SDL_GPUBufferCreateInfo bi = {};
     bi.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
     bi.size  = 6 * sizeof(float) * 4;
-    vbuf = SDL_CreateGPUBuffer(device, &bi);
+    vbuf.reset(device, SDL_CreateGPUBuffer(device, &bi));
     if (!vbuf) {
-        SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
-        pipeline = nullptr;
+        pipeline.reset();
         device   = nullptr;
         return false;
     }
@@ -149,10 +148,8 @@ bool SparkShader::Load(Renderer& r, const char* spvBase, uint32_t injectFlags)
 
 void SparkShader::Release()
 {
-    if (device) {
-        if (vbuf)     { SDL_ReleaseGPUBuffer(device, vbuf);                    vbuf     = nullptr; }
-        if (pipeline) { SDL_ReleaseGPUGraphicsPipeline(device, pipeline); pipeline = nullptr; }
-    }
+    vbuf.reset();
+    pipeline.reset();
     device = nullptr;
     flags  = 0;
 }
@@ -186,7 +183,7 @@ void SparkShader::Process(Renderer& r, Texture& src, Framebuffer& dest)
 
     SDL_GPUCopyPass* cp = SDL_BeginGPUCopyPass(cmd);
     SDL_GPUTransferBufferLocation tbl = { tb, 0 };
-    SDL_GPUBufferRegion           dbr = { vbuf, 0, vSize };
+    SDL_GPUBufferRegion           dbr = { vbuf.get(), 0, vSize };
     SDL_UploadToGPUBuffer(cp, &tbl, &dbr, true);
     SDL_EndGPUCopyPass(cp);
     SDL_ReleaseGPUTransferBuffer(device, tb);
@@ -199,9 +196,9 @@ void SparkShader::Process(Renderer& r, Texture& src, Framebuffer& dest)
     ct.store_op    = SDL_GPU_STOREOP_STORE;
 
     SDL_GPURenderPass* rp = SDL_BeginGPURenderPass(cmd, &ct, 1, nullptr);
-    SDL_BindGPUGraphicsPipeline(rp, pipeline);
+    SDL_BindGPUGraphicsPipeline(rp, pipeline.get());
 
-    SDL_GPUBufferBinding vb = { vbuf, 0 };
+    SDL_GPUBufferBinding vb = { vbuf.get(), 0 };
     SDL_BindGPUVertexBuffers(rp, 0, &vb, 1);
 
     SDL_GPUTextureSamplerBinding tsb = { src.GetGPUTexture(), src.GetSampler() };

@@ -126,9 +126,8 @@ Renderer::Renderer(SDL_GPUDevice* dev, SDL_Window* win)
 	: device(dev), window(win)
 {
 	swapFmt = SDL_GetGPUSwapchainTextureFormat(device, window);
-	initPipeline2D();
-	initPipelineTex();
-	initPipelinesRT();
+	initPipelineSet(swapPipes_, swapFmt, "swapchain");
+	initPipelineSet(rtPipes_, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM, "render target");
 	initPipelineBlur();
 	initPipeline3D();
 
@@ -315,100 +314,57 @@ SDL_GPUGraphicsPipeline* Renderer::makePipeline3D(SDL_GPUTextureFormat fmt,
 // Pipeline init
 // ============================================================================
 
-bool Renderer::initPipeline2D()
+bool Renderer::initPipelineSet(PipelineSet& set, SDL_GPUTextureFormat fmt, const char* labelSuffix)
 {
 	if (!device || !window) return false;
-	SDL_GPUShader* vert = loadShader(SDL_GPU_SHADERSTAGE_VERTEX,
+	SDL_GPUShader* vert2D = loadShader(SDL_GPU_SHADERSTAGE_VERTEX,
 	                                  "assets/shaders/rect2d_vert.spv", 0, 0);
-	SDL_GPUShader* frag = loadShader(SDL_GPU_SHADERSTAGE_FRAGMENT,
+	SDL_GPUShader* frag2D = loadShader(SDL_GPU_SHADERSTAGE_FRAGMENT,
 	                                  "assets/shaders/rect2d_frag.spv", 0, 1);
-	if (!vert || !frag) {
-		if (vert) SDL_ReleaseGPUShader(device, vert);
-		if (frag) SDL_ReleaseGPUShader(device, frag);
-		std::cerr << "[Renderer] Colored 2D pipeline unavailable.\n";
+	SDL_GPUShader* vertTex = loadShader(SDL_GPU_SHADERSTAGE_VERTEX,
+	                                  "assets/shaders/rect2d_tex_vert.spv", 0, 0);
+	SDL_GPUShader* fragTex = loadShader(SDL_GPU_SHADERSTAGE_FRAGMENT,
+	                                  "assets/shaders/rect2d_tex_frag.spv", 1, 1);
+	if (!vert2D || !frag2D || !vertTex || !fragTex) {
+		if (vert2D) SDL_ReleaseGPUShader(device, vert2D);
+		if (frag2D) SDL_ReleaseGPUShader(device, frag2D);
+		if (vertTex) SDL_ReleaseGPUShader(device, vertTex);
+		if (fragTex) SDL_ReleaseGPUShader(device, fragTex);
+		std::cerr << "[Renderer] 2D shaders unavailable for " << labelSuffix << ".\n";
 		return false;
 	}
 
-	pipe2D = makePipeline2D(swapFmt, vert, frag);
-	SDL_ReleaseGPUShader(device, vert);
-	SDL_ReleaseGPUShader(device, frag);
-	if (!pipe2D) { std::cerr << "[Renderer] pipe2D failed.\n"; return false; }
+	set.pipe2D.reset(device, makePipeline2D(fmt, vert2D, frag2D));
+	set.pipeTex.reset(device, makePipelineTex(fmt, vertTex, fragTex));
 
-	SDL_GPUBufferCreateInfo bi = {};
-	bi.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
-	bi.size  = kMaxVerts * sizeof(float) * 2;
-	vbuf2D = SDL_CreateGPUBuffer(device, &bi);
-	return vbuf2D != nullptr;
-}
+	SDL_ReleaseGPUShader(device, vert2D);
+	SDL_ReleaseGPUShader(device, frag2D);
+	SDL_ReleaseGPUShader(device, vertTex);
+	SDL_ReleaseGPUShader(device, fragTex);
 
-bool Renderer::initPipelineTex()
-{
-	if (!device || !window) return false;
-	SDL_GPUShader* vert = loadShader(SDL_GPU_SHADERSTAGE_VERTEX,
-	                                  "assets/shaders/rect2d_tex_vert.spv", 0, 0);
-	SDL_GPUShader* frag = loadShader(SDL_GPU_SHADERSTAGE_FRAGMENT,
-	                                  "assets/shaders/rect2d_tex_frag.spv", 1, 1);
-	if (!vert || !frag) {
-		if (vert) SDL_ReleaseGPUShader(device, vert);
-		if (frag) SDL_ReleaseGPUShader(device, frag);
-		std::cerr << "[Renderer] Textured 2D pipeline unavailable.\n";
+	if (!set.pipe2D || !set.pipeTex) {
+		std::cerr << "[Renderer] 2D pipeline creation failed for " << labelSuffix << ".\n";
+		set.Release();
 		return false;
 	}
 
-	pipeTex = makePipelineTex(swapFmt, vert, frag);
-	SDL_ReleaseGPUShader(device, vert);
-	SDL_ReleaseGPUShader(device, frag);
-	if (!pipeTex) { std::cerr << "[Renderer] pipeTex failed.\n"; return false; }
+	SDL_GPUBufferCreateInfo bi2D = {};
+	bi2D.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
+	bi2D.size  = kMaxVerts * sizeof(float) * 2;
+	set.vb2D.reset(device, SDL_CreateGPUBuffer(device, &bi2D));
 
-	SDL_GPUBufferCreateInfo bi = {};
-	bi.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
-	bi.size  = kMaxTexVerts * sizeof(float) * 4;
-	vbufTex = SDL_CreateGPUBuffer(device, &bi);
-	return vbufTex != nullptr;
-}
+	SDL_GPUBufferCreateInfo biTex = {};
+	biTex.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
+	biTex.size  = kMaxTexVerts * sizeof(float) * 4;
+	set.vbTex.reset(device, SDL_CreateGPUBuffer(device, &biTex));
 
-bool Renderer::initPipelinesRT()
-{
-	if (!device || !window) return false;
-
-	constexpr SDL_GPUTextureFormat kRTFmt = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
-
-	SDL_GPUShader* v2d  = loadShader(SDL_GPU_SHADERSTAGE_VERTEX,
-	                                  "assets/shaders/rect2d_vert.spv", 0, 0);
-	SDL_GPUShader* f2d  = loadShader(SDL_GPU_SHADERSTAGE_FRAGMENT,
-	                                  "assets/shaders/rect2d_frag.spv", 0, 1);
-	SDL_GPUShader* vtex = loadShader(SDL_GPU_SHADERSTAGE_VERTEX,
-	                                  "assets/shaders/rect2d_tex_vert.spv", 0, 0);
-	SDL_GPUShader* ftex = loadShader(SDL_GPU_SHADERSTAGE_FRAGMENT,
-	                                  "assets/shaders/rect2d_tex_frag.spv", 1, 1);
-
-	if (v2d && f2d) {
-		pipe2D_rt = makePipeline2D(kRTFmt, v2d, f2d);
-		if (!pipe2D_rt) std::cerr << "[Renderer] pipe2D_rt failed.\n";
-	}
-	if (vtex && ftex) {
-		pipeTex_rt = makePipelineTex(kRTFmt, vtex, ftex);
-		if (!pipeTex_rt) std::cerr << "[Renderer] pipeTex_rt failed.\n";
+	if (!set.vb2D || !set.vbTex) {
+		std::cerr << "[Renderer] 2D vertex buffer creation failed for " << labelSuffix << ".\n";
+		set.Release();
+		return false;
 	}
 
-	if (v2d)  SDL_ReleaseGPUShader(device, v2d);
-	if (f2d)  SDL_ReleaseGPUShader(device, f2d);
-	if (vtex) SDL_ReleaseGPUShader(device, vtex);
-	if (ftex) SDL_ReleaseGPUShader(device, ftex);
-
-	if (!pipe2D_rt || !pipeTex_rt) return false;
-
-	SDL_GPUBufferCreateInfo bi2 = {};
-	bi2.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
-	bi2.size  = kMaxVerts * sizeof(float) * 2;
-	vbuf2D_rt = SDL_CreateGPUBuffer(device, &bi2);
-
-	SDL_GPUBufferCreateInfo biT = {};
-	biT.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
-	biT.size  = kMaxTexVerts * sizeof(float) * 4;
-	vbufTex_rt = SDL_CreateGPUBuffer(device, &biT);
-
-	return vbuf2D_rt && vbufTex_rt;
+	return true;
 }
 
 bool Renderer::initPipelineBlur()
@@ -427,10 +383,10 @@ bool Renderer::initPipelineBlur()
 		return false;
 	}
 
-	pipeBlur = makePipelineTex(kRTFmt, vert, frag);
+	pipeBlur.reset(device, makePipelineTex(kRTFmt, vert, frag));
 	SDL_ReleaseGPUShader(device, vert);
 	SDL_ReleaseGPUShader(device, frag);
-	return pipeBlur != nullptr;
+	return static_cast<bool>(pipeBlur);
 }
 
 bool Renderer::initPipeline3D()
@@ -448,7 +404,7 @@ bool Renderer::initPipeline3D()
 		return false;
 	}
 
-	pipe3D = makePipeline3D(swapFmt, vert, frag);
+	pipe3D.reset(device, makePipeline3D(swapFmt, vert, frag));
 	SDL_ReleaseGPUShader(device, vert);
 	SDL_ReleaseGPUShader(device, frag);
 	if (!pipe3D) { std::cerr << "[Renderer] pipe3D failed.\n"; return false; }
@@ -462,7 +418,7 @@ bool Renderer::initPipeline3D()
 void Renderer::ensureDepthBuffer(Uint32 w, Uint32 h)
 {
 	if (depthTex && depthW == w && depthH == h) return;
-	if (depthTex) { SDL_ReleaseGPUTexture(device, depthTex); depthTex = nullptr; }
+	depthTex.reset();
 
 	SDL_GPUTextureCreateInfo tci = {};
 	tci.type                     = SDL_GPU_TEXTURETYPE_2D;
@@ -472,7 +428,7 @@ void Renderer::ensureDepthBuffer(Uint32 w, Uint32 h)
 	tci.height                   = h;
 	tci.layer_count_or_depth     = 1;
 	tci.num_levels               = 1;
-	depthTex = SDL_CreateGPUTexture(device, &tci);
+	depthTex.reset(device, SDL_CreateGPUTexture(device, &tci));
 	depthW   = w;
 	depthH   = h;
 }
@@ -662,7 +618,7 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 	if (!cv.empty() || !tv.empty()) {
 		SDL_GPUCopyPass* cp = SDL_BeginGPUCopyPass(cmd);
 
-		if (p.p2D && !cv.empty()) {
+		if (p.pipelines->pipe2D && !cv.empty()) {
 			Uint32 vSize = (Uint32)(cv.size() * sizeof(float));
 			SDL_GPUTransferBufferCreateInfo tbi = { SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, vSize };
 			SDL_GPUTransferBuffer* tb = SDL_CreateGPUTransferBuffer(device, &tbi);
@@ -670,13 +626,13 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 				SDL_memcpy(SDL_MapGPUTransferBuffer(device, tb, false), cv.data(), vSize);
 				SDL_UnmapGPUTransferBuffer(device, tb);
 				SDL_GPUTransferBufferLocation src = { tb, 0 };
-				SDL_GPUBufferRegion           dst = { p.vb2D, 0, vSize };
+				SDL_GPUBufferRegion           dst = { p.pipelines->vb2D.get(), 0, vSize };
 				SDL_UploadToGPUBuffer(cp, &src, &dst, true);
 				SDL_ReleaseGPUTransferBuffer(device, tb);
 			}
 		}
 
-		if (p.pTex && !tv.empty()) {
+		if (p.pipelines->pipeTex && !tv.empty()) {
 			Uint32 vSize = (Uint32)(tv.size() * sizeof(float));
 			SDL_GPUTransferBufferCreateInfo tbi = { SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, vSize };
 			SDL_GPUTransferBuffer* tb = SDL_CreateGPUTransferBuffer(device, &tbi);
@@ -684,7 +640,7 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 				SDL_memcpy(SDL_MapGPUTransferBuffer(device, tb, false), tv.data(), vSize);
 				SDL_UnmapGPUTransferBuffer(device, tb);
 				SDL_GPUTransferBufferLocation src = { tb, 0 };
-				SDL_GPUBufferRegion           dst = { p.vbTex, 0, vSize };
+				SDL_GPUBufferRegion           dst = { p.pipelines->vbTex.get(), 0, vSize };
 				SDL_UploadToGPUBuffer(cp, &src, &dst, true);
 				SDL_ReleaseGPUTransferBuffer(device, tb);
 			}
@@ -723,10 +679,10 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 			continue;
 		}
 		if (r.textured) {
-			if (!p.pTex || !r.tex) continue;
+			if (!p.pipelines->pipeTex || !r.tex) continue;
 			if (!hasBound || !boundTextured) {
-				SDL_BindGPUGraphicsPipeline(rp, p.pTex);
-				SDL_GPUBufferBinding vb = { p.vbTex, 0 };
+				SDL_BindGPUGraphicsPipeline(rp, p.pipelines->pipeTex.get());
+				SDL_GPUBufferBinding vb = { p.pipelines->vbTex.get(), 0 };
 				SDL_BindGPUVertexBuffers(rp, 0, &vb, 1);
 				hasBound = true;
 				boundTextured = true;
@@ -737,10 +693,10 @@ void Renderer::flushQueueTo(SDL_GPUCommandBuffer* cmd,
 			SDL_PushGPUFragmentUniformData(cmd, 0, col, sizeof(col));
 			SDL_DrawGPUPrimitives(rp, r.count, 1, r.first, 0);
 		} else {
-			if (!p.p2D) continue;
+			if (!p.pipelines->pipe2D) continue;
 			if (!hasBound || boundTextured) {
-				SDL_BindGPUGraphicsPipeline(rp, p.p2D);
-				SDL_GPUBufferBinding vb = { p.vb2D, 0 };
+				SDL_BindGPUGraphicsPipeline(rp, p.pipelines->pipe2D.get());
+				SDL_GPUBufferBinding vb = { p.pipelines->vb2D.get(), 0 };
 				SDL_BindGPUVertexBuffers(rp, 0, &vb, 1);
 				hasBound = true;
 				boundTextured = false;
@@ -772,7 +728,7 @@ void Renderer::render3DPass(SDL_GPUCommandBuffer* cmd,
 	ct.store_op    = SDL_GPU_STOREOP_STORE;
 
 	SDL_GPUDepthStencilTargetInfo dt = {};
-	dt.texture            = depthTex;
+	dt.texture            = depthTex.get();
 	dt.clear_depth        = 1.0f;
 	dt.load_op            = SDL_GPU_LOADOP_CLEAR;
 	dt.store_op           = SDL_GPU_STOREOP_DONT_CARE;
@@ -781,7 +737,7 @@ void Renderer::render3DPass(SDL_GPUCommandBuffer* cmd,
 	dt.cycle              = true;
 
 	SDL_GPURenderPass* rp = SDL_BeginGPURenderPass(cmd, &ct, 1, &dt);
-	SDL_BindGPUGraphicsPipeline(rp, pipe3D);
+	SDL_BindGPUGraphicsPipeline(rp, pipe3D.get());
 
 	// Set viewport
 	SDL_GPUViewport vp = {};
@@ -792,9 +748,9 @@ void Renderer::render3DPass(SDL_GPUCommandBuffer* cmd,
 	for (const auto& mc : mesh3DQueue) {
 		if (!mc.mesh || !mc.mesh->IsValid()) continue;
 
-		SDL_GPUBufferBinding vb = { mc.mesh->vbuf, 0 };
+		SDL_GPUBufferBinding vb = { mc.mesh->vbuf.get(), 0 };
 		SDL_BindGPUVertexBuffers(rp, 0, &vb, 1);
-		SDL_GPUBufferBinding ib = { mc.mesh->ibuf, 0 };
+		SDL_GPUBufferBinding ib = { mc.mesh->ibuf.get(), 0 };
 		SDL_BindGPUIndexBuffer(rp, &ib, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 
 		// Vertex uniform slot 0: mat4 mvp + mat4 model = 128 bytes
@@ -826,18 +782,12 @@ void Renderer::Release()
 {
 	if (device) {
 		whiteTex.Release();
-		if (depthTex)   { SDL_ReleaseGPUTexture(device, depthTex);           depthTex   = nullptr; }
-		if (pipe3D)     { SDL_ReleaseGPUGraphicsPipeline(device, pipe3D);    pipe3D     = nullptr; }
-		if (pipeBlur)   { SDL_ReleaseGPUGraphicsPipeline(device, pipeBlur);  pipeBlur   = nullptr; }
-		if (vbufTex_rt) { SDL_ReleaseGPUBuffer(device, vbufTex_rt);          vbufTex_rt = nullptr; }
-		if (vbuf2D_rt)  { SDL_ReleaseGPUBuffer(device, vbuf2D_rt);           vbuf2D_rt  = nullptr; }
-		if (pipeTex_rt) { SDL_ReleaseGPUGraphicsPipeline(device, pipeTex_rt);pipeTex_rt = nullptr; }
-		if (pipe2D_rt)  { SDL_ReleaseGPUGraphicsPipeline(device, pipe2D_rt); pipe2D_rt  = nullptr; }
-		if (vbufTex)    { SDL_ReleaseGPUBuffer(device, vbufTex);             vbufTex    = nullptr; }
-		if (pipeTex)    { SDL_ReleaseGPUGraphicsPipeline(device, pipeTex);   pipeTex    = nullptr; }
-		if (vbuf2D)     { SDL_ReleaseGPUBuffer(device, vbuf2D);              vbuf2D     = nullptr; }
-		if (pipe2D)     { SDL_ReleaseGPUGraphicsPipeline(device, pipe2D);    pipe2D     = nullptr; }
 	}
+	depthTex.reset();
+	pipe3D.reset();
+	pipeBlur.reset();
+	rtPipes_.Release();
+	swapPipes_.Release();
 	device = nullptr;
 	window = nullptr;
 }
@@ -902,23 +852,37 @@ void Renderer::SetDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	dr = r / 255.f; dg = g / 255.f; db = b / 255.f; da = a / 255.f;
 }
 
+void Renderer::PushDrawState()
+{
+	stateStack_.push_back({ dr, dg, db, da, screenSpace });
+}
+
+void Renderer::PopDrawState()
+{
+	if (stateStack_.empty()) return;
+	const Renderer::Draw2DState& s = stateStack_.back();
+	dr = s.r; dg = s.g; db = s.b; da = s.a;
+	screenSpace = s.screenSpace;
+	stateStack_.pop_back();
+}
+
 void Renderer::FillRect(float x, float y, float w, float h)
 {
-	if (!pipe2D) return;
+	if (!swapPipes_.pipe2D) return;
 	activeQueue->push_back({ x, y, w, h, dr, dg, db, da, true,
 	                         nullptr, 0.f, 0.f, 1.f, 1.f, screenSpace });
 }
 
 void Renderer::DrawRect(float x, float y, float w, float h)
 {
-	if (!pipe2D) return;
+	if (!swapPipes_.pipe2D) return;
 	activeQueue->push_back({ x, y, w, h, dr, dg, db, da, false,
 	                         nullptr, 0.f, 0.f, 1.f, 1.f, screenSpace });
 }
 
 void Renderer::DrawTexture(Texture& tex, float x, float y, float w, float h)
 {
-	if (!pipeTex || !tex.IsValid()) return;
+	if (!swapPipes_.pipeTex || !tex.IsValid()) return;
 	if (w == 0.f) w = (float)tex.GetWidth();
 	if (h == 0.f) h = (float)tex.GetHeight();
 	activeQueue->push_back({ x, y, w, h, dr, dg, db, da, true,
@@ -928,7 +892,7 @@ void Renderer::DrawTexture(Texture& tex, float x, float y, float w, float h)
 void Renderer::DrawTextureRegion(Texture& tex, float x, float y, float w, float h,
                                   float u0, float v0, float u1, float v1)
 {
-	if (!pipeTex || !tex.IsValid()) return;
+	if (!swapPipes_.pipeTex || !tex.IsValid()) return;
 	activeQueue->push_back({ x, y, w, h, dr, dg, db, da, true,
 	                         &tex, u0, v0, u1, v1, screenSpace });
 }
@@ -936,7 +900,7 @@ void Renderer::DrawTextureRegion(Texture& tex, float x, float y, float w, float 
 void Renderer::DrawTextureEx(Texture& tex, float x, float y, float w, float h,
                               float angle, float pivX, float pivY)
 {
-	if (!pipeTex || !tex.IsValid()) return;
+	if (!swapPipes_.pipeTex || !tex.IsValid()) return;
 	if (w == 0.f) w = (float)tex.GetWidth();
 	if (h == 0.f) h = (float)tex.GetHeight();
 	activeQueue->push_back({ x, y, w, h, dr, dg, db, da, true,
@@ -946,7 +910,7 @@ void Renderer::DrawTextureEx(Texture& tex, float x, float y, float w, float h,
 
 void Renderer::DrawLine(float x1, float y1, float x2, float y2, float thickness)
 {
-	if (!pipe2D) return;
+	if (!swapPipes_.pipe2D) return;
 	float dx  = x2 - x1, dy = y2 - y1;
 	float len = sqrtf(dx * dx + dy * dy);
 	if (len < 0.5f) return;
@@ -975,7 +939,7 @@ void Renderer::DrawCircle(float cx, float cy, float radius, int segs)
 
 void Renderer::FillCircle(float cx, float cy, float radius, int segs)
 {
-	if (!pipe2D) return;
+	if (!swapPipes_.pipe2D) return;
 	float d = radius * 2.f;
 	// isCircle=true, pivot at (cx,cy) = actual circle centre
 	activeQueue->push_back({ cx - radius, cy - radius, d, d,
@@ -1029,16 +993,16 @@ void Renderer::UploadMesh(Mesh& mesh)
 	if (mesh.vertices.empty() || mesh.indices.empty() || !device) return;
 
 	// Release existing GPU buffers if any
-	if (mesh.vbuf) { SDL_ReleaseGPUBuffer(device, mesh.vbuf); mesh.vbuf = nullptr; }
-	if (mesh.ibuf) { SDL_ReleaseGPUBuffer(device, mesh.ibuf); mesh.ibuf = nullptr; }
+	mesh.vbuf.reset();
+	mesh.ibuf.reset();
 
 	Uint32 vSize = (Uint32)(mesh.vertices.size() * sizeof(float));
 	Uint32 iSize = (Uint32)(mesh.indices.size()  * sizeof(Uint32));
 
 	SDL_GPUBufferCreateInfo vbi = {}; vbi.usage = SDL_GPU_BUFFERUSAGE_VERTEX; vbi.size = vSize;
 	SDL_GPUBufferCreateInfo ibi = {}; ibi.usage = SDL_GPU_BUFFERUSAGE_INDEX;  ibi.size = iSize;
-	mesh.vbuf = SDL_CreateGPUBuffer(device, &vbi);
-	mesh.ibuf = SDL_CreateGPUBuffer(device, &ibi);
+	mesh.vbuf.reset(device, SDL_CreateGPUBuffer(device, &vbi));
+	mesh.ibuf.reset(device, SDL_CreateGPUBuffer(device, &ibi));
 	if (!mesh.vbuf || !mesh.ibuf) return;
 
 	SDL_GPUCommandBuffer* cmd = SDL_AcquireGPUCommandBuffer(device);
@@ -1054,8 +1018,8 @@ void Renderer::UploadMesh(Mesh& mesh)
 	SDL_UnmapGPUTransferBuffer(device, tb);
 
 	SDL_GPUCopyPass* cp = SDL_BeginGPUCopyPass(cmd);
-	SDL_GPUTransferBufferLocation src0 = { tb, 0       }; SDL_GPUBufferRegion dst0 = { mesh.vbuf, 0, vSize };
-	SDL_GPUTransferBufferLocation src1 = { tb, vSize   }; SDL_GPUBufferRegion dst1 = { mesh.ibuf, 0, iSize };
+	SDL_GPUTransferBufferLocation src0 = { tb, 0       }; SDL_GPUBufferRegion dst0 = { mesh.vbuf.get(), 0, vSize };
+	SDL_GPUTransferBufferLocation src1 = { tb, vSize   }; SDL_GPUBufferRegion dst1 = { mesh.ibuf.get(), 0, iSize };
 	SDL_UploadToGPUBuffer(cp, &src0, &dst0, false);
 	SDL_UploadToGPUBuffer(cp, &src1, &dst1, false);
 	SDL_EndGPUCopyPass(cp);
@@ -1067,8 +1031,8 @@ void Renderer::UploadMesh(Mesh& mesh)
 void Renderer::ReleaseMesh(Mesh& mesh)
 {
 	if (!device) return;
-	if (mesh.vbuf) { SDL_ReleaseGPUBuffer(device, mesh.vbuf); mesh.vbuf = nullptr; }
-	if (mesh.ibuf) { SDL_ReleaseGPUBuffer(device, mesh.ibuf); mesh.ibuf = nullptr; }
+	mesh.vbuf.reset();
+	mesh.ibuf.reset();
 }
 
 void Renderer::DrawMesh(Mesh& mesh, const glm::mat4& model, Texture* albedo)
@@ -1104,10 +1068,7 @@ void Renderer::EndRenderToTexture()
 	p.target     = fbTarget;
 	p.tw         = (Uint32)fbTargetW;
 	p.th         = (Uint32)fbTargetH;
-	p.vb2D       = vbuf2D_rt;
-	p.vbTex      = vbufTex_rt;
-	p.p2D        = pipe2D_rt;
-	p.pTex       = pipeTex_rt;
+	p.pipelines  = &rtPipes_;
 	p.clear      = true;
 	p.clearColor = { 0.f, 0.f, 0.f, 0.f };
 
@@ -1140,7 +1101,7 @@ void Renderer::BlurTexture(Framebuffer& dest, Texture& src, float radius)
 
 	SDL_GPUCopyPass* cp = SDL_BeginGPUCopyPass(cmd);
 	SDL_GPUTransferBufferLocation src_loc = { tb, 0 };
-	SDL_GPUBufferRegion           dst_reg = { vbufTex_rt, 0, vSize };
+	SDL_GPUBufferRegion           dst_reg = { rtPipes_.vbTex.get(), 0, vSize };
 	SDL_UploadToGPUBuffer(cp, &src_loc, &dst_reg, true);
 	SDL_EndGPUCopyPass(cp);
 	SDL_ReleaseGPUTransferBuffer(device, tb);
@@ -1152,9 +1113,9 @@ void Renderer::BlurTexture(Framebuffer& dest, Texture& src, float radius)
 	ct.store_op    = SDL_GPU_STOREOP_STORE;
 
 	SDL_GPURenderPass* rp = SDL_BeginGPURenderPass(cmd, &ct, 1, nullptr);
-	SDL_BindGPUGraphicsPipeline(rp, pipeBlur);
+	SDL_BindGPUGraphicsPipeline(rp, pipeBlur.get());
 
-	SDL_GPUBufferBinding vb = { vbufTex_rt, 0 };
+	SDL_GPUBufferBinding vb = { rtPipes_.vbTex.get(), 0 };
 	SDL_BindGPUVertexBuffers(rp, 0, &vb, 1);
 
 	SDL_GPUTextureSamplerBinding tsb = { src.GetGPUTexture(), src.GetSampler() };
@@ -1187,7 +1148,7 @@ void Renderer::Present()
 		return;
 	}
 
-	bool has3D = !mesh3DQueue.empty() && pipe3D;
+	bool has3D = !mesh3DQueue.empty() && static_cast<bool>(pipe3D);
 
 	// 3D pass first — clears swapchain + depth, renders meshes
 	if (has3D) {
@@ -1199,10 +1160,7 @@ void Renderer::Present()
 	p.target     = swapTex;
 	p.tw         = sw;
 	p.th         = sh;
-	p.vb2D       = vbuf2D;
-	p.vbTex      = vbufTex;
-	p.p2D        = pipe2D;
-	p.pTex       = pipeTex;
+	p.pipelines  = &swapPipes_;
 	p.clear      = !has3D;
 	p.clearColor = clearColor;
 

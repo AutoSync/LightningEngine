@@ -7,6 +7,7 @@ namespace LightningEngine {
 	{
 		Texture tex;
 		tex.device = device;
+		tex.ownsGpu = true;
 		tex.width  = w;
 		tex.height = h;
 
@@ -20,7 +21,7 @@ namespace LightningEngine {
 		texInfo.layer_count_or_depth = 1;
 		texInfo.num_levels           = 1;
 
-		tex.gpuTex = SDL_CreateGPUTexture(device, &texInfo);
+		tex.gpuTex.reset(device, SDL_CreateGPUTexture(device, &texInfo));
 		if (!tex.gpuTex) {
 			std::cerr << "[Texture] SDL_CreateGPUTexture failed: " << SDL_GetError() << "\n";
 			return tex;
@@ -35,11 +36,10 @@ namespace LightningEngine {
 		sampInfo.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
 		sampInfo.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE;
 
-		tex.sampler = SDL_CreateGPUSampler(device, &sampInfo);
+		tex.sampler.reset(device, SDL_CreateGPUSampler(device, &sampInfo));
 		if (!tex.sampler) {
 			std::cerr << "[Texture] SDL_CreateGPUSampler failed: " << SDL_GetError() << "\n";
-			SDL_ReleaseGPUTexture(device, tex.gpuTex);
-			tex.gpuTex = nullptr;
+			tex.gpuTex.reset();
 			return tex;
 		}
 
@@ -70,7 +70,7 @@ namespace LightningEngine {
 		src.rows_per_layer  = (Uint32)h;
 
 		SDL_GPUTextureRegion dst = {};
-		dst.texture = tex.gpuTex;
+		dst.texture = tex.gpuTex.get();
 		dst.w       = (Uint32)w;
 		dst.h       = (Uint32)h;
 		dst.d       = 1;
@@ -87,11 +87,12 @@ namespace LightningEngine {
 
 	void Texture::Release()
 	{
-		if (device) {
-			if (sampler) { SDL_ReleaseGPUSampler(device, sampler); sampler = nullptr; }
-			if (gpuTex)  { SDL_ReleaseGPUTexture(device, gpuTex);  gpuTex  = nullptr; }
-		}
+		gpuTex.setOwning(ownsGpu);
+		sampler.setOwning(ownsGpu);
+		gpuTex.reset();
+		sampler.reset();
 		device = nullptr;
+		ownsGpu = true;
 		width  = 0;
 		height = 0;
 	}

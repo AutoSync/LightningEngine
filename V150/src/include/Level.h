@@ -26,6 +26,7 @@
 #include <memory>
 #include <string>
 #include <algorithm>
+#include <unordered_map>
 #include "Node.h"
 
 namespace LightningEngine
@@ -57,6 +58,7 @@ namespace LightningEngine
 		{
 			node->SetContext(renderer, input, this);
 			nodes.push_back(std::move(node));
+			lookupDirty = true;
 		}
 
 		// Release a node from this level (returns ownership to caller).
@@ -68,6 +70,7 @@ namespace LightningEngine
 			{
 				auto owned = std::move(*it);
 				nodes.erase(it);
+				lookupDirty = true;
 				return owned;
 			}
 			return nullptr;
@@ -76,17 +79,32 @@ namespace LightningEngine
 		// Find first node with a matching name. Returns nullptr if not found.
 		Node* FindNode(const std::string& name) const
 		{
-			for (auto& n : nodes)
-				if (n->name == name) return n.get();
-			return nullptr;
+			EnsureLookup();
+			auto it = nameIndex.find(name);
+			return (it != nameIndex.end()) ? it->second : nullptr;
 		}
 
 		// Find first node with a matching tag. Returns nullptr if not found.
 		Node* FindNodeByTag(const std::string& tag) const
 		{
-			for (auto& n : nodes)
-				if (n->tag == tag) return n.get();
-			return nullptr;
+			EnsureLookup();
+			auto it = tagIndex.find(tag);
+			return (it != tagIndex.end()) ? it->second : nullptr;
+		}
+
+		std::vector<Node*> FindNodesByTag(const std::string& tag) const
+		{
+			EnsureLookup();
+			std::vector<Node*> matches;
+			auto range = tagIndex.equal_range(tag);
+			for (auto it = range.first; it != range.second; ++it)
+				matches.push_back(it->second);
+			return matches;
+		}
+
+		void MarkNodeLookupDirty()
+		{
+			lookupDirty = true;
 		}
 
 		// All nodes currently in this level.
@@ -104,6 +122,9 @@ namespace LightningEngine
 		{
 			Shutdown();
 			nodes.clear();
+			nameIndex.clear();
+			tagIndex.clear();
+			lookupDirty = false;
 			Initialize();
 		}
 
@@ -121,7 +142,26 @@ namespace LightningEngine
 		}
 
 	private:
+		void EnsureLookup() const
+		{
+			if (!lookupDirty)
+				return;
+
+			nameIndex.clear();
+			tagIndex.clear();
+			for (const auto& n : nodes)
+			{
+				nameIndex[n->name] = n.get();
+				if (!n->tag.empty())
+					tagIndex.emplace(n->tag, n.get());
+			}
+			lookupDirty = false;
+		}
+
 		std::vector<std::unique_ptr<Node>> nodes;
+		mutable std::unordered_map<std::string, Node*> nameIndex;
+		mutable std::unordered_multimap<std::string, Node*> tagIndex;
+		mutable bool lookupDirty = true;
 	};
 
 } // namespace LightningEngine

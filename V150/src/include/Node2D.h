@@ -25,6 +25,7 @@ public:
     {
         transform.Position.x = x;
         transform.Position.y = y;
+        MarkTransformDirty();
     }
 
     void SetPosition(Lightning::V2 v) { SetPosition(v.x, v.y); }
@@ -39,6 +40,7 @@ public:
     {
         transform.Position.x += dx;
         transform.Position.y += dy;
+        MarkTransformDirty();
     }
 
     void Move(Lightning::V2 delta) { Move(delta.x, delta.y); }
@@ -50,6 +52,7 @@ public:
     void SetRotation(float degrees)
     {
         transform.Rotation.z = degrees;
+        MarkTransformDirty();
     }
 
     float GetRotation() const { return transform.Rotation.z; }
@@ -57,6 +60,7 @@ public:
     void Rotate(float degrees)
     {
         transform.Rotation.z += degrees;
+        MarkTransformDirty();
     }
 
     // -----------------------------------------------------------------------
@@ -67,6 +71,7 @@ public:
     {
         transform.Scale.x = sx;
         transform.Scale.y = sy;
+        MarkTransformDirty();
     }
 
     void SetScale(float uniform) { SetScale(uniform, uniform); }

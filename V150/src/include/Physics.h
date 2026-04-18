@@ -94,6 +94,12 @@ namespace LightningEngine
 		// Call once per frame from Update(dt).
 		void Integrate(float dt)
 		{
+			if (mass <= 0.f)
+			{
+				acceleration = {};
+				return;
+			}
+
 			if (useGravity)
 				acceleration.y += kGravity * gravityScale;
 

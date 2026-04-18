@@ -36,7 +36,8 @@ protected:
     // -----------------------------------------------------------------------
 
     // Construct and immediately activate a Level subclass.
-    // Shuts down and releases any previously active level first.
+    // Initializes the new level before releasing the previous one so a
+    // failing Initialize() does not leave the game without an active level.
     // Example: LoadLevel<MainMenuLevel>();
     template<typename T>
     T* LoadLevel()
@@ -44,17 +45,17 @@ protected:
         static_assert(std::is_base_of<Level, T>::value,
             "T must derive from LightningEngine::Level");
 
-        // Shut down the previous level cleanly
+        auto lvl = std::make_unique<T>();
+        T* ptr   = lvl.get();
+        lvl->SetContext(renderer, inputManager);
+        lvl->Initialize();
+
         if (activeLevel)
         {
             activeLevel->Shutdown();
             activeLevel.reset();
         }
 
-        auto lvl = std::make_unique<T>();
-        T* ptr   = lvl.get();
-        lvl->SetContext(renderer, inputManager);
-        lvl->Initialize();
         activeLevel = std::move(lvl);
         return ptr;
     }

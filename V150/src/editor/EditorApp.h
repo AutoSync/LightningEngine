@@ -953,8 +953,8 @@ private:
             bestScore = score;
         }
 
-        for (Node* child : node->GetChildren()) {
-            pickViewportNodeRecursive(child, worldX, worldY, radiusWorld, bestNode, bestScore);
+        for (const auto& child : node->GetChildren()) {
+            pickViewportNodeRecursive(child.get(), worldX, worldY, radiusWorld, bestNode, bestScore);
         }
     }
 
@@ -2657,8 +2657,8 @@ private:
         tn->userData    = reinterpret_cast<void*>(node);
         tn->expanded    = true;
         if (node == selectedNode) pHierTree->selected = tn;
-        for (Node* child : node->GetChildren())
-            addNodeToTree(tn, child);
+        for (const auto& child : node->GetChildren())
+            addNodeToTree(tn, child.get());
     }
 
     // ── Inspector ─────────────────────────────────────────────────────────
@@ -2696,6 +2696,7 @@ private:
         tfName->SetText(node->name);
         tfName->onChanged = [this, node](const std::string& v) {
             node->name = v;
+            if (node->level) node->level->MarkNodeLookupDirty();
             rebuildHierarchyTree();
         };
         stack->Add<Separator>(innerW);
@@ -2704,7 +2705,10 @@ private:
         stack->Add<Label>(0.f, 0.f, "Tag")->h = lh;
         auto* tfTag = stack->Add<TextField>(0.f, 0.f, innerW, lh + 2.f);
         tfTag->SetText(node->tag);
-        tfTag->onChanged = [node](const std::string& v) { node->tag = v; };
+        tfTag->onChanged = [node](const std::string& v) {
+            node->tag = v;
+            if (node->level) node->level->MarkNodeLookupDirty();
+        };
         stack->Add<Separator>(innerW);
 
         // Active
@@ -2734,9 +2738,12 @@ private:
                 float* ptr = a.ptr;
                 auto* num = row->Add<NumericUpDown>(0.f, 0.f, innerW - 14.f, lh,
                                                     *ptr, -99999.f, 99999.f, 1.f, 1);
-                num->onChanged = [this, ptr](float v) {
+                num->onChanged = [this, node, ptr](float v) {
                     float old = *ptr;
-                    undoStack.Do([ptr, v]{ *ptr = v; }, [ptr, old]{ *ptr = old; }, "Move");
+                    undoStack.Do(
+                        [node, ptr, v]{ *ptr = v; node->MarkTransformDirty(); },
+                        [node, ptr, old]{ *ptr = old; node->MarkTransformDirty(); },
+                        "Move");
                 };
             }
         }
@@ -2763,9 +2770,12 @@ private:
                 float* ptr = a.ptr;
                 auto* num = row->Add<NumericUpDown>(0.f, 0.f, innerW - 14.f, lh,
                                                     *ptr, -360.f, 360.f, 1.f, 1);
-                num->onChanged = [this, ptr](float v) {
+                num->onChanged = [this, node, ptr](float v) {
                     float old = *ptr;
-                    undoStack.Do([ptr, v]{ *ptr = v; }, [ptr, old]{ *ptr = old; }, "Rotate");
+                    undoStack.Do(
+                        [node, ptr, v]{ *ptr = v; node->MarkTransformDirty(); },
+                        [node, ptr, old]{ *ptr = old; node->MarkTransformDirty(); },
+                        "Rotate");
                 };
             }
         }
@@ -2792,9 +2802,12 @@ private:
                 float* ptr = a.ptr;
                 auto* num = row->Add<NumericUpDown>(0.f, 0.f, innerW - 14.f, lh,
                                                     *ptr, 0.001f, 9999.f, 0.1f, 2);
-                num->onChanged = [this, ptr](float v) {
+                num->onChanged = [this, node, ptr](float v) {
                     float old = *ptr;
-                    undoStack.Do([ptr, v]{ *ptr = v; }, [ptr, old]{ *ptr = old; }, "Scale");
+                    undoStack.Do(
+                        [node, ptr, v]{ *ptr = v; node->MarkTransformDirty(); },
+                        [node, ptr, old]{ *ptr = old; node->MarkTransformDirty(); },
+                        "Scale");
                 };
             }
         }
@@ -3328,6 +3341,7 @@ private:
                 selectedNode->transform.Position.x = snapViewportValue(gizmoDragNX0 + dx);
             if (gizmoAxis == GizmoAxis::Y || gizmoAxis == GizmoAxis::XY)
                 selectedNode->transform.Position.y = snapViewportValue(gizmoDragNY0 + dy);
+            selectedNode->MarkTransformDirty();
             refreshInspector();
         }
 
@@ -3344,10 +3358,12 @@ private:
                 [node, axis, nxFinal, nyFinal](){
                     if (axis == GizmoAxis::X || axis == GizmoAxis::XY) node->transform.Position.x = nxFinal;
                     if (axis == GizmoAxis::Y || axis == GizmoAxis::XY) node->transform.Position.y = nyFinal;
+                    node->MarkTransformDirty();
                 },
                 [this, node, axis, nx0, ny0](){
                     if (axis == GizmoAxis::X || axis == GizmoAxis::XY) node->transform.Position.x = nx0;
                     if (axis == GizmoAxis::Y || axis == GizmoAxis::XY) node->transform.Position.y = ny0;
+                    node->MarkTransformDirty();
                     refreshInspector();
                 },
                 "Move Gizmo"

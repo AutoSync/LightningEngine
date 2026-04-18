@@ -24,6 +24,7 @@
 #include <SDL3/SDL_gpu.h>
 #include <vector>
 #include <glm/glm.hpp>
+#include "GPUResource.h"
 #include "Texture.h"
 #include "Framebuffer.h"
 #include "Mesh.h"
@@ -40,29 +41,43 @@ namespace LightningEngine {
 
 	class Renderer {
 	private:
+		struct PipelineSet {
+			UniquePipeline pipe2D;
+			UniquePipeline pipeTex;
+			UniqueBuffer   vb2D;
+			UniqueBuffer   vbTex;
+
+			void Release()
+			{
+				vbTex.reset();
+				vb2D.reset();
+				pipeTex.reset();
+				pipe2D.reset();
+			}
+
+			bool IsReady() const
+			{
+				return pipe2D && pipeTex && vb2D && vbTex;
+			}
+		};
+
 		SDL_GPUDevice*           device     = nullptr;
 		SDL_Window*              window     = nullptr;
 
 		SDL_FColor               clearColor = { 0.f, 0.f, 0.f, 1.f };
 
 		// ── Swapchain pipelines (swapchain format, determined at runtime) ──
-		SDL_GPUGraphicsPipeline* pipe2D     = nullptr;
-		SDL_GPUGraphicsPipeline* pipeTex    = nullptr;
-		SDL_GPUBuffer*           vbuf2D     = nullptr;
-		SDL_GPUBuffer*           vbufTex    = nullptr;
+		PipelineSet              swapPipes_;
 
 		// ── Render-target pipelines (R8G8B8A8_UNORM, for Framebuffer) ──
-		SDL_GPUGraphicsPipeline* pipe2D_rt  = nullptr;
-		SDL_GPUGraphicsPipeline* pipeTex_rt = nullptr;
-		SDL_GPUBuffer*           vbuf2D_rt  = nullptr;
-		SDL_GPUBuffer*           vbufTex_rt = nullptr;
+		PipelineSet              rtPipes_;
 
 		// ── Blur pipeline (textured, R8G8B8A8, separable gaussian) ──
-		SDL_GPUGraphicsPipeline* pipeBlur   = nullptr;
+		UniquePipeline           pipeBlur;
 
 		// ── 3D pipeline ───────────────────────────────────────────────────────
-		SDL_GPUGraphicsPipeline* pipe3D     = nullptr;
-		SDL_GPUTexture*          depthTex   = nullptr;
+		UniquePipeline           pipe3D;
+		UniqueTexture            depthTex;
 		Uint32                   depthW     = 0;
 		Uint32                   depthH     = 0;
 
@@ -80,8 +95,13 @@ namespace LightningEngine {
 		static constexpr Uint32 kMaxTexVerts = 65536;
 
 		// Per-frame draw state
+		struct Draw2DState {
+			float r = 1.f, g = 1.f, b = 1.f, a = 1.f;
+			bool  screenSpace = false;
+		};
 		float dr = 1.f, dg = 1.f, db = 1.f, da = 1.f;
 		bool  screenSpace = false;
+		std::vector<Draw2DState> stateStack_;
 
 		// Camera world offset
 		float camX = 0.f, camY = 0.f;
@@ -119,9 +139,7 @@ namespace LightningEngine {
 		std::vector<ScissorEntry> scissorStack_;
 
 		// ── Pipeline init helpers ──
-		bool           initPipeline2D();
-		bool           initPipelineTex();
-		bool           initPipelinesRT();
+		bool           initPipelineSet(PipelineSet& set, SDL_GPUTextureFormat fmt, const char* labelSuffix);
 		bool           initPipelineBlur();
 		bool           initPipeline3D();
 
@@ -145,10 +163,7 @@ namespace LightningEngine {
 		struct FlushParams {
 			SDL_GPUTexture*          target;
 			Uint32                   tw, th;
-			SDL_GPUBuffer*           vb2D;
-			SDL_GPUBuffer*           vbTex;
-			SDL_GPUGraphicsPipeline* p2D;
-			SDL_GPUGraphicsPipeline* pTex;
+			const PipelineSet*       pipelines;
 			bool                     clear;
 			SDL_FColor               clearColor;
 		};
@@ -192,6 +207,10 @@ namespace LightningEngine {
 
 		void BeginScreenSpace() { screenSpace = true;  }
 		void EndScreenSpace()   { screenSpace = false; }
+
+		// Draw state stack — save/restore color and screenSpace across components.
+		void PushDrawState();
+		void PopDrawState();
 
 		// --- 2D Draw API ---
 		void SetDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255);

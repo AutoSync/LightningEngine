@@ -109,7 +109,7 @@ void ProjectManager::writeNode(std::ostream& out, const Node& node, int depth) c
     out << ind << "  TAG \"" << node.tag << "\"\n";
     out << ind << "  ACTIVE " << (node.active ? 1 : 0) << "\n";
 
-    for (const auto* child : node.GetChildren())
+    for (const auto& child : node.GetChildren())
         writeNode(out, *child, depth + 1);
 
     out << ind << "END\n";

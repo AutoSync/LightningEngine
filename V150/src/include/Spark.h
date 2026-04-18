@@ -24,6 +24,7 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include "GPUResource.h"
 #include "Renderer.h"
 #include "Framebuffer.h"
 #include "Texture.h"
@@ -70,8 +71,8 @@ public:
 
 private:
     SDL_GPUDevice*           device   = nullptr;
-    SDL_GPUGraphicsPipeline* pipeline = nullptr;
-    SDL_GPUBuffer*           vbuf     = nullptr;
+    UniquePipeline           pipeline;
+    UniqueBuffer             vbuf;
     uint32_t                 flags    = 0;
 
     float tint[4]  = { 1.f, 1.f, 1.f, 1.f };

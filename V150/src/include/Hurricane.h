@@ -24,8 +24,8 @@
 //   node->GetComponent<ParticleSystemComponent>()->system.Play();
 #pragma once
 #include <vector>
-#include <cstdlib>
 #include <cmath>
+#include <random>
 #include <SDL3/SDL.h>
 #include "Renderer.h"
 #include "Component.h"
@@ -151,13 +151,15 @@ public:
 
 private:
     std::vector<Particle> pool;
+    std::mt19937 rng{ std::random_device{}() };
     int   aliveCount = 0;
     float emitAccum  = 0.f;
 
-    static float randF(float lo, float hi)
+    float randF(float lo, float hi)
     {
         if (lo >= hi) return lo;
-        return lo + (float)rand() / (float)RAND_MAX * (hi - lo);
+        std::uniform_real_distribution<float> dist(lo, hi);
+        return dist(rng);
     }
 
     void spawnParticle()
