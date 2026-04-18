@@ -3894,7 +3894,7 @@ function App({ Component, pageProps }) {
 }
 //#endregion
 //#region \0virtual:vinext-server-entry
-var buildId = "b76bf4fd-599a-49d7-bc2e-4c957e93ec44";
+var buildId = "97521f87-9b7c-4513-b53e-e1bfcf6238e3";
 var vinextConfig = {
 	"basePath": "",
 	"trailingSlash": false,
