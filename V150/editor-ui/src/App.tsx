@@ -34,6 +34,8 @@ type EditorTab = {
 };
 
 type TrayTab = 'browser' | 'console' | 'output';
+type ViewportMode = '2d' | '3d';
+type ViewportTool = 'move' | 'rotate' | 'scale';
 
 type CtxState = { x: number; y: number; items: ContextItem[] } | null;
 
@@ -114,6 +116,207 @@ const CB_FOLDERS = [
 
 let _nextId = 100;
 const genId = () => `node_${_nextId++}`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Viewport helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+type Visible = { node: HNode; depth: number };
+
+type RenderArgs = {
+  visibleNodes: Visible[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  viewportTool: ViewportTool;
+};
+
+// Map node component preset to a visual archetype used in the scene.
+function nodeArchetype(node: HNode): 'sprite' | 'camera' | 'collider' | 'light' | 'mesh' | 'empty' {
+  const c = node.components[0] ?? '';
+  if (c === 'SpriteRenderer') return 'sprite';
+  if (c === 'Camera2D' || c === 'Camera') return 'camera';
+  if (c === 'Collider2D' || c === 'Collider') return 'collider';
+  if (c === 'Light' || c === 'Light2D') return 'light';
+  if (c === 'MeshRenderer') return 'mesh';
+  return 'empty';
+}
+
+// Project 2D world coords (transform.x/y) onto the viewport surface.
+// 0,0 maps to center; positive X right, positive Y down (Godot/Unity 2D convention).
+function project2D(x: number, y: number): CSSProperties {
+  return {
+    left: `calc(50% + ${x * 0.7}px)`,
+    top:  `calc(50% + ${y * 0.7}px)`,
+  };
+}
+
+// Project a node 3D world position to a pseudo-3D screen position.
+function project3D(x: number, y: number, z: number): CSSProperties {
+  // Simple oblique projection: y axis (vertical) up, x right, z into screen.
+  const px = x * 0.55 + z * 0.18;
+  const py = -y * 0.55 + z * 0.10;
+  const scale = Math.max(0.45, 1 - z * 0.0015);
+  return {
+    left: `calc(50% + ${px}px)`,
+    top:  `calc(60% + ${py}px)`,
+    transform: `translate(-50%, -50%) scale(${scale})`,
+  };
+}
+
+function TransformGizmo2D({ tool }: { tool: ViewportTool }) {
+  if (tool === 'rotate') {
+    return (
+      <div className="vp-gizmo vp-gizmo-rotate-2d" aria-hidden="true">
+        <div className="vp-gizmo-ring" />
+        <div className="vp-gizmo-pivot" />
+      </div>
+    );
+  }
+  if (tool === 'scale') {
+    return (
+      <div className="vp-gizmo vp-gizmo-scale-2d" aria-hidden="true">
+        <div className="vp-axis-arm vp-axis-arm-x"><span className="vp-axis-end vp-axis-end-square" /></div>
+        <div className="vp-axis-arm vp-axis-arm-y"><span className="vp-axis-end vp-axis-end-square" /></div>
+        <div className="vp-gizmo-pivot" />
+      </div>
+    );
+  }
+  return (
+    <div className="vp-gizmo vp-gizmo-move-2d" aria-hidden="true">
+      <div className="vp-axis-arm vp-axis-arm-x"><span className="vp-axis-end vp-axis-end-arrow" /></div>
+      <div className="vp-axis-arm vp-axis-arm-y"><span className="vp-axis-end vp-axis-end-arrow" /></div>
+      <div className="vp-gizmo-plane" />
+      <div className="vp-gizmo-pivot" />
+    </div>
+  );
+}
+
+function TransformGizmo3D({ tool }: { tool: ViewportTool }) {
+  if (tool === 'rotate') {
+    return (
+      <div className="vp-gizmo vp-gizmo-rotate-3d" aria-hidden="true">
+        <div className="vp-rot-ring vp-rot-ring-x" />
+        <div className="vp-rot-ring vp-rot-ring-y" />
+        <div className="vp-rot-ring vp-rot-ring-z" />
+      </div>
+    );
+  }
+  const endClass = tool === 'scale' ? 'vp-axis-end-square' : 'vp-axis-end-arrow';
+  return (
+    <div className="vp-gizmo vp-gizmo-move-3d" aria-hidden="true">
+      <div className="vp-axis-arm vp-axis-arm-x"><span className={'vp-axis-end ' + endClass} /></div>
+      <div className="vp-axis-arm vp-axis-arm-y"><span className={'vp-axis-end ' + endClass} /></div>
+      <div className="vp-axis-arm vp-axis-arm-z"><span className={'vp-axis-end ' + endClass} /></div>
+      <div className="vp-gizmo-pivot" />
+    </div>
+  );
+}
+
+function NodeShape2D({ node, archetype }: { node: HNode; archetype: ReturnType<typeof nodeArchetype> }) {
+  if (archetype === 'sprite') {
+    return <div className="vp-shape-2d vp-shape-sprite" />;
+  }
+  if (archetype === 'camera') {
+    return (
+      <svg className="vp-shape-2d vp-shape-camera" viewBox="0 0 64 48">
+        <rect x="10" y="14" width="32" height="20" rx="3" fill="rgba(255,255,255,0.06)" stroke="#62a7ff" strokeWidth="1.5" />
+        <polygon points="42,18 56,10 56,38 42,30" fill="rgba(98,167,255,0.12)" stroke="#62a7ff" strokeWidth="1.5" />
+        <circle cx="26" cy="24" r="4" fill="none" stroke="#62a7ff" strokeWidth="1.2" />
+      </svg>
+    );
+  }
+  if (archetype === 'collider') {
+    return <div className="vp-shape-2d vp-shape-collider" />;
+  }
+  if (archetype === 'light') {
+    return (
+      <svg className="vp-shape-2d vp-shape-light" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="5" fill="#ffd24d" />
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => (
+          <line key={a} x1="24" y1="24" x2={24 + Math.cos((a * Math.PI) / 180) * 18}
+            y2={24 + Math.sin((a * Math.PI) / 180) * 18} stroke="#ffd24d" strokeWidth="1.2" />
+        ))}
+      </svg>
+    );
+  }
+  return <div className="vp-shape-2d vp-shape-empty" />;
+}
+
+function NodeShape3D({ archetype }: { archetype: ReturnType<typeof nodeArchetype> }) {
+  if (archetype === 'mesh' || archetype === 'sprite') {
+    return (
+      <div className="vp-shape-3d vp-shape-cube">
+        <span className="vp-cube-face vp-cube-top" />
+        <span className="vp-cube-face vp-cube-front" />
+        <span className="vp-cube-face vp-cube-side" />
+      </div>
+    );
+  }
+  if (archetype === 'camera') {
+    return (
+      <svg className="vp-shape-3d" viewBox="0 0 64 48">
+        <rect x="6" y="14" width="34" height="22" rx="3" fill="rgba(20,30,45,0.92)" stroke="#cbd5e1" strokeWidth="1.5" />
+        <polygon points="40,18 60,8 60,42 40,32" fill="rgba(98,167,255,0.12)" stroke="#cbd5e1" strokeWidth="1.5" />
+      </svg>
+    );
+  }
+  if (archetype === 'light') {
+    return (
+      <svg className="vp-shape-3d" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="7" fill="#ffd24d" stroke="#a07a00" strokeWidth="1" />
+        <path d="M24 6 L24 0 M24 48 L24 42 M6 24 L0 24 M48 24 L42 24" stroke="#ffd24d" strokeWidth="1.5" />
+      </svg>
+    );
+  }
+  if (archetype === 'collider') {
+    return <div className="vp-shape-3d vp-shape-sphere" />;
+  }
+  return <div className="vp-shape-3d vp-shape-pyramid" />;
+}
+
+function renderNodes2D({ visibleNodes, selectedId, onSelect, viewportTool }: RenderArgs) {
+  return visibleNodes.map(({ node }) => {
+    const arch = nodeArchetype(node);
+    const isSelected = selectedId === node.id;
+    return (
+      <div
+        key={node.id}
+        className={'vp-node-2d arch-' + arch + (isSelected ? ' selected' : '')}
+        style={project2D(node.transform.x, node.transform.y)}
+        onPointerDown={(e) => { e.stopPropagation(); onSelect(node.id); }}
+        title={`${node.label} — ${node.components.join(', ') || 'Node'}`}
+      >
+        <NodeShape2D node={node} archetype={arch} />
+        <span className="vp-node-name">{node.label}</span>
+        {isSelected && <div className="vp-selection-bounds-2d" aria-hidden="true" />}
+        {isSelected && <TransformGizmo2D tool={viewportTool} />}
+      </div>
+    );
+  });
+}
+
+function renderNodes3D({ visibleNodes, selectedId, onSelect, viewportTool }: RenderArgs) {
+  // Sort by Y so back nodes draw first (painter-style).
+  const sorted = [...visibleNodes].sort((a, b) => (a.node.transform.y - b.node.transform.y));
+  return sorted.map(({ node }) => {
+    const arch = nodeArchetype(node);
+    const isSelected = selectedId === node.id;
+    return (
+      <div
+        key={node.id}
+        className={'vp-node-3d arch-' + arch + (isSelected ? ' selected' : '')}
+        style={project3D(node.transform.x, node.transform.y, node.transform.z)}
+        onPointerDown={(e) => { e.stopPropagation(); onSelect(node.id); }}
+        title={`${node.label} — ${node.components.join(', ') || 'Node'}`}
+      >
+        <div className="vp-node-3d-shadow" aria-hidden="true" />
+        <NodeShape3D archetype={arch} />
+        <span className="vp-node-name">{node.label}</span>
+        {isSelected && <TransformGizmo3D tool={viewportTool} />}
+      </div>
+    );
+  });
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // App
@@ -251,6 +454,8 @@ export default function App() {
 
   // ── tray ──────────────────────────────────────────────────────────────────
   const [trayTab, setTrayTab] = useState<TrayTab>('browser');
+  const [viewportMode, setViewportMode] = useState<ViewportMode>('2d');
+  const [viewportTool, setViewportTool] = useState<ViewportTool>('move');
   const consoleLogs = [
     '[Info]  Editor initialized.',
     '[Info]  Scene "main.lescene" loaded.',
@@ -350,6 +555,8 @@ export default function App() {
 
   const viewportCtxItems = (): ContextItem[] => [
     { kind: 'header', label: 'Viewport' },
+    { label: viewportMode === '2d' ? 'Trocar para 3D' : 'Trocar para 2D', icon: '⇄', onClick: () => setViewportMode((prev) => prev === '2d' ? '3d' : '2d') },
+    { kind: 'separator' },
     { label: 'Adicionar Node',     icon: '+',  onClick: () => addNode('root') },
     { kind: 'separator' },
     { label: 'Enquadrar Selecao',  icon: '⊡', shortcut: 'F',    onClick: () => {} },
@@ -511,7 +718,7 @@ export default function App() {
 
         {/* Viewport */}
         <section className="panel panel-viewport" onContextMenu={(e) => openCtx(e, viewportCtxItems())}>
-          <div className="viewport-surface">
+          <div className={'viewport-surface viewport-mode-' + viewportMode}>
             <div className="viewport-gizmo-cube">
               <div className="gizmo-cube-face">
                 <div className="gizmo-axis-x">X</div>
@@ -521,14 +728,65 @@ export default function App() {
             </div>
             <div className="viewport-top-left">
               <button type="button" className="viewport-settings-btn" title="Viewport Settings">&#9881;</button>
-              <span className="viewport-mode-label">Scene2D</span>
+              <div className="viewport-mode-switch" role="tablist" aria-label="Viewport mode">
+                <button
+                  type="button"
+                  className={'viewport-mode-btn' + (viewportMode === '2d' ? ' active' : '')}
+                  onClick={() => setViewportMode('2d')}
+                >
+                  2D
+                </button>
+                <button
+                  type="button"
+                  className={'viewport-mode-btn' + (viewportMode === '3d' ? ' active' : '')}
+                  onClick={() => setViewportMode('3d')}
+                >
+                  3D
+                </button>
+              </div>
+              <span className="viewport-mode-label">{viewportMode === '2d' ? 'Scene2D' : 'Scene3D'}</span>
             </div>
-            <div className="viewport-grid" />
-            <div className="viewport-watermark">Scene2D</div>
+            <div className="viewport-top-right">
+              <span className="viewport-chip">Camera: {viewportMode === '2d' ? 'Orthographic' : 'Perspective'}</span>
+              <span className="viewport-chip">Selecao: {selectedNode?.label ?? 'None'}</span>
+            </div>
+            {viewportMode === '2d' ? (
+              <>
+                <div className="vp-ruler vp-ruler-h" aria-hidden="true">
+                  {Array.from({ length: 16 }).map((_, i) => (
+                    <span key={i} className="vp-ruler-tick" style={{ left: `${i * 80}px` }}>{(i - 8) * 100}</span>
+                  ))}
+                </div>
+                <div className="vp-ruler vp-ruler-v" aria-hidden="true">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <span key={i} className="vp-ruler-tick" style={{ top: `${i * 60}px` }}>{(i - 6) * 100}</span>
+                  ))}
+                </div>
+                <div className="vp-grid-2d" aria-hidden="true" />
+                <div className="vp-axis vp-axis-x-2d" aria-hidden="true" />
+                <div className="vp-axis vp-axis-y-2d" aria-hidden="true" />
+                <div className="vp-scene-2d">
+                  {renderNodes2D({ visibleNodes, selectedId, onSelect: setSelectedId, viewportTool })}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="vp-sky-3d" aria-hidden="true" />
+                <div className="vp-floor-3d" aria-hidden="true">
+                  <div className="vp-floor-grid" />
+                  <div className="vp-floor-axis vp-floor-axis-x" />
+                  <div className="vp-floor-axis vp-floor-axis-z" />
+                </div>
+                <div className="vp-scene-3d">
+                  {renderNodes3D({ visibleNodes, selectedId, onSelect: setSelectedId, viewportTool })}
+                </div>
+              </>
+            )}
+            <div className="viewport-watermark">{viewportMode === '2d' ? 'Scene2D' : 'Scene3D'}</div>
             <div className="viewport-gizmo-bar">
-              <button type="button" className="gizmo-tool active" title="Mover">&#10021;</button>
-              <button type="button" className="gizmo-tool" title="Rotacionar">&#8635;</button>
-              <button type="button" className="gizmo-tool" title="Escalar">&#10548;</button>
+              <button type="button" className={'gizmo-tool' + (viewportTool === 'move' ? ' active' : '')} title="Mover" onClick={() => setViewportTool('move')}>&#10021;</button>
+              <button type="button" className={'gizmo-tool' + (viewportTool === 'rotate' ? ' active' : '')} title="Rotacionar" onClick={() => setViewportTool('rotate')}>&#8635;</button>
+              <button type="button" className={'gizmo-tool' + (viewportTool === 'scale' ? ' active' : '')} title="Escalar" onClick={() => setViewportTool('scale')}>&#10548;</button>
             </div>
           </div>
         </section>
