@@ -1,28 +1,25 @@
 # Lightning Engine Editor UI
 
-Scaffold Vinext + Tauri para o MVP da interface do editor.
+Frontend **Next.js 15** (Pages Router + static export) hospedado dentro do **Tauri v2**
+para o editor da Lightning Engine.
+
+## Stack
+
+- Next.js 15 (Pages Router, `output: 'export'`)
+- React 19
+- Tauri 2 (host desktop + IPC com o core C++)
+- TypeScript 5
 
 ## Desenvolvimento
 
-* Instale as dependencias do frontend:
-
 ```bash
 npm install
+npm run tauri:dev   # sobe `next dev` em :3000 e abre a janela Tauri
 ```
 
-Isso também instala o Vinext e o CLI do Tauri usados pelo script de desenvolvimento.
-
-* Inicie o host desktop com Tauri:
-
-```bash
-npm run tauri:dev
-```
-
-* Rode o frontend Vinext isolado, se quiser depurar a UI sem Tauri:
-
-```bash
-npm run dev
-```
+Para depurar somente a UI no navegador (sem Tauri), use `npm run dev` e
+acesse `http://localhost:3000`. As chamadas a `@tauri-apps/api` ficam em
+fallback mock (ver `src/services/tauri-service.ts`).
 
 ## Build
 
@@ -30,8 +27,18 @@ npm run dev
 npm run tauri:build
 ```
 
+O `next build` produz `out/` (static export) consumido pelo Tauri
+(`frontendDist: "../out"` em `src-tauri/tauri.conf.json`).
+
 ## Estrutura
 
-* `src/` - UI React do editor.
-* `src/services/tauri-service.ts` - camada de integracao com Tauri.
-* `src-tauri/` - backend Rust do host desktop.
+- `pages/_app.tsx`, `pages/_document.tsx`, `pages/index.tsx` — entrada Next.js.
+- `src/App.tsx` — shell do editor (carregado via `next/dynamic` com `ssr: false`).
+- `src/services/tauri-service.ts` — camada IPC (Tauri commands + eventos).
+- `src-tauri/` — backend Rust que faz a ponte com o core C++ da engine.
+
+## Integração UI ↔ Core
+
+Veja [`Docs/UI-Engine-Integration.md`](../Docs/UI-Engine-Integration.md)
+para o fluxo completo: comandos, eventos e contrato JSON com `EditorBridge`.
+

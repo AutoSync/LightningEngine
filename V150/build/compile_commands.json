@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/Arquivos/Developers/CPP/LightningEngine/V150/build",
+  "command": "D:\\Arquivos\\HDDR\\Microsoft\\VisualStudio\\VS26\\VC\\Tools\\MSVC\\14.50.35717\\bin\\Hostx86\\x86\\cl.exe  /nologo /TP -DHelloPlugin_EXPORTS -DLIGHTNING_PLUGIN_BUILD -ID:\\Arquivos\\Developers\\CPP\\LightningEngine\\V150\\examples\\plugins\\HelloPlugin\\include -ID:\\Arquivos\\Developers\\CPP\\LightningEngine\\V150\\examples\\plugins\\HelloPlugin\\..\\..\\..\\src\\include /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd /FoCMakeFiles\\HelloPlugin.dir\\src\\HelloPlugin.cpp.obj /FdCMakeFiles\\HelloPlugin.dir\\ /FS -c D:\\Arquivos\\Developers\\CPP\\LightningEngine\\V150\\examples\\plugins\\HelloPlugin\\src\\HelloPlugin.cpp",
+  "file": "D:/Arquivos/Developers/CPP/LightningEngine/V150/examples/plugins/HelloPlugin/src/HelloPlugin.cpp",
+  "output": "D:/Arquivos/Developers/CPP/LightningEngine/V150/build/CMakeFiles/HelloPlugin.dir/src/HelloPlugin.cpp.obj"
+}
+]

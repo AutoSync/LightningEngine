@@ -1,0 +1,14 @@
+{
+  "id": "com.lightningengine.examples.hello",
+  "name": "Hello Plugin",
+  "version": "0.1.0",
+  "engineVersionMin": "0.1.0",
+  "engineVersionMax": "",
+  "scope": "Project",
+  "category": "Examples",
+  "subcategory": "",
+  "dependencies": [],
+  "permissions": [],
+  "enabledByDefault": true,
+  "entryNative": "HelloPlugin.dll"
+}

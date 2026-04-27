@@ -1,11 +1,6 @@
-import type { ComponentType } from 'react';
+import type { AppProps } from 'next/app';
 import '../src/styles.css';
 
-type AppProps = {
-  Component: ComponentType<Record<string, unknown>>;
-  pageProps: Record<string, unknown>;
-};
-
-export default function App({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }

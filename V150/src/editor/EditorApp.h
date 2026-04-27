@@ -284,22 +284,21 @@ private:
         }
 
         fs::path rel = fs::relative(cur, root, ec);
-        if (ec || rel.) return false;
-        fs::path root = contentRootDir();
-        if (root.empty()) return false;
-
-        std::error_code ec;
-        if (cbCurrentDir.empty()) cbCurrentDir = root.string();
-
-        fs::path cur(cbCurrentDir);
-        if (!fs::exists(cur, ec) || !fs::is_directory(cur, ec)) {
-            cbCurrentDir = root.string();
-            return true;
-        }
-
-        fs::path rel = fs::relative(cur, root, ec);
         if (ec || rel.empty() || rel.string().rfind("..", 0) == 0) {
-            "_x" + ext);
+            cbCurrentDir = root.string();
+        }
+        return true;
+    }
+
+    fs::path makeUniquePath(const fs::path& dir, const std::string& stem, const std::string& ext) const
+    {
+        fs::path candidate = dir / (stem + ext);
+        if (!fs::exists(candidate)) return candidate;
+        for (int i = 1; i < 1000; ++i) {
+            candidate = dir / (stem + "_" + std::to_string(i) + ext);
+            if (!fs::exists(candidate)) return candidate;
+        }
+        return dir / (stem + "_x" + ext);
     }
 
     fs::path editorCacheDir() const

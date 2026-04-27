@@ -1,0 +1,3 @@
+D:/Arquivos/Developers/CPP/LightningEngine/V150/build/CMakeFiles/HelloPlugin.dir
+D:/Arquivos/Developers/CPP/LightningEngine/V150/build/CMakeFiles/edit_cache.dir
+D:/Arquivos/Developers/CPP/LightningEngine/V150/build/CMakeFiles/rebuild_cache.dir
