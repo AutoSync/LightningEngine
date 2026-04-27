@@ -12,9 +12,9 @@
     ]
   },
   "pages\\index.tsx -> ../src/App": {
-    "id": 6518,
+    "id": 8220,
     "files": [
-      "static/chunks/518.7f7fa3b9aa28bb59.js"
+      "static/chunks/220.3eb393daf3c07cf8.js"
     ]
   },
   "src\\services\\tauri-service.ts -> @tauri-apps/api/core": {
