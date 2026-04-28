@@ -9,6 +9,7 @@
   type MouseEvent as ReactMouseEvent,
 } from 'react';
 import { tauriService, type MotorStatus } from './services/tauri-service';
+import { useEngineScene } from './hooks/useEngineScene';
 import { ContextMenu, type ContextItem } from './components/ContextMenu';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -328,6 +329,10 @@ export default function App() {
     running: false, fps: 60, scene: 'main.lescene', project: 'MyProject', lastChange: '',
   });
   const [loadingMotor, setLoadingMotor] = useState(false);
+
+  // Live scene from C++ EditorBridge. While source !== 'engine', the UI
+  // keeps using its own mock state — but the viewport now declares it.
+  const { source: sceneSource } = useEngineScene(1500);
 
   useEffect(() => {
     let unsub = () => {};
@@ -749,6 +754,13 @@ export default function App() {
             <div className="viewport-top-right">
               <span className="viewport-chip">Camera: {viewportMode === '2d' ? 'Orthographic' : 'Perspective'}</span>
               <span className="viewport-chip">Selecao: {selectedNode?.label ?? 'None'}</span>
+            </div>
+            <div className={'vp-source-banner vp-source-' + sceneSource} role="status">
+              {sceneSource === 'engine'
+                ? 'Engine bridge: live'
+                : sceneSource === 'pending'
+                ? 'Engine bridge: connecting…'
+                : 'Mock viewport — engine bridge offline (DOM preview only)'}
             </div>
             {viewportMode === '2d' ? (
               <>

@@ -198,6 +198,9 @@ private:
     int    fpsCount = 0;
     float  curFps   = 0.f;
 
+    // Bridge IPC throttle (write scene snapshot every ~120 ms while idle).
+    float  bridgeSaveTimer = 0.f;
+
     bool                isPlaying    = false;
     GamePreviewWindow   gamePreview;
 
@@ -1515,6 +1518,104 @@ private:
             EditorBridge::SetLastChange(lastChange);
         }
         EditorBridge::SaveStatusSnapshot();
+        EditorBridge::SetSelectedNodePtr(selectedNode);
+        EditorBridge::SaveSceneSnapshot();
+    }
+
+    // ── Bridge command handlers ──────────────────────────────────────────
+    // Helpers used by the React/Tauri host: each command is routed through
+    // the same paths the Titan UI uses (rebuildHierarchyTree, refreshInspector,
+    // noteEngineChange, undoStack), so behaviour stays consistent.
+
+    static std::string ptrToBridgeId(const void* p)
+    {
+        if (!p) return std::string();
+        std::ostringstream ss;
+        ss << "0x" << std::hex << reinterpret_cast<std::uintptr_t>(p);
+        return ss.str();
+    }
+
+    Node* findNodeByBridgeId(const std::string& id)
+    {
+        if (id.empty()) return nullptr;
+        std::vector<Node*> stack;
+        for (const auto& root : editorLevel.GetNodes()) stack.push_back(root.get());
+        while (!stack.empty()) {
+            Node* n = stack.back(); stack.pop_back();
+            if (!n) continue;
+            if (ptrToBridgeId(n) == id) return n;
+            for (const auto& c : n->GetChildren()) stack.push_back(c.get());
+        }
+        return nullptr;
+    }
+
+    void registerBridgeCommandHandlers()
+    {
+        EditorBridge::CommandHandlers h;
+
+        h.selectById = [this](const std::string& id) -> bool {
+            Node* n = findNodeByBridgeId(id);
+            if (!n) return false;
+            selectedNode = n;
+            refreshInspector();
+            noteEngineChange("Selection (bridge): " + n->name);
+            return true;
+        };
+
+        h.deselect = [this]() -> bool {
+            selectedNode = nullptr;
+            refreshInspector();
+            noteEngineChange("Deselect (bridge)");
+            return true;
+        };
+
+        h.setTransform = [this](const std::string& id,
+                                bool hx, float x, bool hy, float y, bool hz, float z) -> bool {
+            Node* n = findNodeByBridgeId(id);
+            if (!n) return false;
+            if (hx) n->transform.Position.x = x;
+            if (hy) n->transform.Position.y = y;
+            if (hz) n->transform.Position.z = z;
+            n->MarkTransformDirty();
+            if (selectedNode == n) refreshInspector();
+            noteEngineChange("Transform (bridge): " + n->name);
+            return true;
+        };
+
+        h.createNode = [this](const std::string& parentId,
+                              const std::string& name,
+                              const std::string& /*archetype*/) -> std::string {
+            auto node = std::make_unique<Node>(name.empty() ? std::string("Node") : name);
+            Node* raw = node.get();
+            if (!parentId.empty()) {
+                Node* parent = findNodeByBridgeId(parentId);
+                if (parent) parent->AddChild(std::move(node));
+                else        editorLevel.AddNode(std::move(node));
+            } else {
+                editorLevel.AddNode(std::move(node));
+            }
+            rebuildHierarchyTree();
+            noteEngineChange("Node added (bridge): " + raw->name);
+            return ptrToBridgeId(raw);
+        };
+
+        h.deleteNode = [this](const std::string& id) -> bool {
+            Node* n = findNodeByBridgeId(id);
+            if (!n) return false;
+            if (selectedNode == n) { selectedNode = nullptr; refreshInspector(); }
+            std::string deletedName = n->name;
+            // RemoveNode only handles roots; for children we walk parent.
+            if (Node* parent = n->GetParent()) {
+                parent->RemoveChild(n);
+            } else {
+                editorLevel.RemoveNode(n);
+            }
+            rebuildHierarchyTree();
+            noteEngineChange("Node deleted (bridge): " + deletedName);
+            return true;
+        };
+
+        EditorBridge::RegisterCommandHandlers(std::move(h));
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -1556,6 +1657,8 @@ public:
         editorLevel.Initialize();
 
         EditorBridge::Reset();
+        EditorBridge::SetActiveLevel(&editorLevel);
+        registerBridgeCommandHandlers();
         syncBridgeState("Editor initialized");
 
         buildSplash();
@@ -1586,12 +1689,26 @@ public:
         cbIconStaticMesh.Release();
         cbIconParticles.Release();
         if (texEditorTex.IsValid()) { texEditorTex.Release(); texEditorPath.clear(); }
+        EditorBridge::ClearCommandHandlers();
+        EditorBridge::SetActiveLevel(nullptr);
         syncBridgeState("Editor shutdown");
     }
 
     void Update(float dt) override
     {
         if (inputManager.IsKeyPressed(SDL_SCANCODE_ESCAPE)) Quit();
+
+        // ── Bridge IPC pulse ─────────────────────────────────────────────
+        // 1. Drain any commands the Tauri host wrote since last frame.
+        // 2. Periodically persist the scene snapshot so the host can poll it.
+        // dt is in milliseconds (matches Component::Update contract).
+        EditorBridge::DrainCommandQueue();
+        bridgeSaveTimer += dt;
+        if (bridgeSaveTimer >= 120.f) {
+            bridgeSaveTimer = 0.f;
+            EditorBridge::SetSelectedNodePtr(selectedNode);
+            EditorBridge::SaveSceneSnapshot();
+        }
 
         // Window resize
         {

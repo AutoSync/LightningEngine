@@ -1446,3 +1446,68 @@ input { font: inherit; outline: none; }
 .vp-rot-ring-x { color: #ff4d4d; transform: rotateY(80deg); }
 .vp-rot-ring-y { color: #4cd964; transform: rotateX(80deg); }
 .vp-rot-ring-z { color: #4d8cff; }
+
+/* ── Source-of-truth banner for the viewport ─────────────────────── */
+.vp-source-banner {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 3px;
+  z-index: 6;
+  pointer-events: none;
+  user-select: none;
+  border: 1px solid transparent;
+}
+.vp-source-banner.vp-source-unavailable {
+  background: rgba(180, 50, 40, 0.85);
+  color: #fff5d8;
+  border-color: rgba(255, 200, 80, 0.6);
+}
+.vp-source-banner.vp-source-pending {
+  background: rgba(60, 70, 90, 0.8);
+  color: #cbd5e1;
+  border-color: rgba(255 255 255 / 0.12);
+}
+.vp-source-banner.vp-source-engine {
+  background: rgba(40, 110, 60, 0.85);
+  color: #d6ffe0;
+  border-color: rgba(120, 255, 160, 0.4);
+}
+
+
+/* â”€â”€ Source-of-truth banner for the viewport â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.vp-source-banner {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 3px;
+  z-index: 6;
+  pointer-events: none;
+  user-select: none;
+  border: 1px solid transparent;
+}
+.vp-source-banner.vp-source-unavailable {
+  background: rgba(180, 50, 40, 0.85);
+  color: #fff5d8;
+  border-color: rgba(255, 200, 80, 0.6);
+}
+.vp-source-banner.vp-source-pending {
+  background: rgba(60, 70, 90, 0.8);
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.vp-source-banner.vp-source-engine {
+  background: rgba(40, 110, 60, 0.85);
+  color: #d6ffe0;
+  border-color: rgba(120, 255, 160, 0.4);
+}

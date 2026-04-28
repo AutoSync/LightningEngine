@@ -140,6 +140,12 @@ namespace LightningEngine
 		Node*                        GetParent()   const { return parent;   }
 		const std::vector<std::unique_ptr<Node>>& GetChildren() const { return children; }
 
+		// Read-only access to the components map (used by editor tooling /
+		// EditorBridge to enumerate attached components without needing the
+		// concrete types). Keys are std::type_index of each component class.
+		const std::unordered_map<std::type_index, std::unique_ptr<Component>>&
+			GetComponentsMap() const { return components; }
+
 		// -----------------------------------------------------------------------
 		// Transform matrices (GLM, world-space cascade)
 		// -----------------------------------------------------------------------
