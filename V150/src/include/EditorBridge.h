@@ -1,4 +1,4 @@
-// EditorBridge — runtime contract for the React/Tauri editor host.
+// EditorBridge — runtime contract for the native editor host.
 //
 // Two layers:
 //   1. Status snapshot (running / fps / project / scene / lastChange).
@@ -63,11 +63,11 @@ void SetActiveLevel(LightningEngine::Level* level);
 std::string GetSceneJson();
 
 // Persists the current scene snapshot to disk (companion to
-// SaveStatusSnapshot). The Tauri host polls this file to mirror the live
-// scene into the React editor while a real FFI bridge is not in place.
+// SaveStatusSnapshot). The desktop editor can poll this file to mirror the
+// live scene while a direct bridge is not in place.
 void SaveSceneSnapshot(const std::string& filePath = "editor-bridge-scene.json");
 
-// Drains the command queue file written by the Tauri host (one JSON object
+// Drains the command queue file written by the editor host (one JSON object
 // per line, JSONL). For each command, DispatchCommand is invoked and the
 // queue file is truncated. Safe to call every editor frame; does nothing if
 // the file is missing or empty. Returns the number of commands processed.

@@ -42,6 +42,8 @@
 #include "tabs/EditorTabSystem.h"
 #include "tabs/EditorDocumentContent.h"
 #include "tabs/EditorDocumentWorkspaceRenderer.h"
+#include "../include/EditorUIContracts.h"
+#include "../include/PluginManager.h"
 
 namespace fs = std::filesystem;
 using namespace Titan;
@@ -71,6 +73,11 @@ private:
     UndoStack      undoStack;
     Node*          selectedNode = nullptr;   // real Node*, nullptr = none
     std::string    currentScenePath;         // relative to project root
+
+    // ── New: UI extensibility ─────────────────────────────────────────────
+    EditorCommandRegistry commandRegistry;
+    std::unique_ptr<EditorLayoutStore> layoutStore;
+    PluginManager pluginManager;
 
     // ── Layout constants ──────────────────────────────────────────────────
     static constexpr float kTitleH    = 46.f;
@@ -139,6 +146,8 @@ private:
     Label*       lblFooterLeft   = nullptr;
     Label*       lblFooterRight  = nullptr;
     bool         consoleVisible  = true;
+    bool         bottomTrayVisible = true;
+    bool         focusViewportMode = false;
     int          newProjTemplate = 0;   // 0=Empty 1=2D 2=3D
     ContextMenu* hierMenu        = nullptr;
     ContextMenu* cbMenu          = nullptr;
@@ -335,6 +344,95 @@ private:
         saveEditorCache();
     }
 
+    void saveLayout()
+    {
+        if (!layoutStore) return;
+        EditorLayoutData data;
+        // TODO: Populate data from current UI state (dock positions, tab states, etc.)
+        // For now, save empty data as placeholder
+        layoutStore->SaveLayout(data);
+    }
+
+    void loadLayout()
+    {
+        if (!layoutStore) return;
+        EditorLayoutData data;
+        if (layoutStore->LoadLayout(data)) {
+            // TODO: Apply loaded data to UI (restore dock positions, tabs, etc.)
+        }
+    }
+
+    void registerCommands()
+    {
+        // Register basic editor commands
+        commandRegistry.RegisterCommand({
+            "save_scene",
+            "Save Scene",
+            "Ctrl+S",
+            CommandScope::Project,
+            [this]() { saveScene(); }
+        });
+
+        commandRegistry.RegisterCommand({
+            "new_scene",
+            "New Scene",
+            "Ctrl+N",
+            CommandScope::Project,
+            [this]() { newScene(); }
+        });
+
+        commandRegistry.RegisterCommand({
+            "open_scene",
+            "Open Scene",
+            "Ctrl+O",
+            CommandScope::Project,
+            [this]() { openSceneDialog(); }
+        });
+
+        commandRegistry.RegisterCommand({
+            "undo",
+            "Undo",
+            "Ctrl+Z",
+            CommandScope::Global,
+            [this]() { undoStack.Undo(); rebuildHierarchyTree(); }
+        });
+
+        commandRegistry.RegisterCommand({
+            "redo",
+            "Redo",
+            "Ctrl+Y",
+            CommandScope::Global,
+            [this]() { undoStack.Redo(); rebuildHierarchyTree(); }
+        });
+    }
+
+    void loadPlugins()
+    {
+        // Scan plugins directory and load them
+        fs::path pluginsDir = fs::path(pm.project.rootPath) / "plugins";
+        if (!fs::exists(pluginsDir)) return;
+
+        for (const auto& entry : fs::directory_iterator(pluginsDir)) {
+            if (!entry.is_directory()) continue;
+            // TODO: Load plugin from directory (parse manifest, load binary, etc.)
+            // For now, placeholder
+        }
+    }
+
+    void activateUIPlugins()
+    {
+        for (const auto& id : pluginManager.ListIds()) {
+            if (pluginManager.Load(id) &&
+                pluginManager.Register(id) &&
+                pluginManager.Activate(id)) {
+                // If it's a UI plugin, call UI-specific methods
+                pluginManager.LoadUI(id);
+                pluginManager.RegisterPanels(id);
+                pluginManager.RegisterMenus(id);
+            }
+        }
+    }
+
     void saveEditorCache()
     {
         fs::path path = cacheFilePath();
@@ -366,6 +464,8 @@ private:
         ini.Set("ContentBrowser", "ViewMode", std::to_string(cbViewMode));
 
         ini.Set("Containers", "BottomTrayActive", std::to_string(pBottomTrayNode ? pBottomTrayNode->activeIdx : cacheBottomTrayActiveIdx));
+        ini.Set("Containers", "BottomTrayVisible", bottomTrayVisible ? "true" : "false");
+        ini.Set("Containers", "FocusViewportMode", focusViewportMode ? "true" : "false");
         ini.Set("Containers", "HierarchyX", std::to_string(pHierarchy ? pHierarchy->x : 0.f));
         ini.Set("Containers", "HierarchyY", std::to_string(pHierarchy ? pHierarchy->y : 0.f));
         ini.Set("Containers", "HierarchyW", std::to_string(pHierarchy ? pHierarchy->w : 0.f));
@@ -424,6 +524,8 @@ private:
         cbViewMode = ini.GetInt("ContentBrowser", "ViewMode", cbViewMode);
 
         cacheBottomTrayActiveIdx = std::max(0, ini.GetInt("Containers", "BottomTrayActive", cacheBottomTrayActiveIdx));
+        bottomTrayVisible = ini.GetBool("Containers", "BottomTrayVisible", bottomTrayVisible);
+        focusViewportMode = ini.GetBool("Containers", "FocusViewportMode", focusViewportMode);
         cacheLastChange = ini.Get("Changes", "LastEngineChange", cacheLastChange);
         codeEditorFontScale = std::clamp(readFloat("CodeEditor", "FontScale", codeEditorFontScale), 0.75f, 2.5f);
         return true;
@@ -2145,6 +2247,11 @@ private:
             if (lblOpenStatus) lblOpenStatus->SetText("Cannot open project.");
             return;
         }
+        // Initialize layout store for this project
+        layoutStore = std::make_unique<EditorLayoutStore>(pm.project.rootPath);
+
+        loadPlugins();  // Load plugins for this project
+
         currentScenePath = pm.project.lastScene.empty()
                          ? "scenes/main.lescene"
                          : pm.project.lastScene;
@@ -2168,6 +2275,9 @@ private:
         clearEditorPtrs();
         resetTabsToSceneOnly();
         buildEditorUI();
+        loadLayout();  // Load saved layout after building UI
+        registerCommands();  // Register editor commands
+        activateUIPlugins();  // Activate UI plugins after UI is built
         rebuildHierarchyTree();
         refreshContentBrowser();
         cachePersistenceSuspended = false;
@@ -2374,6 +2484,18 @@ private:
         pToolbar->items.back().active = viewportShowGrid;
         pToolbar->AddButton("Snap", [this](bool active){ viewportSnapToGrid = active; noteEngineChange("Viewport snap toggled"); }, true);
         pToolbar->items.back().active = viewportSnapToGrid;
+        pToolbar->AddButton("Bottom Panel", [this](bool active){
+            bottomTrayVisible = active;
+            rebuildEditorUI();
+            noteEngineChange(active ? "Bottom panel shown" : "Bottom panel hidden");
+        }, true);
+        pToolbar->items.back().active = bottomTrayVisible;
+        pToolbar->AddButton("Focus View", [this](bool active){
+            focusViewportMode = active;
+            rebuildEditorUI();
+            noteEngineChange(active ? "Focus viewport mode enabled" : "Focus viewport mode disabled");
+        }, true);
+        pToolbar->items.back().active = focusViewportMode;
         pToolbar->AddButton("Enquadrar", [this](bool){ frameViewportSelection(); }, false);
         pToolbar->AddButton("Reset View", [this](bool){ resetViewportView(); }, false);
         syncViewportToolbarState();
@@ -2385,6 +2507,46 @@ private:
         const float workspaceH = kMainH + kScriptH;
         pDockSpace = ui.AddRoot<DockSpace>(0.f, kTopH, kW, workspaceH);
         DockNode* root = pDockSpace->Root();
+
+        // Godot-style distraction free flow: keep only the center viewport.
+        if (focusViewportMode) {
+            pBottomTrayNode = nullptr;
+            root->Dock(buildViewportWidget(), "Viewport");
+            return;
+        }
+
+        // Godot-style panel management: bottom panel can be hidden without
+        // removing side docks.
+        if (!bottomTrayVisible) {
+            float leftFrac  = kLeftW / kW;
+            auto [left, centerRight] = root->Split(true, leftFrac);
+
+            float rightFrac = kHierW / (kW - kLeftW);
+            auto [center, right] = centerRight->Split(true, 1.f - rightFrac);
+
+            pBottomTrayNode = nullptr;
+            left->Dock(buildHierarchy(),        "Hierarchy View");
+            center->Dock(buildViewportWidget(), "Viewport");
+            right->Dock(buildInspector(),       "Properties");
+
+            left->SetLayout(pHierarchy, [this](float w, float h) {
+                float pad = gStyle.padding;
+                if (pHierTree) { pHierTree->w = w - pad * 2.f; pHierTree->h = h - pHierTree->y - pad; }
+                noteEngineChange("Hierarchy layout changed");
+            });
+            center->SetLayout(pViewport, [this](float w, float h) {
+                if (pViewport) { pViewport->w = w; pViewport->h = h; }
+                noteEngineChange("Viewport layout changed");
+            });
+            right->SetLayout(pInspector, [this](float w, float /*h*/) {
+                if (std::abs(w - inspLastW) > 0.5f) { inspLastW = w; refreshInspector(); noteEngineChange("Inspector layout changed"); }
+            });
+            if (pInspector && pInspector->w > 0.f) {
+                inspLastW = pInspector->w;
+                refreshInspector();
+            }
+            return;
+        }
 
         float topFrac = kMainH / workspaceH;
         auto [topNode, bottomNode] = root->Split(false, topFrac);
@@ -3848,6 +4010,7 @@ private:
     void closeAndGoSplash()
     {
         if (pm.isOpen) {
+            saveLayout();  // Save layout before closing
             saveScene();
             pm.Close();
         }

@@ -31,7 +31,10 @@
 
 ### Pré-requisitos
 1. **Visual Studio Build Tools** instalado (MSBuild)
-2. **SDL3** instalado no sistema
+2. Dependências em **D:\Arquivos\HDDR\deps**
+   - SDL3 em `D:\Arquivos\HDDR\deps\SDL3`
+   - glm em `D:\Arquivos\HDDR\deps\glm`
+   - Assimp em `D:\Arquivos\HDDR\deps\Assimp`
 3. **Extensão C/C++** do VS Code instalada
 
 ### Passos para Configurar
@@ -70,7 +73,8 @@
 - Ou adicione MSBuild ao PATH
 
 ### Erro "SDL3 não encontrado"
-- Instale SDL3 via vcpkg ou manualmente
+- Verifique se existe `D:\Arquivos\HDDR\deps\SDL3\include`
+- Se preferir, mantenha fallback em `third_party\SDL3`
 - Atualize os caminhos em `c_cpp_properties.json`
 
 ### Erro de compilação

@@ -7,6 +7,9 @@ setlocal enabledelayedexpansion
 REM Set Visual Studio path
 set VS_PATH=D:\Arquivos\HDDR\Microsoft\VisualStudio\VS26
 
+REM Dependencies root path (can be overridden by environment variable)
+if "%DEPS_DIR%"=="" set DEPS_DIR=D:\Arquivos\HDDR\deps
+
 REM Check if Visual Studio exists
 if not exist "%VS_PATH%\Common7\Tools\VsDevCmd.bat" (
     echo ERROR: Visual Studio not found at %VS_PATH%
@@ -26,6 +29,7 @@ if not "%2"=="" set PLATFORM=%2
 echo ========================================
 echo Building LightningEngine with MSVC
 echo Visual Studio: %VS_PATH%
+echo Dependencies: %DEPS_DIR%
 echo Configuration: %CONFIG%
 echo Platform: %PLATFORM%
 echo ========================================
@@ -44,9 +48,12 @@ if %ERRORLEVEL% EQU 0 (
     echo ========================================
     
     REM Copy DLLs if needed
-    if exist "third_party\SDL3\lib\x64\*.dll" (
+    if exist "%DEPS_DIR%\SDL3\lib\x64\*.dll" (
+        copy "%DEPS_DIR%\SDL3\lib\x64\*.dll" "%PLATFORM%\%CONFIG%\" >nul 2>&1
+        echo SDL3 DLLs copied from %DEPS_DIR%.
+    ) else if exist "third_party\SDL3\lib\x64\*.dll" (
         copy "third_party\SDL3\lib\x64\*.dll" "%PLATFORM%\%CONFIG%\" >nul 2>&1
-        echo SDL3 DLLs copied to output directory.
+        echo SDL3 DLLs copied from local third_party fallback.
     )
     
     REM Optionally run the executable

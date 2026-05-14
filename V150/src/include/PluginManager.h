@@ -107,6 +107,70 @@ public:
         return true;
     }
 
+    // UI-specific methods for IEditorUIPlugin
+    bool LoadUI(const std::string& id)
+    {
+        Entry* e = get(id);
+        if (!e || !e->plugin) return false;
+        auto uiPlugin = std::dynamic_pointer_cast<IEditorUIPlugin>(e->plugin);
+        if (!uiPlugin) return false;
+        if (!uiPlugin->OnLoadUI()) {
+            e->lastError = "OnLoadUI returned false";
+            return false;
+        }
+        return true;
+    }
+
+    bool RegisterPanels(const std::string& id)
+    {
+        Entry* e = get(id);
+        if (!e || !e->plugin) return false;
+        auto uiPlugin = std::dynamic_pointer_cast<IEditorUIPlugin>(e->plugin);
+        if (!uiPlugin) return false;
+        uiPlugin->OnRegisterPanels();
+        return true;
+    }
+
+    bool RegisterMenus(const std::string& id)
+    {
+        Entry* e = get(id);
+        if (!e || !e->plugin) return false;
+        auto uiPlugin = std::dynamic_pointer_cast<IEditorUIPlugin>(e->plugin);
+        if (!uiPlugin) return false;
+        uiPlugin->OnRegisterMenus();
+        return true;
+    }
+
+    bool SaveLayout(const std::string& id)
+    {
+        Entry* e = get(id);
+        if (!e || !e->plugin) return false;
+        auto uiPlugin = std::dynamic_pointer_cast<IEditorUIPlugin>(e->plugin);
+        if (!uiPlugin) return false;
+        uiPlugin->OnSaveLayout();
+        return true;
+    }
+
+    bool RestoreLayout(const std::string& id)
+    {
+        Entry* e = get(id);
+        if (!e || !e->plugin) return false;
+        auto uiPlugin = std::dynamic_pointer_cast<IEditorUIPlugin>(e->plugin);
+        if (!uiPlugin) return false;
+        uiPlugin->OnRestoreLayout();
+        return true;
+    }
+
+    bool UnloadUI(const std::string& id)
+    {
+        Entry* e = get(id);
+        if (!e || !e->plugin) return false;
+        auto uiPlugin = std::dynamic_pointer_cast<IEditorUIPlugin>(e->plugin);
+        if (!uiPlugin) return false;
+        uiPlugin->OnUnloadUI();
+        return true;
+    }
+
     const Entry* Find(const std::string& id) const
     {
         auto it = entries.find(id);

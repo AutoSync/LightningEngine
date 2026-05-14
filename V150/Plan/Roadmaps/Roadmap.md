@@ -199,6 +199,41 @@ Pipeline: `.spark` → `SparkCompiler` (gera GLSL + compila via glslc) → `.spv
 
 ---
 
+## Editor
+
+- O Editor da Lightning Engine é construído sobre o sistema Titan GUI e fornece uma interface completa para desenvolvimento de jogos.
+- Inclui ferramentas para edição de cenas, inspeção de objetos, navegação de conteúdo, scripting visual, e execução em tempo real.
+- Suporta extensibilidade via plugins, com contratos padronizados para UI e comandos.
+
+### Funcionalidades Principais
+
+- [x] Interface básica (DockSpace, Abas, Painéis: Hierarchy, Inspector, Viewport, Content Browser, Console)
+- [x] Gerenciamento de projetos (criar, abrir, salvar cena)
+- [x] Edição de cena (seleção, transformação, undo/redo)
+- [x] Content Browser (navegação de assets, drag-and-drop)
+- [x] Scripting (editor de texto com syntax highlight, execução via Nucleo)
+- [ ] Extensibilidade de UI
+  - [x] Contrato único de plugin de interface (IEditorUIPlugin)
+  - [x] Registry central de comandos e atalhos (EditorCommandRegistry)
+  - [x] Persistência de layout por projeto (EditorLayoutStore via YAML)
+  - [ ] API para extensão de barra superior/inferior
+  - [ ] Hooks para overlays e painéis contextuais
+  - [ ] Fallback automático em layout inválido
+- [ ] Ferramentas avançadas
+  - [ ] Preview em tempo real de materiais
+  - [ ] Editor visual de materiais (Material Graph)
+  - [ ] Debugging de scripts
+  - [ ] Profiling de performance
+
+### Roadmap do Editor
+
+- [x] MVP: Interface básica funcional
+- [x] Fase 0: Spike de arquitetura de extensibilidade (contratos, registry, layout store) - **Concluído**
+- [ ] Fase 1: MVP de shell extensível (migrar painéis, centralizar comandos, persistir layout)
+- [ ] Fase 2: Hardening e DX (APIs para terceiros, telemetria, migração de versões)
+
+---
+
 ## API
 
 - [x] Math — LMath namespace: Lerp, Clamp, Distance, Normalize, Dot, Smoothstep, MoveTowards, Reflect (Math.h)

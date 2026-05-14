@@ -54,7 +54,7 @@ implementação concreta em `src/graphics`, `src/input`, etc.
 | `runtime/IRenderer.h` | `src/include/Renderer.h` (SDL3 GPU)     |
 | `runtime/IInputManager.h` | `src/include/InputManager.h` (SDL3) |
 | `runtime/IPhysicsWorld.h` | `src/include/Physics.h` (kinematic) |
-| `runtime/IAudioEngine.h` | Pendente de implementação             |
+| `runtime/IAudioEngine.h` | Pendente de implementação            |
 | `runtime/IUiHost.h`   | `src/include/gui/TitanUI.h` (Titan)     |
 | `runtime/IScriptHost.h` | `src/include/Nucleo.h` (Nucleo VM)    |
 

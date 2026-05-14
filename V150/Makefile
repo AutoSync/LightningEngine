@@ -1,8 +1,11 @@
 # Makefile for LightningEngine V150 - Windows Compatible
 # Compiler settings
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -I./src/include -I./third_party/SDL3/include -I./third_party/glm/include -I./third_party/Assimp/include
-LDFLAGS = -L./third_party/SDL3/lib/x64 -L./third_party/Assimp/lib
+DEPS_DIR ?= D:\Arquivos\HDDR\deps
+DEPS_DIR_POSIX = $(subst \\,/,$(DEPS_DIR))
+
+CXXFLAGS = -std=c++17 -Wall -Wextra -I./src/include -I$(DEPS_DIR_POSIX)/SDL3/include -I$(DEPS_DIR_POSIX)/glm/include -I$(DEPS_DIR_POSIX)/Assimp/include -I./third_party/SDL3/include -I./third_party/glm/include -I./third_party/Assimp/include
+LDFLAGS = -L$(DEPS_DIR_POSIX)/SDL3/lib/x64 -L$(DEPS_DIR_POSIX)/Assimp/lib -L./third_party/SDL3/lib/x64 -L./third_party/Assimp/lib
 LIBS = -lSDL3 -lassimpd -lopengl32
 
 # Build configurations
@@ -76,7 +79,7 @@ run: release
 # Install dependencies (copy DLLs)
 install-dlls:
 	@echo Copying required DLLs...
-	copy "third_party\SDL3\lib\x64\*.dll" . 2>nul || echo No SDL3 DLLs to copy
-	copy "third_party\Assimp\lib\*.dll" . 2>nul || echo No Assimp DLLs to copy
+	@if exist "$(DEPS_DIR)\SDL3\lib\x64\*.dll" (copy "$(DEPS_DIR)\SDL3\lib\x64\*.dll" . 2>nul) else (copy "third_party\SDL3\lib\x64\*.dll" . 2>nul || echo No SDL3 DLLs to copy)
+	@if exist "$(DEPS_DIR)\Assimp\lib\*.dll" (copy "$(DEPS_DIR)\Assimp\lib\*.dll" . 2>nul) else (copy "third_party\Assimp\lib\*.dll" . 2>nul || echo No Assimp DLLs to copy)
 
 .PHONY: all debug release clean run install-dlls

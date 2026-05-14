@@ -62,4 +62,18 @@ public:
     virtual void OnUnload() = 0;
 };
 
+// New: Editor UI Plugin contract for interface extensibility
+class IEditorUIPlugin : public IEnginePlugin {
+public:
+    virtual ~IEditorUIPlugin() = default;
+
+    // UI-specific lifecycle
+    virtual bool OnLoadUI() = 0;
+    virtual void OnRegisterPanels() = 0;
+    virtual void OnRegisterMenus() = 0;
+    virtual void OnSaveLayout() = 0;
+    virtual void OnRestoreLayout() = 0;
+    virtual void OnUnloadUI() = 0;
+};
+
 } // namespace LightningEngine

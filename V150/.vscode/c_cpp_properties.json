@@ -4,6 +4,9 @@
             "name": "Win32 (MSVC)",
             "includePath": [
                 "${workspaceFolder}/src/include",
+                "D:/Arquivos/HDDR/deps/SDL3/include",
+                "D:/Arquivos/HDDR/deps/glm/include",
+                "D:/Arquivos/HDDR/deps/Assimp/include",
                 "${workspaceFolder}/third_party/SDL3/include",
                 "${workspaceFolder}/third_party/glm/include",
                 "${workspaceFolder}/third_party/Assimp/include",
@@ -25,6 +28,9 @@
             "name": "Win32 (MinGW/GCC)",
             "includePath": [
                 "${workspaceFolder}/src/include",
+                "D:/Arquivos/HDDR/deps/SDL3/include",
+                "D:/Arquivos/HDDR/deps/glm/include",
+                "D:/Arquivos/HDDR/deps/Assimp/include",
                 "${workspaceFolder}/third_party/SDL3/include",
                 "${workspaceFolder}/third_party/glm/include",
                 "${workspaceFolder}/third_party/Assimp/include",

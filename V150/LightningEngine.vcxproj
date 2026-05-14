@@ -69,10 +69,16 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="UserMacros">
+    <DepsDir Condition="'$(DepsDir)'==''">D:\Arquivos\HDDR\deps</DepsDir>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)third_party\SDL3\include;$(SolutionDir)third_party\glm\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)third_party\SDL3\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(DepsDir)\SDL3\include;$(DepsDir)\glm\include;$(SolutionDir)third_party\SDL3\include;$(SolutionDir)third_party\glm\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DepsDir)\SDL3\lib\x64;$(SolutionDir)third_party\SDL3\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(DepsDir)\SDL3\include;$(DepsDir)\glm\include;$(SolutionDir)third_party\SDL3\include;$(SolutionDir)third_party\glm\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DepsDir)\SDL3\lib\x64;$(SolutionDir)third_party\SDL3\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,7 +124,8 @@
       </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>xcopy "$(SolutionDir)\third_party\SDL3\lib\x64\*.dll" "$(TargetDir)" /Y</Command>
+      <Command>if exist "$(DepsDir)\SDL3\lib\x64\*.dll" xcopy "$(DepsDir)\SDL3\lib\x64\*.dll" "$(TargetDir)" /Y
+if exist "$(SolutionDir)\third_party\SDL3\lib\x64\*.dll" xcopy "$(SolutionDir)\third_party\SDL3\lib\x64\*.dll" "$(TargetDir)" /Y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,7 +141,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>if exist "$(DepsDir)\SDL3\lib\x64\*.dll" xcopy "$(DepsDir)\SDL3\lib\x64\*.dll" "$(TargetDir)" /Y
+if exist "$(SolutionDir)\third_party\SDL3\lib\x64\*.dll" xcopy "$(SolutionDir)\third_party\SDL3\lib\x64\*.dll" "$(TargetDir)" /Y</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
