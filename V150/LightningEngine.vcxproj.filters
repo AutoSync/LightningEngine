@@ -179,6 +179,12 @@
     <ClInclude Include="src\editor\EditorApp.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="src\editor\EditorMainWindow.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="src\editor\EditorUI.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
     <ClInclude Include="src\include\Spark.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>

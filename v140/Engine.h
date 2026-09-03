@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 * AutoSync Lightning Engine by Erick Andrade
 * 2018 - 2025 - Copyright Lightning Engine - All Rights Reserved
@@ -9,6 +11,7 @@
 
 //Tools Engine
 #include "Types.h"			//Global scope of enumerators, structs, and classes
+#include "GameNode.h"		//GameObject/GameNode hierarchy and lifecycle
 #include "Msg.h"			//Formatted message sender
 #include "Inputs.h"			//Inputs Class
 #include "System.h"			//Global Variables
@@ -33,12 +36,19 @@ namespace LightningEngine
 	private:
 		//OpenGL window
 		GLFWwindow* window = nullptr;
+		//Gameplay hierarchy. Nodes can be assembled before a GL context exists.
+		GameNode sceneRoot = GameNode("Scene");
+		bool engineInitialized = false;
+		bool engineTerminated = false;
 		//Framerate limit
 		int limiter = 0;		
 		int FPS = 0;
 	public:
 		//Inputs Class
 		std::unique_ptr<Inputs> Input;
+		//Root of the gameplay hierarchy.
+		GameNode& GetSceneRoot();
+		const GameNode& GetSceneRoot() const;
 		//Constructor Empty
 		EngineCore();
 		//Constructor with settings
@@ -46,7 +56,7 @@ namespace LightningEngine
 		//Constructor with settings
 		EngineCore(EngineSettings settings);
 		//Destructor
-		~EngineCore(){}
+		virtual ~EngineCore();
 		//[Required] Initializer with InitializeComponent
 		virtual void Run() = 0;						
 		//Call to start the engine

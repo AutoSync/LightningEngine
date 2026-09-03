@@ -1,12 +1,15 @@
 #pragma once
 #include "Types.h"
+#include "GameNode.h"
 #include "Inputs.h"
 #include <memory>
 
 
 namespace LightningEngine
 {
-	class SceneComponent
+	// Legacy transform component. GameNode owns the scene hierarchy; this class
+	// remains the compatibility base for MeshComponent and Light.
+	class SceneComponent : public GameComponent
 	{
 	public:
 		SceneComponent();
@@ -14,8 +17,10 @@ namespace LightningEngine
 		V3 direction = V3();
 		bool Visible = true;
 		bool Active = false;
-		SceneComponent* Parent = NULL;
-		vector<SceneComponent*> Childs = { NULL };
+		// Kept for source compatibility with the original v0.14 API. New code
+		// must use GameNode::AddChild and GameNode::GetParent.
+		SceneComponent* Parent = nullptr;
+		vector<SceneComponent*> Childs;
 	protected:
 		Transform globalTransform = Transform();
 		void InitializeSceneComponent();

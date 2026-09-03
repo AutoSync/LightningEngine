@@ -12,6 +12,7 @@ LightningEngine::EngineCore::EngineCore()
 
 LightningEngine::EngineCore::EngineCore(EngineSettings settings, bool simpleInitialize)
 {
+	this->settings = settings;
 	if(simpleInitialize)
 		window = nullptr;
 	InitializeWindow(settings);
@@ -20,12 +21,40 @@ LightningEngine::EngineCore::EngineCore(EngineSettings settings, bool simpleInit
 LightningEngine::EngineCore::EngineCore(EngineSettings settings)
 {
 	window = nullptr;
-	settings = settings;
+	this->settings = settings;
 	InitializeWindow(settings);
+}
+
+LightningEngine::EngineCore::~EngineCore()
+{
+	if (!engineTerminated)
+	{
+		sceneRoot.DestroyRecursive();
+		if (window != nullptr)
+		{
+			glfwDestroyWindow(window);
+			window = nullptr;
+		}
+		glfwTerminate();
+	}
+}
+
+LightningEngine::GameNode& LightningEngine::EngineCore::GetSceneRoot()
+{
+	return sceneRoot;
+}
+
+const LightningEngine::GameNode& LightningEngine::EngineCore::GetSceneRoot() const
+{
+	return sceneRoot;
 }
 
 void LightningEngine::EngineCore::InitializeEngine()
 {
+	if (engineInitialized)
+		return;
+
+	engineInitialized = true;
 	OnInit();
 	OnRender();
 	OnTerminate();
@@ -177,8 +206,9 @@ void LightningEngine::EngineCore::OnRender(RenderSettings settings)
 {
 	Msg::Emit(Flow::OUTPUT, "Start Engine");
 
-	//Begin Play
+	//The application may assemble its hierarchy in Start().
 	Start();
+	sceneRoot.StartRecursive();
 	//Render Loop
 	Rendering();
 	//End Play
@@ -188,9 +218,20 @@ void LightningEngine::EngineCore::OnRender(RenderSettings settings)
 
 void LightningEngine::EngineCore::OnTerminate()
 {
+	if (engineTerminated)
+		return;
+
+	//Destroy gameplay objects while the OpenGL context is still alive.
+	sceneRoot.DestroyRecursive();
 	WhenEnd();
+	if (window != nullptr)
+	{
+		glfwDestroyWindow(window);
+		window = nullptr;
+	}
 	glfwTerminate();
-	Msg::Emit(Flow::EXIT, "[Program Finished]");
+	engineTerminated = true;
+	Msg::Emit(Flow::OUTPUT, "[Program Finished]");
 }
 
 void LightningEngine::EngineCore::Rendering()
@@ -205,13 +246,16 @@ void LightningEngine::EngineCore::Rendering()
 		UpdateTitlebar();
 		
 		// Processing data
+		sceneRoot.UpdateRecursive(static_cast<float>(Time->deltaTime));
 		Update();
 
 		//Render
 		Render();
+		sceneRoot.RenderRecursive();
 
 		//Last Update
 		LateUpdate();
+		sceneRoot.LateUpdateRecursive(static_cast<float>(Time->deltaTime));
 
 		//Swap Buffers and Poll Events
 		glfwSwapBuffers(window);

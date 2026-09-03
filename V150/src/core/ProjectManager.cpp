@@ -22,6 +22,30 @@ static std::string recentProjectsPath()
     return base + "/LightningEngine/recent.ini";
 }
 
+static bool hasProjectIni(const std::string& folderPath)
+{
+    if (folderPath.empty()) return false;
+
+    std::error_code ec;
+    fs::path root(folderPath);
+    fs::path ini = root / "project.ini";
+    return fs::exists(ini, ec) && fs::is_regular_file(ini, ec);
+}
+
+static void writeRecentProjects(const std::vector<std::string>& list)
+{
+    std::string rPath = recentProjectsPath();
+    std::error_code ec;
+    fs::create_directories(fs::path(rPath).parent_path(), ec);
+
+    IniFile out;
+    const int count = std::min((int)list.size(), 20);
+    for (int i = 0; i < count; ++i)
+        out.Set("Recent", "p" + std::to_string(i), list[i]);
+
+    out.Save(rPath);
+}
+
 static std::string indent(int depth)
 {
     return std::string(depth * 2, ' ');
@@ -427,16 +451,34 @@ std::vector<std::string> ProjectManager::GetRecentProjects()
 {
     IniFile f;
     if (!f.Load(recentProjectsPath())) return {};
+
+    std::vector<std::string> raw;
     std::vector<std::string> out;
+    bool changed = false;
     for (int i = 0; i < 20; ++i) {
         std::string v = f.Get("Recent", "p" + std::to_string(i), "");
-        if (!v.empty()) out.push_back(v);
+        if (!v.empty()) raw.push_back(v);
     }
+
+    for (const auto& path : raw) {
+        if (hasProjectIni(path)) {
+            out.push_back(path);
+        } else {
+            changed = true;
+        }
+    }
+
+    if (changed) {
+        writeRecentProjects(out);
+    }
+
     return out;
 }
 
 void ProjectManager::AddRecentProject(const std::string& folderPath)
 {
+    if (!hasProjectIni(folderPath)) return;
+
     std::string rPath = recentProjectsPath();
     fs::create_directories(fs::path(rPath).parent_path());
 
@@ -451,10 +493,7 @@ void ProjectManager::AddRecentProject(const std::string& folderPath)
     }
     if (list.size() > 20) list.resize(20);
 
-    IniFile out;
-    for (int i = 0; i < (int)list.size(); ++i)
-        out.Set("Recent", "p" + std::to_string(i), list[i]);
-    out.Save(rPath);
+    writeRecentProjects(list);
 }
 
 } // namespace LightningEngine

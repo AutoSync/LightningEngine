@@ -4,26 +4,25 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <filesystem>
 #include "../include/Renderer.h"
 #include "../include/InputManager.h"
 #include "../include/ProjectManager.h"
 #include "../include/Level.h"
 #include "../include/UndoStack.h"
-#include "../include/gui/TitanUI.h"
-#include "../include/gui/TitanStyle.h"
 #include "../include/Node.h"
+#include "EditorUI.h"
 #include "tabs/EditorTabSystem.h"
 
 namespace fs = std::filesystem;
 using namespace LightningEngine;
-using namespace Titan;
 
 struct EditorContext
 {
     // ── Core subsystems (non-owning references) ───────────────────────────
     Renderer&       renderer;
     InputManager&   inputManager;
-    TitanUI&        ui;
+    LightningEditor::UI::Runtime& ui;
     ProjectManager& pm;
     Level&          editorLevel;
     UndoStack&      undoStack;
@@ -53,7 +52,7 @@ struct EditorContext
     std::function<std::string(const std::string&)> resolveFilePath;
     std::function<void(const std::string&)>       openAssetTab;
     std::function<void(float)>                    adjustFontScale;
-    std::function<void(RichText*)>                applyTextPrefs;
+    std::function<void(LightningEditor::UI::RichText*)> applyTextPrefs;
 
     // ── Helpers ───────────────────────────────────────────────────────────
     fs::path contentRootDir() const

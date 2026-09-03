@@ -5,7 +5,7 @@
 
 namespace LightningEngine
 {
-	class Light : SceneComponent
+	class Light : public SceneComponent
 	{
 	public:
 		LightType Type = LightType::Directional;

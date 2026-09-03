@@ -31,7 +31,7 @@ namespace LightningEngine
 		void MeshBuild();
 	};
 
-	class MeshComponent : SceneComponent
+	class MeshComponent : public SceneComponent
 	{
 	private:
 		Console						   console;

@@ -202,6 +202,8 @@ if exist "$(SolutionDir)\third_party\SDL3\lib\x64\*.dll" xcopy "$(SolutionDir)\t
     <ClInclude Include="src\include\gui\widgets\Slider.h" />
     <ClInclude Include="src\include\gui\widgets\TextField.h" />
     <ClInclude Include="src\editor\EditorApp.h" />
+    <ClInclude Include="src\editor\EditorMainWindow.h" />
+    <ClInclude Include="src\editor\EditorUI.h" />
     <ClInclude Include="src\include\Spark.h" />
     <ClInclude Include="src\include\Nucleo.h" />
     <ClInclude Include="src\include\ProjectConfig.h" />

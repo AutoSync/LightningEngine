@@ -20,6 +20,9 @@
       <UniqueIdentifier>{3b18add4-65d2-417b-b076-3c5b14655d17}</UniqueIdentifier>
       <Extensions>frag;vert</Extensions>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{C7C9A8BB-5418-4C2A-9D5C-8EA2203BDB12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\editor\Msg.cpp">
@@ -36,6 +39,9 @@
     </ClCompile>
     <ClCompile Include="core\components\Camera.cpp">
       <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
+    <ClCompile Include="core\ui\UI.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="core\components\Lights.cpp">
       <Filter>Arquivos de Origem</Filter>
@@ -73,8 +79,20 @@
     <ClCompile Include="core\renderer\Shapes.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="core\renderer\Sprite.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="UI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameNode.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
     <ClInclude Include="Msg.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -127,6 +145,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Shapes.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Exemples\BlockBreaker\BlockBreaker.h">

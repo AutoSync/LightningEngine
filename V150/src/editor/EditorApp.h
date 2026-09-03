@@ -34,19 +34,20 @@
 #include "../include/GamePreviewWindow.h"
 #include "../include/EditorBridge.h"
 #include "../include/Equinox.h"
-#include "../include/gui/TitanUI.h"
-#include "../include/gui/TitanStyle.h"
-#include "../include/gui/widgets/TextureViewerWidget.h"
+#include "EditorMainWindow.h"
 #include "../include/components/SpriteRenderer.h"
 #include "../include/EditorElementRegistry.h"
 #include "tabs/EditorTabSystem.h"
 #include "tabs/EditorDocumentContent.h"
 #include "tabs/EditorDocumentWorkspaceRenderer.h"
+#include "EditorLayoutState.h"
+#include "EditorDockLayoutController.h"
+#include "EditorViewportToolbarBuilder.h"
 #include "../include/EditorUIContracts.h"
 #include "../include/PluginManager.h"
 
 namespace fs = std::filesystem;
-using namespace Titan;
+using namespace LightningEditor::UI;
 using namespace LightningEngine;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -66,7 +67,8 @@ private:
     // ── Editor state ──────────────────────────────────────────────────────
     enum class State { Splash, Editor };
 
-    TitanUI        ui;
+    LightningEditor::EditorMainWindow mainWindow;
+    Runtime&       ui           = mainWindow.UIRuntime();
     State          state        = State::Splash;
     ProjectManager pm;
     EditorLevel    editorLevel;
@@ -146,8 +148,7 @@ private:
     Label*       lblFooterLeft   = nullptr;
     Label*       lblFooterRight  = nullptr;
     bool         consoleVisible  = true;
-    bool         bottomTrayVisible = true;
-    bool         focusViewportMode = false;
+    EditorLayoutState layoutState;
     int          newProjTemplate = 0;   // 0=Empty 1=2D 2=3D
     ContextMenu* hierMenu        = nullptr;
     ContextMenu* cbMenu          = nullptr;
@@ -220,7 +221,9 @@ private:
 
     // Gizmo drag state
     enum class GizmoAxis { None, X, Y, XY };
+    enum class ViewportRenderMode { Mode2D, Mode3D };
     GizmoAxis gizmoAxis       = GizmoAxis::None;
+    ViewportRenderMode viewportRenderMode = ViewportRenderMode::Mode2D;
     float     gizmoDragMX0    = 0.f;  // mouse pos when drag started
     float     gizmoDragMY0    = 0.f;
     float     gizmoDragNX0    = 0.f;  // node pos when drag started
@@ -229,6 +232,7 @@ private:
     float     vpAY            = 0.f;
     float     viewportCamX    = 0.f;
     float     viewportCamY    = 0.f;
+    float     viewportCamZ    = 0.f;
     float     viewportZoom    = 1.f;
     float     viewportGridSize = 32.f;
     bool      viewportShowGrid = true;
@@ -244,7 +248,6 @@ private:
     SDL_Cursor* cursorText    = nullptr;
     SDL_Cursor* cursorPan     = nullptr;
     EditorCursorMode cursorMode = EditorCursorMode::Default;
-    int       cacheBottomTrayActiveIdx = 0;
     std::string cacheLastChange = "Session start";
     bool      cacheDirty = false;
     bool      cachePersistenceSuspended = false;
@@ -454,7 +457,9 @@ private:
 
         ini.Set("Viewport", "CamX", std::to_string(viewportCamX));
         ini.Set("Viewport", "CamY", std::to_string(viewportCamY));
+        ini.Set("Viewport", "CamZ", std::to_string(viewportCamZ));
         ini.Set("Viewport", "Zoom", std::to_string(viewportZoom));
+        ini.Set("Viewport", "Mode", std::to_string(viewportRenderMode == ViewportRenderMode::Mode3D ? 1 : 0));
         ini.Set("Viewport", "ShowGrid", viewportShowGrid ? "true" : "false");
         ini.Set("Viewport", "SnapToGrid", viewportSnapToGrid ? "true" : "false");
 
@@ -463,9 +468,7 @@ private:
         ini.Set("ContentBrowser", "TypeFilter", std::to_string(cbTypeFilter));
         ini.Set("ContentBrowser", "ViewMode", std::to_string(cbViewMode));
 
-        ini.Set("Containers", "BottomTrayActive", std::to_string(pBottomTrayNode ? pBottomTrayNode->activeIdx : cacheBottomTrayActiveIdx));
-        ini.Set("Containers", "BottomTrayVisible", bottomTrayVisible ? "true" : "false");
-        ini.Set("Containers", "FocusViewportMode", focusViewportMode ? "true" : "false");
+        layoutState.SaveToIni(ini, pBottomTrayNode ? pBottomTrayNode->activeIdx : layoutState.bottomTrayActiveIdx);
         ini.Set("Containers", "HierarchyX", std::to_string(pHierarchy ? pHierarchy->x : 0.f));
         ini.Set("Containers", "HierarchyY", std::to_string(pHierarchy ? pHierarchy->y : 0.f));
         ini.Set("Containers", "HierarchyW", std::to_string(pHierarchy ? pHierarchy->w : 0.f));
@@ -514,7 +517,11 @@ private:
 
         viewportCamX = readFloat("Viewport", "CamX", viewportCamX);
         viewportCamY = readFloat("Viewport", "CamY", viewportCamY);
+        viewportCamZ = readFloat("Viewport", "CamZ", viewportCamZ);
         viewportZoom = std::clamp(readFloat("Viewport", "Zoom", viewportZoom), 0.2f, 8.0f);
+        viewportRenderMode = (ini.GetInt("Viewport", "Mode", 0) == 1)
+            ? ViewportRenderMode::Mode3D
+            : ViewportRenderMode::Mode2D;
         viewportShowGrid = ini.GetBool("Viewport", "ShowGrid", viewportShowGrid);
         viewportSnapToGrid = ini.GetBool("Viewport", "SnapToGrid", viewportSnapToGrid);
 
@@ -523,9 +530,7 @@ private:
         cbTypeFilter = ini.GetInt("ContentBrowser", "TypeFilter", cbTypeFilter);
         cbViewMode = ini.GetInt("ContentBrowser", "ViewMode", cbViewMode);
 
-        cacheBottomTrayActiveIdx = std::max(0, ini.GetInt("Containers", "BottomTrayActive", cacheBottomTrayActiveIdx));
-        bottomTrayVisible = ini.GetBool("Containers", "BottomTrayVisible", bottomTrayVisible);
-        focusViewportMode = ini.GetBool("Containers", "FocusViewportMode", focusViewportMode);
+        layoutState.LoadFromIni(ini);
         cacheLastChange = ini.Get("Changes", "LastEngineChange", cacheLastChange);
         codeEditorFontScale = std::clamp(readFloat("CodeEditor", "FontScale", codeEditorFontScale), 0.75f, 2.5f);
         return true;
@@ -852,6 +857,21 @@ private:
         };
     }
 
+    Lightning::V2 viewportWorldToScreen3D(float wx, float wy, float wz) const
+    {
+        const float zoom = std::max(viewportZoom, 0.001f);
+        const float centerX = vpAX + (pViewport ? pViewport->w * 0.5f : 0.f);
+        const float centerY = vpAY + (pViewport ? pViewport->h * 0.58f : 0.f);
+
+        const float relX = wx - viewportCamX;
+        const float relY = wy - viewportCamY;
+        const float relZ = wz - viewportCamZ;
+
+        const float sx = centerX + (relX + relZ * 0.60f) * zoom;
+        const float sy = centerY + (-relY + relZ * 0.28f) * zoom;
+        return { sx, sy };
+    }
+
     float snapViewportValue(float value) const
     {
         if (!viewportSnapToGrid || viewportGridSize <= 0.f) return value;
@@ -873,6 +893,41 @@ private:
 
     void frameViewportSelection()
     {
+        if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+            if (selectedNode) {
+                Lightning::V3 wp = selectedNode->WorldPosition3D();
+                viewportCamX = wp.x;
+                viewportCamY = wp.y;
+                viewportCamZ = wp.z;
+                return;
+            }
+
+            const auto& nodes = editorLevel.GetNodes();
+            if (nodes.empty()) {
+                viewportCamX = 0.f;
+                viewportCamY = 0.f;
+                viewportCamZ = 0.f;
+                return;
+            }
+
+            Lightning::V3 avg{0.f, 0.f, 0.f};
+            int count = 0;
+            for (const auto& node : nodes) {
+                Lightning::V3 wp = node->WorldPosition3D();
+                avg.x += wp.x;
+                avg.y += wp.y;
+                avg.z += wp.z;
+                ++count;
+            }
+
+            if (count > 0) {
+                viewportCamX = avg.x / (float)count;
+                viewportCamY = avg.y / (float)count;
+                viewportCamZ = avg.z / (float)count;
+            }
+            return;
+        }
+
         if (selectedNode) {
             focusViewportOn(selectedNode->WorldPosition());
             return;
@@ -901,6 +956,9 @@ private:
     void resetViewportView()
     {
         viewportZoom = 1.f;
+        if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+            viewportCamZ = 0.f;
+        }
         frameViewportSelection();
     }
 
@@ -910,6 +968,8 @@ private:
         for (auto& item : pToolbar->items) {
             if (item.label == "Grid") item.active = viewportShowGrid;
             if (item.label == "Snap") item.active = viewportSnapToGrid;
+            if (item.label == "2D") item.active = (viewportRenderMode == ViewportRenderMode::Mode2D);
+            if (item.label == "3D") item.active = (viewportRenderMode == ViewportRenderMode::Mode3D);
         }
     }
 
@@ -968,6 +1028,7 @@ private:
 
     bool isCursorOverGizmo(float mx, float my) const
     {
+        if (viewportRenderMode == ViewportRenderMode::Mode3D) return false;
         if (!selectedNode) return false;
 
         static constexpr float kArrow = 50.f;
@@ -1014,6 +1075,64 @@ private:
             bool axis = std::fabs(y) < 0.001f;
             r.SetDrawColor(axis ? 120 : 58, axis ? 120 : 58, axis ? 132 : 70, axis ? 180 : 90);
             r.DrawLine(left, y, right, y, thickness);
+        }
+    }
+
+    void drawViewportGrid3D(Renderer& r)
+    {
+        if (!viewportShowGrid || viewportGridSize <= 0.f) return;
+
+        const int halfCount = 14;
+        const float step = viewportGridSize;
+
+        for (int i = -halfCount; i <= halfCount; ++i) {
+            const float x = i * step;
+            Lightning::V2 a = viewportWorldToScreen3D(x, 0.f, -halfCount * step);
+            Lightning::V2 b = viewportWorldToScreen3D(x, 0.f, halfCount * step);
+            const bool axis = (i == 0);
+            r.SetDrawColor(axis ? 130 : 70, axis ? 88 : 70, axis ? 88 : 86, axis ? 180 : 95);
+            r.DrawLine(a.x, a.y, b.x, b.y, 1.2f);
+        }
+
+        for (int i = -halfCount; i <= halfCount; ++i) {
+            const float z = i * step;
+            Lightning::V2 a = viewportWorldToScreen3D(-halfCount * step, 0.f, z);
+            Lightning::V2 b = viewportWorldToScreen3D(halfCount * step, 0.f, z);
+            const bool axis = (i == 0);
+            r.SetDrawColor(axis ? 88 : 70, axis ? 130 : 70, axis ? 88 : 86, axis ? 180 : 95);
+            r.DrawLine(a.x, a.y, b.x, b.y, 1.2f);
+        }
+    }
+
+    void drawViewportNodes3DRecursive(Renderer& r, Node* node)
+    {
+        if (!node || !node->active) return;
+
+        Lightning::V3 wp = node->WorldPosition3D();
+        Lightning::V2 sp = viewportWorldToScreen3D(wp.x, wp.y, wp.z);
+
+        const float relZ = std::fabs(wp.z - viewportCamZ);
+        const float size = std::clamp(8.f * viewportZoom / (1.f + relZ * 0.03f), 3.5f, 11.f);
+        if (node == selectedNode) {
+            r.SetDrawColor(255, 196, 72, 220);
+            r.FillCircle(sp.x, sp.y, size + 3.f);
+        }
+
+        r.SetDrawColor(92, 190, 255, 220);
+        r.FillCircle(sp.x, sp.y, size);
+
+        if (!node->name.empty()) {
+            r.SetDrawColor(220, 220, 230, 200);
+            ui.font.DrawText(r, node->name.c_str(), sp.x + size + 4.f, sp.y - ui.font.GlyphH() * 0.5f);
+        }
+
+        for (const auto& child : node->GetChildren()) {
+            if (!child || !child->active) continue;
+            Lightning::V3 cwp = child->WorldPosition3D();
+            Lightning::V2 csp = viewportWorldToScreen3D(cwp.x, cwp.y, cwp.z);
+            r.SetDrawColor(120, 148, 186, 130);
+            r.DrawLine(sp.x, sp.y, csp.x, csp.y, 1.1f);
+            drawViewportNodes3DRecursive(r, child.get());
         }
     }
 
@@ -1077,6 +1196,40 @@ private:
         return bestNode;
     }
 
+    void pickViewportNode3DRecursive(Node* node, float mx, float my, Node*& bestNode, float& bestScore)
+    {
+        if (!node || !node->active) return;
+
+        Lightning::V3 wp = node->WorldPosition3D();
+        Lightning::V2 sp = viewportWorldToScreen3D(wp.x, wp.y, wp.z);
+        float dx = mx - sp.x;
+        float dy = my - sp.y;
+        float dist2 = dx * dx + dy * dy;
+        float score = dist2 + std::fabs(wp.z - viewportCamZ) * 4.f;
+
+        if (score < bestScore) {
+            bestScore = score;
+            bestNode = node;
+        }
+
+        for (const auto& child : node->GetChildren()) {
+            pickViewportNode3DRecursive(child.get(), mx, my, bestNode, bestScore);
+        }
+    }
+
+    Node* pickViewportNode3D(float mx, float my)
+    {
+        Node* bestNode = nullptr;
+        float bestScore = 18.f * 18.f;
+
+        const auto& nodes = editorLevel.GetNodes();
+        for (auto it = nodes.rbegin(); it != nodes.rend(); ++it) {
+            pickViewportNode3DRecursive(it->get(), mx, my, bestNode, bestScore);
+        }
+
+        return bestNode;
+    }
+
     void processViewportNavigation()
     {
         if (!pViewport || isPlaying) return;
@@ -1101,6 +1254,12 @@ private:
             if (inputManager.IsKeyPressed(SDL_SCANCODE_S)) { viewportSnapToGrid = !viewportSnapToGrid; changed = true; }
             if (inputManager.IsKeyPressed(SDL_SCANCODE_F)) frameViewportSelection();
             if (inputManager.IsKeyPressed(SDL_SCANCODE_0)) resetViewportView();
+            if (inputManager.IsKeyPressed(SDL_SCANCODE_2)) { viewportRenderMode = ViewportRenderMode::Mode2D; changed = true; }
+            if (inputManager.IsKeyPressed(SDL_SCANCODE_3)) { viewportRenderMode = ViewportRenderMode::Mode3D; changed = true; }
+            if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+                if (inputManager.IsKeyDown(SDL_SCANCODE_Q)) { viewportCamZ -= 8.f / std::max(viewportZoom, 0.001f); changed = true; }
+                if (inputManager.IsKeyDown(SDL_SCANCODE_E)) { viewportCamZ += 8.f / std::max(viewportZoom, 0.001f); changed = true; }
+            }
             if (changed) noteEngineChange("Viewport settings changed");
             syncViewportToolbarState();
         }
@@ -1133,7 +1292,9 @@ private:
         float my = inputManager.GetMouseY();
         if (!isMouseOverViewport(mx, my) || isCursorOverGizmo(mx, my)) return;
 
-        Node* picked = pickViewportNode(mx, my);
+        Node* picked = (viewportRenderMode == ViewportRenderMode::Mode3D)
+            ? pickViewportNode3D(mx, my)
+            : pickViewportNode(mx, my);
         if (picked != selectedNode) {
             selectedNode = picked;
             rebuildHierarchyTree();
@@ -1728,7 +1889,7 @@ public:
     void Initialize() override
     {
         renderer.SetClearColor(20, 20, 26);
-        ui.Init(renderer, "assets/fonts/Roboto-Regular.ttf", 13);
+        mainWindow.Initialize(renderer, "assets/fonts/Roboto-Regular.ttf", 13);
         logoTex   = renderer.LoadTexture("assets/icons/lightning.png");
         projectIconTex = renderer.LoadTexture("assets/icons/folder.png");
         splashTex = renderer.LoadTexture("assets/splash/splashscreen.png");
@@ -1750,6 +1911,7 @@ public:
 
         kW = (float)GetWidth();
         kH = (float)GetHeight();
+        mainWindow.Resize(kW, kH);
         initializeEditorCursors();
         loadEditorCache();
         computeLayout();
@@ -1772,7 +1934,7 @@ public:
         releaseEditorCursors();
         editorLevel.Shutdown();
         if (pm.isOpen) pm.Save();
-        ui.Release();
+        mainWindow.Shutdown();
         logoTex.Release();
         projectIconTex.Release();
         splashTex.Release();
@@ -1819,6 +1981,7 @@ public:
             if ((float)ww != kW || (float)wh != kH) {
                 kW = (float)ww;
                 kH = (float)wh;
+                mainWindow.Resize(kW, kH);
                 noteEngineChange("Window resized");
                 computeLayout();
                 if (state == State::Editor) {
@@ -1857,7 +2020,7 @@ public:
             }
         }
 
-        ui.ProcessInput(inputManager);
+        mainWindow.ProcessInput(inputManager);
         updateEditorCursor();
         if (state == State::Editor) {
             if (inputManager.IsKeyPressed(SDL_SCANCODE_F2)) {
@@ -1938,7 +2101,7 @@ public:
     {
         renderer.Clear();
         if (state == State::Editor) renderChrome();
-        ui.Render(renderer);
+        mainWindow.Render();
 
         // Drag & drop ghost tooltip
         if (cbDragging && !cbDragFile.empty()) {
@@ -2205,22 +2368,16 @@ private:
                            float mh = 220.f)
     {
         float mw = 420.f;
-        float mx = (kW - mw) * 0.5f, my = (kH - mh) * 0.5f;
-        auto* p = ui.AddRoot<Panel>(mx, my, mw, mh, title);
-        p->visible = false;
-        p->zOrder  = 200;
-        ui.BringToFront(p);
-        populate(p);
-        return p;
+        return mainWindow.CreateModalPanel(title, mw, mh, populate, 200);
     }
 
     void openNewProjectModal()
     {
-        if (pNewProjModal)  { pNewProjModal->visible  = true; if (lblNewStatus)  lblNewStatus->SetText(""); }
+        if (pNewProjModal)  { mainWindow.ShowDialog(pNewProjModal); if (lblNewStatus)  lblNewStatus->SetText(""); }
     }
     void openOpenProjectModal()
     {
-        if (pOpenProjModal) { pOpenProjModal->visible = true; if (lblOpenStatus) lblOpenStatus->SetText(""); }
+        if (pOpenProjModal) { mainWindow.ShowDialog(pOpenProjModal); if (lblOpenStatus) lblOpenStatus->SetText(""); }
     }
 
     // ── Project operations ────────────────────────────────────────────────
@@ -2479,25 +2636,49 @@ private:
         }, false);
         pToolbar->AddButton("Config Cena", [](bool){}, false);
         pToolbar->AddButton("Ferramentas", [](bool){}, false);
-        pToolbar->AddSeparator();
-        pToolbar->AddButton("Grid", [this](bool active){ viewportShowGrid = active; noteEngineChange("Viewport grid toggled"); }, true);
-        pToolbar->items.back().active = viewportShowGrid;
-        pToolbar->AddButton("Snap", [this](bool active){ viewportSnapToGrid = active; noteEngineChange("Viewport snap toggled"); }, true);
-        pToolbar->items.back().active = viewportSnapToGrid;
-        pToolbar->AddButton("Bottom Panel", [this](bool active){
-            bottomTrayVisible = active;
-            rebuildEditorUI();
-            noteEngineChange(active ? "Bottom panel shown" : "Bottom panel hidden");
+        pToolbar->AddButton("2D", [this](bool active){
+            if (!active) return;
+            viewportRenderMode = ViewportRenderMode::Mode2D;
+            noteEngineChange("Viewport mode: 2D");
+            syncViewportToolbarState();
         }, true);
-        pToolbar->items.back().active = bottomTrayVisible;
-        pToolbar->AddButton("Focus View", [this](bool active){
-            focusViewportMode = active;
-            rebuildEditorUI();
-            noteEngineChange(active ? "Focus viewport mode enabled" : "Focus viewport mode disabled");
+        pToolbar->items.back().active = (viewportRenderMode == ViewportRenderMode::Mode2D);
+        pToolbar->AddButton("3D", [this](bool active){
+            if (!active) return;
+            viewportRenderMode = ViewportRenderMode::Mode3D;
+            noteEngineChange("Viewport mode: 3D");
+            syncViewportToolbarState();
         }, true);
-        pToolbar->items.back().active = focusViewportMode;
-        pToolbar->AddButton("Enquadrar", [this](bool){ frameViewportSelection(); }, false);
-        pToolbar->AddButton("Reset View", [this](bool){ resetViewportView(); }, false);
+        pToolbar->items.back().active = (viewportRenderMode == ViewportRenderMode::Mode3D);
+
+        EditorViewportToolbarBuilder::Append(
+            pToolbar,
+            layoutState,
+            viewportShowGrid,
+            viewportSnapToGrid,
+            EditorViewportToolbarCallbacks{
+                [this](bool active) {
+                    viewportShowGrid = active;
+                    noteEngineChange("Viewport grid toggled");
+                },
+                [this](bool active) {
+                    viewportSnapToGrid = active;
+                    noteEngineChange("Viewport snap toggled");
+                },
+                [this](bool active) {
+                    layoutState.bottomTrayVisible = active;
+                    rebuildEditorUI();
+                    noteEngineChange(active ? "Bottom panel shown" : "Bottom panel hidden");
+                },
+                [this](bool active) {
+                    layoutState.focusViewportMode = active;
+                    rebuildEditorUI();
+                    noteEngineChange(active ? "Focus viewport mode enabled" : "Focus viewport mode disabled");
+                },
+                [this]() { frameViewportSelection(); },
+                [this]() { resetViewportView(); },
+            }
+        );
         syncViewportToolbarState();
     }
 
@@ -2508,8 +2689,10 @@ private:
         pDockSpace = ui.AddRoot<DockSpace>(0.f, kTopH, kW, workspaceH);
         DockNode* root = pDockSpace->Root();
 
+        const EditorDockLayoutMode dockMode = EditorDockLayoutController::Resolve(layoutState);
+
         // Godot-style distraction free flow: keep only the center viewport.
-        if (focusViewportMode) {
+        if (dockMode == EditorDockLayoutMode::FocusViewport) {
             pBottomTrayNode = nullptr;
             root->Dock(buildViewportWidget(), "Viewport");
             return;
@@ -2517,7 +2700,7 @@ private:
 
         // Godot-style panel management: bottom panel can be hidden without
         // removing side docks.
-        if (!bottomTrayVisible) {
+        if (dockMode == EditorDockLayoutMode::StandardNoBottom) {
             float leftFrac  = kLeftW / kW;
             auto [left, centerRight] = root->Split(true, leftFrac);
 
@@ -2564,7 +2747,7 @@ private:
         right->Dock(buildInspector(),           "Properties");
         bottomNode->Dock(buildContentBrowser(), "Content Browser");
         bottomNode->Dock(buildConsolePanel(),   "Console");
-        bottomNode->activeIdx = std::clamp(cacheBottomTrayActiveIdx, 0, (int)bottomNode->panels.size() - 1);
+        bottomNode->activeIdx = std::clamp(layoutState.bottomTrayActiveIdx, 0, (int)bottomNode->panels.size() - 1);
         bottomNode->applyPanelGeometry();
 
         left->SetLayout(pHierarchy, [this](float w, float h) {
@@ -3134,25 +3317,43 @@ private:
             vpAX = ax; vpAY = ay;
             r.BeginScreenSpace();
 
-            r.SetDrawColor(20, 20, 26);
+            if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+                r.SetDrawColor(18, 22, 32);
+            } else {
+                r.SetDrawColor(20, 20, 26);
+            }
             r.FillRect(ax, ay, vw, vh);
+            if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+                r.SetDrawColor(34, 44, 66, 120);
+                r.FillRect(ax, ay, vw, vh * 0.45f);
+            }
 
-            // Render real scene nodes (positions are in viewport-local screen coords)
+            // Render scene according to viewport mode.
             r.EndScreenSpace();
             r.SetScissor(ax, ay, vw, vh);
-            r.SetCameraOrigin(ax, ay);
-            r.SetCameraOffset(viewportCamX, viewportCamY);
-            r.SetCameraZoom(viewportZoom);
-            drawViewportGrid(r, vw, vh);
-            editorLevel.Render();    // node components draw via renderer (screen-space coords)
+            if (viewportRenderMode == ViewportRenderMode::Mode2D) {
+                r.SetCameraOrigin(ax, ay);
+                r.SetCameraOffset(viewportCamX, viewportCamY);
+                r.SetCameraZoom(viewportZoom);
+                drawViewportGrid(r, vw, vh);
+                editorLevel.Render();
+            }
             r.ClearScissor();
             r.SetCameraOrigin(0.f, 0.f);
             r.SetCameraOffset(0.f, 0.f);
             r.SetCameraZoom(1.f);
             r.BeginScreenSpace();
 
+            if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+                drawViewportGrid3D(r);
+                const auto& roots = editorLevel.GetNodes();
+                for (const auto& rootNode : roots) {
+                    drawViewportNodes3DRecursive(r, rootNode.get());
+                }
+            }
+
             // Gizmos (move handles) — only in editor mode
-            if (selectedNode && !isPlaying) {
+            if (selectedNode && !isPlaying && viewportRenderMode == ViewportRenderMode::Mode2D) {
                 static constexpr float kArrow = 50.f;
                 static constexpr float kTip   = 5.f;
                 auto wp = selectedNode->WorldPosition();
@@ -3199,7 +3400,8 @@ private:
 
             char viewportHud[128];
             SDL_snprintf(viewportHud, sizeof(viewportHud),
-                         "Zoom %.0f%%  |  Grid %s  |  Snap %s",
+                         "Mode %s  |  Zoom %.0f%%  |  Grid %s  |  Snap %s",
+                         viewportRenderMode == ViewportRenderMode::Mode3D ? "3D" : "2D",
                          viewportZoom * 100.f,
                          viewportShowGrid ? "ON" : "OFF",
                          viewportSnapToGrid ? "ON" : "OFF");
@@ -3209,8 +3411,19 @@ private:
             r.SetDrawColor(210, 210, 220, 230);
             ui.font.DrawText(r, viewportHud, ax + 16.f, ay + 12.f);
 
+            if (viewportRenderMode == ViewportRenderMode::Mode3D) {
+                const char* navHint = "Q/E Depth  |  MMB Pan  |  Wheel Zoom  |  [2] 2D [3] 3D";
+                float hintW = ui.font.MeasureW(navHint);
+                r.SetDrawColor(12, 14, 20, 170);
+                r.FillRect(ax + 10.f, ay + vh - ui.font.GlyphH() - 18.f, hintW + 12.f, ui.font.GlyphH() + 8.f);
+                r.SetDrawColor(180, 194, 220, 220);
+                ui.font.DrawText(r, navHint, ax + 16.f, ay + vh - ui.font.GlyphH() - 14.f);
+            }
+
             std::string sceneWatermark = fs::path(currentScenePath).stem().string();
-            if (sceneWatermark.empty()) sceneWatermark = "Scene2D";
+            if (sceneWatermark.empty()) {
+                sceneWatermark = viewportRenderMode == ViewportRenderMode::Mode3D ? "Scene3D" : "Scene2D";
+            }
             float wmW = ui.font.MeasureW(sceneWatermark.c_str());
             r.SetDrawColor(255, 255, 255, 110);
             ui.font.DrawText(r, sceneWatermark.c_str(), ax + vw - wmW - 18.f,
@@ -3576,6 +3789,7 @@ private:
     // drags the selected node, and commits an undo record on release.
     void processGizmoDrag()
     {
+        if (viewportRenderMode == ViewportRenderMode::Mode3D) return;
         if (!selectedNode) return;
 
         float mx = inputManager.GetMouseX();
@@ -3721,7 +3935,7 @@ private:
         if (!pBottomTrayNode || pBottomTrayNode->panels.empty()) return;
         if ((int)pBottomTrayNode->panels.size() == 1) return;
         pBottomTrayNode->activeIdx = (pBottomTrayNode->activeIdx == 1) ? 0 : 1;
-        cacheBottomTrayActiveIdx = pBottomTrayNode->activeIdx;
+        layoutState.bottomTrayActiveIdx = pBottomTrayNode->activeIdx;
         noteEngineChange("Container state changed: bottom tray tab");
         pBottomTrayNode->applyPanelGeometry();
     }

@@ -5,6 +5,8 @@
 #include "EditorContext.h"
 #include <memory>
 
+using namespace LightningEditor::UI;
+
 class EditorPanel
 {
 public:
